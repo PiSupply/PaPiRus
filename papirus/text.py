@@ -7,10 +7,11 @@ from papirus import Papirus
 import random
 
 class PapirusText():
+
     def __init__():
         self.papirus = Papirus()
 
-    def write_text(self, text, size = 20):
+    def write(self, text, size = 20):
 
         # initially set all white background
         image = Image.new('1', papirus.size, WHITE)
