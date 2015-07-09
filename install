@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sudo apt-get install libfuse-dev -y
+sudo apt-get install git -y
 sudo apt-get install python-imaging -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
