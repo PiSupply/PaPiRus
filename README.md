@@ -94,20 +94,6 @@ image.write('/path/to/image')
 # image.write(path, width, (x,y))
 image.write('/path/to/image', 20, (10, 10) )
 ```
-
-# Command Line
-
-```bash
-# Set the screen size you are using
-papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
-
-# Write data to the screen
-papirus-write "Some text to write"
-
-# Clear the screen
-papirus-clear
-```
-
 #### Notes
 
 Your python script must be running with root previlages update the screen and change sizes.
@@ -121,4 +107,17 @@ user = os.getuid()
 if user != 0:
     print "Please run script as root"
     sys.exit()
+```
+
+# Command Line
+
+```bash
+# Set the screen size you are using
+papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
+
+# Write data to the screen
+papirus-write "Some text to write"
+
+# Clear the screen
+papirus-clear
 ```
