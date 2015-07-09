@@ -39,3 +39,21 @@ make rpi-epd_fuse
 sudo make rpi-install
 sudo service epd-fuse start
 ```
+
+# Python API
+
+#### The Basic API
+
+```python
+# The epaper screen object
+screen = Papirus()
+
+# Write a bitmap to the epaper screen
+screen.display('./path/to/bmp/image')
+
+# Perform a full update to the screen (slower)
+screen.update()
+
+# Update only the changed pixels (faster)
+screen.partial_update()
+```
