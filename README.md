@@ -93,3 +93,16 @@ image.write('/path/to/image')
 # image.write(path, width, (x,y))
 image.write('/path/to/image', 20, (10, 10) )
 ```
+
+# Command Line
+
+```bash
+# Set the screen size you are using
+papirus-set [1.44 | 2.0 | 2.7 ]
+
+# Write data to the screen
+papirus-write "Some text to write"
+
+# Clear the screen
+papirus-clear
+```
