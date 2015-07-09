@@ -123,3 +123,22 @@ papirus-write "Some text to write"
 # Clear the screen
 papirus-clear
 ```
+
+#### Demos
+
+```bash
+# Show clock
+papirus-clock
+
+# Run game of life
+papirus-gol
+
+# Show system information
+papirus-system
+
+# Push framebuffer to screen
+papirus-framepush
+
+# Snakes game
+papirus-snakes
+```
