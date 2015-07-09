@@ -107,3 +107,18 @@ papirus-write "Some text to write"
 # Clear the screen
 papirus-clear
 ```
+
+#### Notes
+
+Your python script must be running with root previlages update the screen and change sizes.
+This code will only allow the script to run as root
+
+```python
+import os
+import sys
+
+user = os.getuid()
+if user != 0:
+    print "Please run script as root"
+    sys.exit()
+```
