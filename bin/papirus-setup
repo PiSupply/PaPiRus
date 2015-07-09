@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Install fuse driver
+sudo apt-get install libfuse-dev -y
+
+sudo mkdir /tmp/papirus
+cd /tmp/papirus
+git clone https://github.com/repaper/gratis.git
+
+cd /tmp/papirus/gratis-master/PlatformWithOS
+make rpi-epd_fuse
+sudo make rpi-install
+sudo service epd-fuse start
