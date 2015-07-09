@@ -1,0 +1,78 @@
+#!/bin/bash
+
+OPTION=$(whiptail --title "PaPiRus Config" --menu "Choose an option" 22 78 16 \
+"Screen Size" "Change the screen ePaper screen size." \
+"Enable Driver" "Enable and disable the ePaper driver." \
+"Mirror Framebuffer" "Use ePaper as a general display." \
+"Web Interface" "Enable the web interface." \
+"Test Mode" "Enable auto test when HAT is plugged in." 3>&1 1>&2 2>&3)		
+
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+    echo "Your chosen option:" $OPTION
+else
+    echo "You chose Cancel."
+fi
+
+if [ "$OPTION" = "Screen Size" ]; then
+
+	DISTROS=$(whiptail --title "Screen Size" --radiolist \
+	"Please select your display size" 15 60 6 \
+	"1.44" "Inch                    " ON \
+	"1.9" "Inch                    " OFF \
+	"2.0" "Inch                    " OFF \
+	"2.6" "Inch                    " OFF \
+	"2.7" "Inch                    " OFF 3>&1 1>&2 2>&3)
+	 
+	exitstatus=$?
+	if [ $exitstatus = 0 ]; then
+	    papirus-set $DISTROS
+	fi
+
+fi
+
+if [ "$OPTION" = "Enable Driver" ]; then
+
+	#!/bin/bash
+	if (whiptail --title "Enable Driver" --yes-button "Enable" --no-button "Disable"  --yesno "Enable or disable the ePaper driver" 10 60) then
+	    service epd-fuse stop
+	    update-rc.d epd-fuse disable
+	else
+	    update-rc.d epd-fuse enable
+	    service epd-fuse start
+	fi
+
+fi
+
+if [ "$OPTION" = "Mirror Framebuffer" ]; then
+
+	#!/bin/bash
+	if (whiptail --title "Framebuffer Mirroring" --yesno "Do you want to enable framebuffer mirroring?" 10 60) then
+	    echo "You chose Skittles Exit status was $?."
+	else
+	    echo "You chose M&M's. Exit status was $?."
+	fi
+
+fi
+
+if [ "$OPTION" = "Web Interface" ]; then
+
+	#!/bin/bash
+	if (whiptail --title "Web Interface"  --yesno "Would you like to enable the web interface?" 10 60) then
+	    echo "You chose Skittles Exit status was $?."
+	else
+	    echo "You chose M&M's. Exit status was $?."
+	fi
+
+fi
+
+if [ "$OPTION" = "Test Mode" ]; then
+
+	#!/bin/bash
+	if (whiptail --title "Test mode"  --yesno "Do you want to enable auto test mode?" 10 60) then
+	    echo "You chose Skittles Exit status was $?."
+	else
+	    echo "You chose M&M's. Exit status was $?."
+	fi
+
+fi
