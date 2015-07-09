@@ -71,8 +71,25 @@ from papirus import PapirusText
 text = PapirusText()
 
 # Write text to the screen
+# text.write(text)
 text.write("hello world")
 
 # Write text to the screen at selected point
-text.write("hello world", 10, 10)
+# text.write(text, (x,y))
+text.write("hello world", (10, 10) )
+```
+
+#### The Image API
+```python
+from papirus import PapirusImage
+
+image = PapirusImage()
+
+# easy write image to screen
+# image.write(path)
+image.write('/path/to/image')
+
+# write image to the screen with size and position
+# image.write(path, width, (x,y))
+image.write('/path/to/image', 20, (10, 10) )
 ```
