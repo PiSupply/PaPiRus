@@ -99,7 +99,7 @@ image.write('/path/to/image', 20, (10, 10) )
 
 ```bash
 # Set the screen size you are using
-papirus-set [1.44 | 2.0 | 2.7 ]
+papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
 
 # Write data to the screen
 papirus-write "Some text to write"
