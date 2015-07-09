@@ -7,7 +7,7 @@ Resources for PaPiRus ePaper eInk display
 curl https://goo.gl/i1Imel | sudo bash
 ```
 
-# Manually Setup PaPiRus
+# Manually Install PaPiRus Software
 
 #### Install Python API
 ```bash
