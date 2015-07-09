@@ -125,6 +125,7 @@ papirus-clear
 ```
 
 #### Demos
+All demos can be seen by running the following commands. Code can be found in the repo for the python bin directory. 
 
 ```bash
 # Show clock
