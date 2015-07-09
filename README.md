@@ -1,13 +1,13 @@
 # PaPiRus
 Resources for PaPiRus ePaper eInk display
 
-# Single Line Install
+# Setup PaPiRus
 ```bash
 # Run this line and PaPiRus will be setup and installed
 curl https://goo.gl/i1Imel | sudo bash
 ```
 
-# Setup PaPiRus
+# Manually Setup PaPiRus
 
 ```bash
 sudo apt-get install python-imaging
