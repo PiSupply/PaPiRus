@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
 import os
+import sys
 from papirus import Papirus
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import argparse
+
+user = os.getuid()
+if user != 0:
+    print "Please run script as root"
+    sys.exit()
 
 # Command line usage
 # papirus-wite "Some text to write"
@@ -62,6 +68,6 @@ def write_text(papirus, text, size):
 
     papirus.display(image)
     papirus.update()
-    
+
 if __name__ == '__main__':
     main()

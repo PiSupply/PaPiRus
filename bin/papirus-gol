@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import os
+import sys
+
 from PIL import Image
 from PIL import ImageDraw
 from papirus import Papirus
@@ -9,6 +12,13 @@ WHITE = 1
 BLACK = 0
 
 CELLSIZE = 10
+
+
+user = os.getuid()
+if user != 0:
+    print "Please run script as root"
+    sys.exit()
+
 
 #Colours the cells green for life and white for no life
 def colourGrid(draw, item, lifeDict):
