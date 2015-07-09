@@ -1,6 +1,11 @@
 # PaPiRus
 Resources for PaPiRus ePaper eInk display
 
+# Single Line Install
+```bash
+curl https://www.github.com/test/install.sh | sudo bash
+```
+
 # Setup PaPiRus
 
 ```bash
