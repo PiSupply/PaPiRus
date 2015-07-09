@@ -45,6 +45,8 @@ sudo service epd-fuse start
 #### The Basic API
 
 ```python
+from papirus import Papirus
+
 # The epaper screen object
 screen = Papirus()
 
@@ -56,4 +58,21 @@ screen.update()
 
 # Update only the changed pixels (faster)
 screen.partial_update()
+
+# Change screen size
+screen.set_size(papirus.1_7INCH)
+
+```
+
+#### The Text API
+```python
+from papirus import PapirusText
+
+text = PapirusText()
+
+# Write text to the screen
+text.write("hello world")
+
+# Write text to the screen at selected point
+text.write("hello world", 10, 10)
 ```
