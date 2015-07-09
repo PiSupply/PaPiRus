@@ -9,6 +9,5 @@ setup(name='papirus',
       author_email='example@example.com',
       url='pi-supply.com',
       packages=['papirus'],
-      install_requires=["pillow"],
-      scripts=['bin/papirus-clear', 'bin/papirus-write', 'bin/papirus-set']
+      scripts=['bin/papirus-clear', 'bin/papirus-write', 'bin/papirus-set', 'papirus-gol']
      )
