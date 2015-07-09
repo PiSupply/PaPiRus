@@ -9,7 +9,7 @@ curl https://goo.gl/i1Imel | sudo bash
 
 # Manually Setup PaPiRus
 
-## Install Python API
+#### Install Python API
 ```bash
 
 # Install dependencies
@@ -20,12 +20,12 @@ cd PaPiRus
 sudo python setup.py install    # Install PaPirRus python library
 ```
 
-## Install Driver (Option 1)
+#### Install Driver (Option 1)
 ```bash
 papirus-setup    # This will auto install the driver
 ````
 
-## Install Driver (Option 2)
+#### Install Driver (Option 2)
 ```bash
 # Install fuse driver
 sudo apt-get install libfuse-dev -y
