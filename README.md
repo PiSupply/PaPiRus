@@ -37,8 +37,8 @@ cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
 cd /tmp/papirus/gratis-master/PlatformWithOS
-make rpi-epd_fuse
-sudo make rpi-install
+make rpi-epd_fuse PANEL_VERSION='V231_G2'
+sudo make rpi-install PANEL_VERSION='V231_G2'
 sudo service epd-fuse start
 ```
 
