@@ -3,7 +3,12 @@
 import os
 import sys
 
-from EPD import EPD
+
+'''This is a hack as I don't know why it's not finding the installed papirus module
+without it'''
+sys.path.append("/usr/local/lib/python2.7/dist-packages/papirus/")
+
+from epd import EPD
 
 user = os.getuid()
 if user != 0:
