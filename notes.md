@@ -1,3 +1,4 @@
+```
 RTC
 
 pi@glooston ~ $ hwclock -r
@@ -50,7 +51,7 @@ hwclock: Use the --debug option to see the details of our search for an access m
 pi@glooston ~ $ sudo hwclock -r
 Fri 24 Jul 2015 10:39:21 EDT  -0.059050 seconds
 pi@glooston ~ $
-
+```
 
 
 NXP LM75BD Temperature sensor
