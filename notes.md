@@ -1,5 +1,5 @@
 ```
-RTC
+RTC  NXP 8523T
 
 pi@glooston ~ $ hwclock -r
 hwclock: Cannot access the Hardware Clock via any known method.
