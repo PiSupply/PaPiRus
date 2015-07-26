@@ -56,3 +56,5 @@ pi@glooston ~ $
 
 NXP LM75BD Temperature sensor
 http://www.nxp.com/documents/data_sheet/LM75B.pdf
+
+buttons gpio.25,27,28,29 (physical pins 36,37,38,40)
