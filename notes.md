@@ -56,5 +56,6 @@ pi@glooston ~ $
 
 NXP LM75BD Temperature sensor
 http://www.nxp.com/documents/data_sheet/LM75B.pdf
+It is supposed to be on I2C at an address somewhere in 0x48 thru 0x4F range but my particular PCB revision either I am doing something wrong or the LM75BD doesn't work. I have v1.4 rev of the PCB the KS people will be getting v1.5 rev so will leave it alone until 1.5's are out in the wild.
 
 buttons gpio.25,27,28,29 (physical pins 36,37,38,40)
