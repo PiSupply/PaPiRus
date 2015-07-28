@@ -1,3 +1,14 @@
+***Notes***
+
+EPD (2.7)
+264x175 == 46464 bits, == 5808 bytes
+
+origin top left
+
+arranged in rows in memory
+
+0,0 -> 263,0
+
 ```
 RTC  NXP 8523T
 
