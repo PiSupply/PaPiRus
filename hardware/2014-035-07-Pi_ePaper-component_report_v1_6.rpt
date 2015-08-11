@@ -1,0 +1,152 @@
+COMPONENT PLACEMENT DATA.
+-------------------------
+
+Design Title : 4 Layer Defaults
+Date         : 14 July, 2015
+Time         : 07:42
+
+Component         X         Y      Side    Rotation
+---------------------------------------------------
+
+Total Number of SMD Components on Top:0
+
+Component         X         Y      Side    Rotation
+---------------------------------------------------
+     BAT1    40.700    25.800    Bottom    180.000
+       C1    11.475    31.200    Bottom    180.000
+       C2    11.475    29.700    Bottom    180.000
+       C3    11.475    28.200    Bottom    180.000
+       C4    11.475    26.700    Bottom    180.000
+       C5    37.100     8.550    Bottom    180.000
+       C6    11.475    25.200    Bottom    180.000
+       C7    11.475    23.700    Bottom    180.000
+       C8    11.475    22.200    Bottom    180.000
+       C9    11.475    20.700    Bottom    180.000
+      C10    11.450    19.200    Bottom    180.000
+      C11    11.450    17.700    Bottom    180.000
+      C12    11.450    16.200    Bottom    180.000
+      C13     8.150     9.350    Bottom     90.000
+      C14    11.450    13.200    Bottom    180.000
+      C15    11.450    11.700    Bottom    180.000
+      C16    11.450    10.200    Bottom    180.000
+      C17    11.450     8.700    Bottom    180.000
+      C18    18.700    11.200    Bottom    180.000
+      C19    16.150    18.550    Bottom    180.000
+      C20    20.000    23.550    Bottom    180.000
+      C21     6.900    39.800    Bottom      0.000
+      C22    48.550    12.650    Bottom      0.000
+      C23    52.350    16.750    Bottom    270.000
+      C24    53.150    32.450    Bottom     90.000
+      C25    60.850     7.550    Bottom    180.000
+      C26    63.450    11.400    Bottom     90.000
+      C27    10.500    42.400    Bottom      0.000
+      C28    10.500    37.400    Bottom      0.000
+      C29    10.500    47.400    Bottom      0.000
+      C30    57.300    31.900    Bottom    180.000
+      C31    61.250    42.650    Bottom      0.000
+      C32    53.950    34.950    Bottom      0.000
+      C33    55.350    47.600    Bottom     90.000
+      C34    56.850    47.600    Bottom     90.000
+      C35    59.150    44.250    Bottom    180.000
+      CN1     2.250    20.775    Bottom     90.000
+      CN2    55.850    10.400    Bottom    270.000
+      CN3    32.500     3.500    Bottom      0.000
+      CN4    40.000    40.000    Bottom      0.000
+      CN5    52.000    48.500    Bottom      0.000
+      CN6    48.500    48.500    Bottom      0.000
+      CN7    45.000    48.500    Bottom      0.000
+      CN8    41.500    48.500    Bottom      0.000
+      CN9    38.000    48.500    Bottom      0.000
+     CN10    34.500    48.500    Bottom      0.000
+     CN11    31.000    48.500    Bottom      0.000
+     CN12    27.500    48.500    Bottom      0.000
+     CN13    60.250    14.800    Bottom      0.000
+     CN14    21.600    14.700    Bottom      0.000
+       D1    15.400    12.600    Bottom    180.000
+       D2    58.500    29.400    Bottom     90.000
+       D3    60.900    47.350    Bottom      0.000
+      IC1     4.850    43.350    Bottom    180.000
+      IC2    61.050    39.800    Bottom     90.000
+      IC3    55.850    16.750    Bottom     90.000
+      IC4    37.650    11.100    Bottom      0.000
+      IC5    14.150    37.400    Bottom      0.000
+      IC6    14.150    42.400    Bottom      0.000
+      IC7    14.150    47.400    Bottom      0.000
+      IC8    56.550    39.750    Bottom     90.000
+      IC9    60.650    10.800    Bottom    270.000
+       Q1    15.400     9.900    Bottom      0.000
+       Q2    15.400    15.300    Bottom      0.000
+       Q3    16.150    27.650    Bottom    270.000
+       Q4    22.250    27.900    Bottom    180.000
+       Q5    16.500    22.600    Bottom      0.000
+       Q6    19.800    19.200    Bottom    270.000
+       Q7    22.900    22.550    Bottom     90.000
+       R1    63.550    41.200    Bottom    270.000
+       R2    11.450    14.700    Bottom    180.000
+       R3    18.450    15.950    Bottom    270.000
+       R4    19.750    27.900    Bottom     90.000
+       R5    16.150    25.150    Bottom      0.000
+       R6    18.250    27.900    Bottom     90.000
+       R7    16.150    20.050    Bottom    180.000
+       R8    19.950    22.050    Bottom      0.000
+       R9    36.900    13.650    Bottom      0.000
+      R10    34.650    10.600    Bottom    270.000
+      R11    40.000    13.650    Bottom      0.000
+      R12    53.750    21.250    Bottom    180.000
+      R13    56.800    21.250    Bottom    180.000
+      R14    59.350    17.950    Bottom    270.000
+      R15    61.600    17.150    Bottom      0.000
+      R16    21.900    19.300    Bottom    270.000
+      R17    38.500    53.450    Bottom     90.000
+      R18    49.650    53.450    Bottom     90.000
+      R19    27.650    53.450    Bottom     90.000
+      R20    24.750    17.250    Bottom     90.000
+      R21    14.650    44.900    Bottom    180.000
+      R22    14.750    39.900    Bottom    180.000
+      R23    16.650    53.450    Bottom     90.000
+      R24    15.150    53.450    Bottom    270.000
+      R25    37.000    53.450    Bottom    270.000
+      R26    48.150    53.450    Bottom    270.000
+      R27    26.150    53.450    Bottom    270.000
+      R28    54.900    32.650    Bottom     90.000
+      R29    55.650    30.400    Bottom      0.000
+      R30    58.150    34.150    Bottom     90.000
+      R31    56.400    34.150    Bottom     90.000
+      R32    58.350    46.550    Bottom    270.000
+      TP1    42.000    11.650    Bottom     90.000
+      TP2    42.000     9.150    Bottom    270.000
+       Y1    55.550    44.850    Bottom      0.000
+
+Total Number of SMD Components on Bottom:104
+
+Component         X         Y      Side    Rotation
+---------------------------------------------------
+      SW1    48.900    54.250       Top      0.000
+      SW2    37.750    54.250       Top      0.000
+      SW3    26.900    54.250       Top      0.000
+      SW4    15.900    54.250       Top      0.000
+
+Total Number of Through the hole Components on Top:4
+
+Component         X         Y      Side    Rotation
+---------------------------------------------------
+
+Total Number of Through the hole Components on Bottom:0
+
+Component         X         Y      Side    Rotation
+---------------------------------------------------
+    FAST4    61.500    52.500       Top      0.000
+    FAST9    61.500     3.500       Top      0.000
+   FAST10     3.500    52.500       Top      0.000
+   FAST11     3.500     3.500       Top      0.000
+
+Total Number of Mechanical Parts:4
+
+Fiductional mark       X         Y      Side
+---------------------------------------------------
+            FID1     8.500    52.500    Bottom
+            FID2    63.400    14.700    Bottom
+            FID3    56.400    54.400    Bottom
+Total Number of Fiductional marks:3
+
+                         --- End of Report ---
