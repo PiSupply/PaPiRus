@@ -10,6 +10,9 @@ arranged in rows in memory
 0,0 -> 263,0
 
 ```
+rev 1.6 RTC has been changed to be a Microchip part. MCP7940N -- address range 0x68 to 0x6F
+--------
+
 RTC  NXP 8523T
 
 pi@glooston ~ $ hwclock -r
@@ -63,6 +66,7 @@ pi@glooston ~ $ sudo hwclock -r
 Fri 24 Jul 2015 10:39:21 EDT  -0.059050 seconds
 pi@glooston ~ $
 ```
+
 
 
 NXP LM75BD Temperature sensor
