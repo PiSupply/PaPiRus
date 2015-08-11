@@ -1,0 +1,21 @@
+1.) All dimensions are metric
+2.) Number of electrical layers - 2
+3.) Minimal track/spacing 0.20/0.20
+4.) Minimal drill 0.30
+5.) See LAYER STACK for layer specification
+6.) PCB size 65.00x56.00 +/- 0.1(mm)
+7.) PCB finish - HASL
+8.) Material - FR4
+9.) Solder resist - LPSIM
+10.) Solder resist color - WHITE
+11.) Silk color - BLACK
+12.) GERBER file format RS-274-X
+13.) DRILL file format - EXCELLON
+  4/4/Abs/mm/none
+14.) Showed drill diameters are for finished drills
+15.) For tool table see tool_table.rpt
+16.) All traces must be 100% electricaly 
+checked for shorts and opens
+17.) PCB assembly according to IPC-A-610E Class I
+18.) Paneling - to be decided by ECM partner
+19.) SOLDER PASTE layers to be adjusted by ECM
