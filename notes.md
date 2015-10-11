@@ -1,5 +1,7 @@
 ***Notes***
 
+[if using a 4.1.x kernel on raspbian jessie (you will be) edit epd-fuse script to s/spi_bcm2708/spi_bcm2835/g ]
+
 EPD (2.7)
 264x175 == 46464 bits, == 5808 bytes
 
