@@ -37,8 +37,8 @@ cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
 cd /tmp/papirus/gratis-master/PlatformWithOS
-make rpi-epd_fuse
-sudo make rpi-install
+make rpi-epd_fuse PANEL_VERSION='V231_G2'
+sudo make rpi-install PANEL_VERSION='V231_G2'
 sudo service epd-fuse start
 ```
 
@@ -98,7 +98,7 @@ image.write('/path/to/image', 20, (10, 10) )
 ```
 #### Notes
 
-Your python script must be running with root previlages update the screen and change sizes.
+Your python script must be running with root previlages to change sizes.
 This code will only allow the script to run as root
 
 ```python

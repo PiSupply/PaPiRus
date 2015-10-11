@@ -16,7 +16,7 @@ fi
 
 if [ "$OPTION" = "Screen Size" ]; then
 
-	DISTROS=$(whiptail --title "Screen Size" --radiolist \
+	EPD_SIZE=$(whiptail --title "Screen Size" --radiolist \
 	"Please select your display size" 15 60 6 \
 	"1.44" "Inch                    " ON \
 	"1.9" "Inch                    " OFF \
@@ -26,7 +26,7 @@ if [ "$OPTION" = "Screen Size" ]; then
 	 
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
-	    papirus-set $DISTROS
+	    bash ./papirus-set $EPD_SIZE
 	fi
 
 fi

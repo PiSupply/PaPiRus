@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+
+'''This is a hack as I don't know why it's not finding the installed papirus module
+without it'''
+sys.path.append("/usr/local/lib/python2.7/dist-packages/papirus/")
+
+from epd import EPD
+
+user = os.getuid()
+if user != 0:
+    print "Please run script as root"
+    sys.exit()
+
+epd = EPD()
+
+print "PaPiRus System Info\n===================\n"
+print 'PANEL:{p:s}\" ({w:d} x {h:d})'.format(p=epd.panel, w=epd.width, h=epd.height)
+print 'FILM:{f:d}\nCOG:{g:d}\nVERSION:{v:s}'.format(v=epd.version, g=epd.cog, f=epd.film)
+print "PATH:",epd._epd_path
