@@ -8,6 +8,7 @@ fi
 
 # Install fuse driver
 sudo apt-get install libfuse-dev -y
+sudo apt-get install fonts-freefont-ttf -y
 
 sudo rm -R /tmp/papirus
 sudo mkdir /tmp/papirus
