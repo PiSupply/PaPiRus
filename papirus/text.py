@@ -19,7 +19,7 @@ class PapirusText():
         # prepare for drawing
         draw = ImageDraw.Draw(image)
 
-        font = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', size)
+        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', size)
 
         # Calculate the max number of char to fit on line
         line_size = (papirus.width / (size*0.65))
