@@ -57,9 +57,9 @@ def write_text(papirus, text, size):
             text_lines[current_line] += " " + word
         else:
             # No space left on line so move to next one
-	    text_lines.append("")
+            text_lines.append("")
             current_line += 1
-	    text_lines[current_line] += " " + word
+            text_lines[current_line] += " " + word
 
     current_line = 0
     for l in text_lines:
