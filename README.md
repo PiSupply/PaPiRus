@@ -3,6 +3,9 @@
 # PaPiRus
 Resources for PaPiRus ePaper eInk display
 
+# Enabling SPI interface on RaspberryPi
+Before using PaPiRus, do not forget to enable the SPI interface. You can enable it by using `sudo raspi-config` then `Advanced options` > `SPI`. 
+
 # Setup PaPiRus
 ```bash
 # Run this line and PaPiRus will be setup and installed
@@ -119,6 +122,9 @@ papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
 
 # Write data to the screen
 papirus-write "Some text to write"
+
+# Draww image on the screen
+papirus-draw /path/to/image -t [resize | crop]
 
 # Clear the screen
 papirus-clear
