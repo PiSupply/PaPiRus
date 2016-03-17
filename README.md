@@ -123,7 +123,7 @@ papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
 # Write data to the screen
 papirus-write "Some text to write"
 
-# Draww image on the screen
+# Draw image on the screen
 papirus-draw /path/to/image -t [resize | crop]
 
 # Clear the screen
