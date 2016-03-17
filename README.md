@@ -146,6 +146,9 @@ papirus-system
 # Push framebuffer to screen
 papirus-framepush
 
+# Demo of using the buttons
+papirus-buttons
+
 # Snakes game
 papirus-snakes
 ```
