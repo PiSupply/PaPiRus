@@ -14,7 +14,7 @@ ib=$(echo "obase=2;$ia" | bc)
 ic="${ib:0:-5}"
 [ $DEBUG ] && echo "IC is ${ic}"
 # if binary value is 11 bits long, number is negative (twos complement)
-if [ $(echo "${ic}" | wc -c) -eq 12 ]
+if [ $(echo -en "${ic}" | wc -c) -eq 11 ]
 then
     [ $DEBUG ] && echo "Temperature is negative"
     ica=$(echo "ibase=2;${ic}" | bc)
