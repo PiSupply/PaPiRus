@@ -149,7 +149,7 @@ papirus-framepush
 # Demo of using the buttons
 papirus-buttons
 
-# Demo of getting temperature (in °C) from LM75
+# Demo of getting temperature from LM75
 papirus-temp
 
 # Snakes game
