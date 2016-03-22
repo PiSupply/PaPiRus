@@ -1,11 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import os
+import sys
 from papirus import Papirus
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import argparse
+
+user = os.getuid()
+if user != 0:
+    print "Please run script as root"
+    sys.exit()
 
 # Command line usage
 # papirus-wite "Some text to write"
@@ -36,7 +42,7 @@ def write_text(papirus, text, size):
     # prepare for drawing
     draw = ImageDraw.Draw(image)
 
-    font = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', size)
+    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', size)
 
     # Calculate the max number of char to fit on line
     line_size = (papirus.width / (size*0.65))
@@ -51,9 +57,9 @@ def write_text(papirus, text, size):
             text_lines[current_line] += " " + word
         else:
             # No space left on line so move to next one
-	    text_lines.append("")
+            text_lines.append("")
             current_line += 1
-	    text_lines[current_line] += " " + word
+            text_lines[current_line] += " " + word
 
     current_line = 0
     for l in text_lines:
@@ -62,6 +68,6 @@ def write_text(papirus, text, size):
 
     papirus.display(image)
     papirus.update()
-    
+
 if __name__ == '__main__':
     main()
