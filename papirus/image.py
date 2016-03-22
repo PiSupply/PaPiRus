@@ -7,7 +7,7 @@ from papirus import Papirus
 
 class PapirusImage():
 
-    def __init__():
+    def __init__(self):
         self.papirus = Papirus()
 
     def write(self, image):

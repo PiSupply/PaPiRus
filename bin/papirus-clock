@@ -23,7 +23,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 from datetime import datetime
 import time
-from EPD import EPD
+from papirus import Papirus
 
 user = os.getuid()
 if user != 0:
@@ -61,20 +61,20 @@ MAX_START = 0xffff
 def main(argv):
     """main program - draw and display a test image"""
 
-    epd = EPD()
+    papirus = Papirus()
 
-    print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=epd.panel, w=epd.width, h=epd.height, v=epd.version, g=epd.cog, f=epd.film))
+    print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
 
-    epd.clear()
+    papirus.clear()
 
-    demo(epd)
+    demo(papirus)
 
 
-def demo(epd):
+def demo(papirus):
     """simple partial update demo - draw draw a clock"""
 
     # initially set all white background
-    image = Image.new('1', epd.size, WHITE)
+    image = Image.new('1', papirus.size, WHITE)
 
     # prepare for drawing
     draw = ImageDraw.Draw(image)
@@ -105,11 +105,11 @@ def demo(epd):
         draw.text((5, 10), '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second), fill=BLACK, font=clock_font)
 
         # display image on the panel
-        epd.display(image)
+        papirus.display(image)
         if now.second < previous_second:
-            epd.update()    # full update every minute
+            papirus.update()    # full update every minute
         else:
-            epd.partial_update()
+            papirus.partial_update()
         previous_second = now.second
 
 # main
