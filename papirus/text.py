@@ -19,7 +19,7 @@ class PapirusText():
         # prepare for drawing
         draw = ImageDraw.Draw(image)
 
-        font = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', size)
+        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', size)
 
         # Calculate the max number of char to fit on line
         line_size = (papirus.width / (size*0.65))
@@ -34,9 +34,9 @@ class PapirusText():
                 text_lines[current_line] += " " + word
             else:
                 # No space left on line so move to next one
-    	    text_lines.append("")
+                text_lines.append("")
                 current_line += 1
-    	    text_lines[current_line] += " " + word
+                text_lines[current_line] += " " + word
 
         current_line = 0
         for l in text_lines:
