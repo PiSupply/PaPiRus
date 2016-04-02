@@ -9,6 +9,9 @@ Resources for PaPiRus ePaper eInk display
 curl -sSL https://goo.gl/i1Imel | sudo bash
 ```
 
+# Enable SPI
+By default SPI is disabled. Enable SPI using the “raspi-config” tool
+
 # Manual Installation
 
 #### Install Python API
@@ -77,9 +80,9 @@ text = PapirusText()
 # text.write(text)
 text.write("hello world")
 
-# Write text to the screen at selected point
-# text.write(text, (x,y))
-text.write("hello world", (10, 10) )
+# Write text to the screen with font size
+# text.write(text, font size)
+text.write("hello world", 10)
 ```
 
 #### The Image API
