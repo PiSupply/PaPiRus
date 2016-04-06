@@ -23,7 +23,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 from datetime import datetime
 import time
-from EPD import EPD
+from papirus import Papirus
 
 user = os.getuid()
 if user != 0:
