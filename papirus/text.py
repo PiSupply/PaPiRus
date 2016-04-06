@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 
 from PIL import Image
 from PIL import ImageDraw
@@ -28,26 +29,13 @@ class PapirusText(Papirus):
 
         # Calculate the max number of char to fit on line
         line_size = (self.width / (size*0.65))
-        
-        current_line = 0
-        text_lines = [""]
-
-        # Compute each line
-        for word in text.split():
-            # If there is space on line add the word to it
-            if (len(text_lines[current_line]) + len(word)) < line_size:
-                text_lines[current_line] += " " + word
-            else:
-                # No space left on line so move to next one
-                text_lines.append("")
-                current_line += 1
-                text_lines[current_line] += " " + word
 
         current_line = 0
-        for l in text_lines:
+        for l in re.split(r'[\r\n]+', text):
             current_line += 1
             draw.text( (0, ((size*current_line)-size)) , l, font=font, fill=BLACK)
 
         self.display(image)
         self.update()
+
 
