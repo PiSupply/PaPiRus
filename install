@@ -3,7 +3,7 @@
 sudo apt-get install git -y
 sudo apt-get install python-imaging -y
 
-git clone https://github.com/PiSupply/PaPiRus.git
+git clone https://github.com/francesco-vannini/PaPiRus.git
 cd PaPiRus
 sudo python setup.py install    # Install PaPirRus python library
 papirus-setup    # Install drivers and setup epaper
