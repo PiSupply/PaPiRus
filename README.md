@@ -1,5 +1,3 @@
-#!!!UNDER CONSTRUCTION!!!
-
 # PaPiRus
 Resources for PaPiRus ePaper eInk display
 
@@ -10,6 +8,15 @@ Before using PaPiRus, do not forget to enable the SPI interface. You can enable 
 ```bash
 # Run this line and PaPiRus will be setup and installed
 curl -sSL https://goo.gl/i1Imel | sudo bash
+```
+
+# Getting Started
+```bash
+# Select your screen size
+sudo papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
+or
+sudo papirus-config
+# System will now reboot
 ```
 
 # Manual Installation

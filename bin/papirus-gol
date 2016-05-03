@@ -11,7 +11,7 @@ import random
 WHITE = 1
 BLACK = 0
 
-CELLSIZE = 10
+CELLSIZE = 5
 
 
 user = os.getuid()
@@ -109,7 +109,7 @@ def main():
         for item in lifeDict:
             colourGrid(draw, item, lifeDict)
 
-        print("Showing Image")
+        print("Rendering Frame")
         epd.display(image)
         epd.partial_update()
 
