@@ -28,3 +28,5 @@ echo "${EPD_SIZE}" # SHOULD OUTPUT Erl
 set_config EPD_SIZE $EPD_SIZE # SETS THE NEW VALUE
 
 service epd-fuse start
+
+sudo reboot
