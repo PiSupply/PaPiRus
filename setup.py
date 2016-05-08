@@ -9,5 +9,5 @@ setup(name='papirus',
       author_email='example@example.com',
       url='pi-supply.com',
       packages=['papirus'],
-      scripts=['bin/papirus-clear', 'bin/papirus-write', 'bin/papirus-set', 'bin/papirus-gol', 'bin/papirus-clock', 'bin/papirus-config', 'bin/papirus-setup', 'bin/papirus-draw', 'papirus-set', 'papirus-tmp']
+      scripts=['bin/papirus-clear', 'bin/papirus-write', 'bin/papirus-set', 'bin/papirus-gol', 'bin/papirus-clock', 'bin/papirus-config', 'bin/papirus-setup', 'bin/papirus-draw', 'bin/papirus-set', 'bin/papirus-tmp']
      )
