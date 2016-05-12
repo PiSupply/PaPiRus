@@ -136,7 +136,7 @@ to use:
             raise EPDError('image size mismatch')
 
         with open(os.path.join(self._epd_path, 'LE', 'display_inverse'), 'r+b') as f:
-            f.write(image.tostring())
+            f.write(image.tobytes())
 
         if self.auto:
             self.update()
