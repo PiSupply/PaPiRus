@@ -3,6 +3,7 @@
 # install git
 sudo apt-get install git -y
 sudo apt-get install python-imaging -y
+sudo apt-get install bc -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
