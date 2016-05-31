@@ -3,6 +3,7 @@ Resources for PaPiRus ePaper eInk display
 
 # Enabling SPI interface on Raspberry Pi
 Before using PaPiRus, do not forget to enable the SPI interface. You can enable it by typing `sudo raspi-config` at the command line and then selecting `Advanced options` > `SPI` and then selecting Enable. 
+if you want to use temp sensor and rtc enable i2c in the same way too
 
 # Setup PaPiRus
 ```bash
