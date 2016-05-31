@@ -89,7 +89,7 @@ text.write("hello world")
 
 # Write text to the screen at selected point
 # text.write(text, (x,y))
-text.write("hello world", (10, 10) )
+text.write("hello world", (10, 10) ) #positioning not working TODO
 ```
 
 #### The Image API
