@@ -109,7 +109,7 @@ image.write('/path/to/image', 20, (10, 10) )
 ```
 #### Notes
 
----
+<s>
 Your python script must be running with root previlages update the screen and change sizes.
 This code will only allow the script to run as root
 
@@ -122,7 +122,7 @@ if user != 0:
     print "Please run script as root"
     sys.exit()
 ```
----
+</s>
 
 # Command Line
 
