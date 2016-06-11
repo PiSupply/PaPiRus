@@ -3,6 +3,7 @@ Resources for PaPiRus ePaper eInk display
 
 # Enabling SPI interface on Raspberry Pi
 Before using PaPiRus, do not forget to enable the SPI interface. You can enable it by typing `sudo raspi-config` at the command line and then selecting `Advanced options` > `SPI` and then selecting Enable. 
+if you want to use temp sensor and rtc enable i2c in the same way too
 
 # Setup PaPiRus
 ```bash
@@ -88,8 +89,8 @@ text = PapirusText()
 text.write("hello world")
 
 # Write text to the screen at selected point
-# text.write(text, (x,y))
-text.write("hello world", (10, 10) )
+# text.write(text, size, x,y)
+text.write("hello world", 20, 10, 10 )
 ```
 
 #### The Image API
@@ -108,6 +109,7 @@ image.write('/path/to/image', 20, (10, 10) )
 ```
 #### Notes
 
+<s>
 Your python script must be running with root previlages update the screen and change sizes.
 This code will only allow the script to run as root
 
@@ -120,6 +122,7 @@ if user != 0:
     print "Please run script as root"
     sys.exit()
 ```
+</s>
 
 # Command Line
 
@@ -160,5 +163,5 @@ papirus-buttons
 papirus-temp
 
 # Snakes game
-papirus-snakes
+papirus-snakes #TODO
 ```

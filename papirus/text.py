@@ -13,8 +13,8 @@ class PapirusText():
     def __init__(self):
         self.papirus = Papirus()
 
-    def write(self, text, size = 20):
-        
+    def write(self, text, size = 20, Xaxis=0, Yaxis=0):
+
         # initially set all white background
         image = Image.new('1', self.papirus.size, WHITE)
 
@@ -40,10 +40,10 @@ class PapirusText():
                 current_line += 1
                 text_lines[current_line] += " " + word
 
-        current_line = 0
+        current_line = Yaxis
         for l in text_lines:
             current_line += 1
-            draw.text( (0, ((size*current_line)-size)) , l, font=font, fill=BLACK)
+            draw.text((Xaxis, current_line), l, font=font, fill=BLACK)
 
         self.papirus.display(image)
         self.papirus.update()
