@@ -29,4 +29,4 @@ set_config EPD_SIZE $EPD_SIZE # SETS THE NEW VALUE
 
 service epd-fuse start
 
-sudo reboot
+# sudo reboot
