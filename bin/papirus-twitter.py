@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # coding: utf-8
 # ------------------------------------------------------
-# Filename twitterbuttons.py
+# Filename papirus-twitter.py
 # ------------------------------------------------------
 # Displays Tweets on PaPiRus Zero display
 #
