@@ -2,7 +2,7 @@
 
 OPTION=$(whiptail --title "PaPiRus Config" --menu "Choose an option" 22 78 16 \
 "Screen Size" "Change the screen ePaper screen size." \
-"Enable Driver" "Enable and disable the ePaper driver." \
+"ePaper Driver" "Enable and disable the ePaper driver." \
 "Mirror Framebuffer" "Use ePaper as a general display." \
 "Web Interface" "Enable the web interface." \
 "Test Mode" "Enable auto test when HAT is plugged in." 3>&1 1>&2 2>&3)
@@ -31,10 +31,10 @@ if [ "$OPTION" = "Screen Size" ]; then
 
 fi
 
-if [ "$OPTION" = "Enable Driver" ]; then
+if [ "$OPTION" = "ePaper Driver" ]; then
 
 	#!/bin/bash
-	if (whiptail --title "Enable Driver" --yes-button "Enable" --no-button "Disable"  --yesno "Enable or disable the ePaper driver" 10 60) then
+	if (whiptail --title "ePaper Driver" --yes-button "Enable" --no-button "Disable"  --yesno "Enable or disable the ePaper driver" 10 60) then
         update-rc.d epd-fuse enable
 	    service epd-fuse start
 	else
