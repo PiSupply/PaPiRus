@@ -24,7 +24,7 @@ from papirus import PapirusText
 screen = Papirus()
 text = PapirusText()
 
-#Twitter authorisation keys - add your own here
+# Twitter authorisation keys - add your own here
 CONSUMER_KEY = 'YOUR CONSUMER KEY HERE'
 CONSUMER_SECRET = 'YOUR CONSUMER SECRET HERE'
 ACCESS_KEY = 'YOUR ACCESS KEY HERE'
