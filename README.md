@@ -108,7 +108,7 @@ image.write('/path/to/image', 20, (10, 10) )
 ```
 #### Notes
 
-Your python script must be running with root previlages update the screen and change sizes.
+Your python script must be running with root privileges to update the screen and change sizes.
 This code will only allow the script to run as root
 
 ```python
