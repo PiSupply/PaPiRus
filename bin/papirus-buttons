@@ -2,6 +2,7 @@
 
 import os
 import sys
+import getopt
 from papirus import Papirus
 from PIL import Image
 from PIL import ImageDraw
@@ -23,18 +24,37 @@ BLACK = 0
 
 SIZE = 27
 
-SW1 = 16
-SW2 = 26
-SW3 = 20
-SW4 = 21
+def main(argv):
+    SW1 = 16
+    SW2 = 26
+    SW3 = 20
+    SW4 = 21
+    SW5 = -1
 
-def main():
+    try:
+        opts, args = getopt.getopt(argv,"hz", ['help', 'zero'])
+        for opt, arg in opts:
+            if (opt == '-z') or (opt == '--zero'):
+                SW1 = 26
+                SW2 = 19
+                SW3 = 20
+                SW4 = 16
+                SW5 = 21
+            elif (opt == '-h') or (opt == '--help'):
+                print 'papirus-buttons [-z | --zero]'
+                sys.exit(2)
+    except getopt.GetoptError:
+        print 'papirus-buttons [-z | --zero]'
+        sys.exit(2)
+
     GPIO.setmode(GPIO.BCM)
 
     GPIO.setup(SW1, GPIO.IN)
     GPIO.setup(SW2, GPIO.IN)
     GPIO.setup(SW3, GPIO.IN)
     GPIO.setup(SW4, GPIO.IN)
+    if SW5 != -1:
+        GPIO.setup(SW5, GPIO.IN)
 
     papirus = Papirus()
 
@@ -52,6 +72,9 @@ def main():
 
         if GPIO.input(SW4) == False:
             write_text(papirus, "Four", SIZE)
+
+        if (SW5 != -1) and (GPIO.input(SW5) == False):
+            write_text(papirus, "Five", SIZE)            
 
         sleep(0.1)
 
@@ -91,4 +114,4 @@ def write_text(papirus, text, size):
     papirus.update()
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
