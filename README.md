@@ -3,7 +3,7 @@ Resources for PaPiRus ePaper eInk display
 
 # Enabling SPI and I2C interfaces on Raspberry Pi
 Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
-You can enable the SPI by typing `sudo raspi-config` at the command line and then selecting `Advanced options` > `SPI` and then selecting Enable. Without exiting the tool still in `Advanced options` > `I2C` and then selecting Enable.
+You can enable the SPI by typing `sudo raspi-config` at the command line and then selecting `Interfacing options` > `SPI` and then selecting Enable. Without exiting the tool still in `Interfacing options` > `I2C` and then selecting Enable.
 
 # Setup PaPiRus
 ```bash
