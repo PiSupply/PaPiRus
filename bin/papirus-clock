@@ -27,7 +27,7 @@ from papirus import Papirus
 
 user = os.getuid()
 if user != 0:
-    print "Please run script as root"
+    print ("Please run script as root")
     sys.exit()
     
 WHITE = 1
