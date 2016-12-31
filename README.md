@@ -87,10 +87,33 @@ text = PapirusText()
 # Write text to the screen
 # text.write(text)
 text.write("hello world")
+```
+
+#### The Positional Text API
+```python
+from papirus import PapirusTextPos
+
+text = PapirusTextPos()
 
 # Write text to the screen at selected point
-# text.write(text, (x,y))
-text.write("hello world", (10, 10) )
+# text.AddText(text, X, Y)
+text.AddText("hello world", 10, 10, Id="Start" )
+
+# Display the line
+text.WriteAll()
+# Remove the line
+text.RemoveText("Start")
+
+#  Add "Hello World", in a middle location, size 10, with an ID
+text.AddText("Hello World", 20, 30, 10, "Line1")
+# Add another line, default locaiton, with an ID
+text.AddText("Top Line", Id="TopLine")
+# Display it all
+text.WriteAll()
+# Update the first line with something else
+text.UpdateText("Line1", "Something New")
+# Display the updated text
+text.WriteAll()
 ```
 
 #### The Image API
