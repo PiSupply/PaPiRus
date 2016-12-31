@@ -32,6 +32,11 @@ class PapirusTextPos():
             item = self.allText[Id]
             self.allText[Id] = (newText, item[1], item[2], item[3])
 
+    def RemoveText(self, Id):
+        # If the ID supplied is in the dictionary, remove it.
+        if Id in self.allText:
+            del self.allText[Id]
+
     def addToImageText(self, image, item):
         # Break the text item back in to parts
         size = item[3]
