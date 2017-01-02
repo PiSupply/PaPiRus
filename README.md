@@ -90,29 +90,56 @@ text.write("hello world")
 ```
 
 #### The Positional Text API
-```python
+```python (Example 1)
 from papirus import PapirusTextPos
 
+# Same as calling "PapirusTextPos(True)"
 text = PapirusTextPos()
 
-# Write text to the screen at selected point
-# text.AddText(text, X, Y)
+# Write text to the screen at selected point, with an Id
+# "hello world" will appear on the screen at (10, 10), font size 20, straight away
 text.AddText("hello world", 10, 10, Id="Start" )
 
-# Display the line
-text.WriteAll()
-# Remove the line
-text.RemoveText("Start")
+# Add another line of text, at the default location
+# "Another line" will appear on screen at (0, 0), font size 20, straight away
+text.AddText("Another line", Id="Top")
 
-#  Add "Hello World", in a middle location, size 10, with an ID
-text.AddText("Hello World", 20, 30, 10, "Line1")
-# Add another line, default locaiton, with an ID
-text.AddText("Top Line", Id="TopLine")
-# Display it all
+# Update the first line
+# "hello world" will disappear and "New Text" will be displayed straight away
+text.UpdateText("Start", "New Text")
+
+# Remove The second line of text
+# "Another line" will be removed from the screen straight away
+text.RemoveText("Top")
+
+
+
+```python (Example 2)
+from papirus import PapirusTextPos
+
+# Calling PapirusTextPos this way will mean nothing is written to the screen be default
+text = PapirusTextPos(False)
+
+# Write text to the screen at selected point, with an Id
+# Nothing will show on the screen
+text.AddText("hello world", 10, 10, Id="Start" )
+
+# Add another line of text, at the default location
+# Nothing will show on the screen
+text.AddText("Another line", Id="Top")
+
+# Now display BOTH lines on the scrren
 text.WriteAll()
-# Update the first line with something else
-text.UpdateText("Line1", "Something New")
-# Display the updated text
+
+# Update the first line
+# No change will happen on the screen
+text.UpdateText("Start", "New Text")
+
+# Remove The second line of text
+# The text won't be removed just yet from the screen
+text.RemoveText("Top")
+
+# Now update the screen to show the changes
 text.WriteAll()
 ```
 
