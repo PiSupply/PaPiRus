@@ -112,6 +112,9 @@ text.UpdateText("Start", "New Text")
 # "Another line" will be removed from the screen straight away
 text.RemoveText("Top")
 
+# Clear all text from the screen
+# This does a full update so is a little slower than just removing the text.
+text.Clear()
 
 
 ```python (Example 2)
@@ -158,18 +161,9 @@ image.write('/path/to/image')
 image.write('/path/to/image', 20, (10, 10) )
 ```
 #### Notes
+PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
+Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
 
-Your python script must be running with root previlages update the screen and change sizes.
-This code will only allow the script to run as root
-
-```python
-import os
-import sys
-
-user = os.getuid()
-if user != 0:
-    print "Please run script as root"
-    sys.exit()
 ```
 
 # Command Line
