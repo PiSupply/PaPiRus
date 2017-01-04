@@ -91,19 +91,27 @@ class PapirusTextPos():
 
         # Starting vars
         current_line = 0
-        text_lines = [""]
+        text_lines = []
 
-        # Compute each line
-        for word in self.allText[Id].text.split():
-            # If there is space on line add the word to it
-            if (len(text_lines[current_line]) + len(word)) < line_size:
-                text_lines[current_line] += " " + word
-            else:
-                # No space left on line so move to next one
-                text_lines.append("")
-                current_line += 1
-                text_lines[current_line] += " " + word
+        # Split the text by \n first
+        toProcess = self.allText[Id].text.split('\n')
 
+        # Go through the lines and add them
+        for line in toProcess:
+            # Add in a line to add the words to
+            text_lines.append("")
+            # Compute each line
+            for word in line.split():
+                # If there is space on line add the word to it
+                if (len(text_lines[current_line]) + len(word)) < line_size:
+                    text_lines[current_line] += " " + word
+                else:
+                    # No space left on line so move to next one
+                    text_lines.append("")
+                    current_line += 1
+                    text_lines[current_line] += " " + word
+            # Move the pointer to next line
+            current_line +=1
 
         #  Go through all the lines as needed, drawing them on to the image
 
@@ -132,3 +140,11 @@ class PapirusTextPos():
         # Push the image to the PaPiRus device, and update only what's needed
         self.papirus.display(self.image)
         self.papirus.partial_update()
+
+    def Clear(self):
+        # Clear the image, clear the text items, do a full update to the screen
+        self.image = Image.new('1', self.papirus.size, WHITE)
+        self.allText = dict()
+        self.papirus.display(self.image)
+        self.papirus.update()
+        
