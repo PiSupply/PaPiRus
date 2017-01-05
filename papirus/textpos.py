@@ -94,7 +94,7 @@ class PapirusTextPos():
         text_lines = []
 
         # Split the text by \n first
-        toProcess = self.allText[Id].text.split('\n')
+        toProcess = self.allText[Id].text.splitlines()
 
         # Go through the lines and add them
         for line in toProcess:
