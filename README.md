@@ -149,10 +149,10 @@ papirus-clock
 papirus-gol
 
 # Show system information
-papirus-system
+papirus-system (coming soon)
 
 # Push framebuffer to screen
-papirus-framepush
+papirus-framepush (coming soon)
 
 # Demo of using the buttons
 papirus-buttons
@@ -161,5 +161,5 @@ papirus-buttons
 papirus-temp
 
 # Snakes game
-papirus-snakes
+papirus-snakes (coming soon)
 ```
