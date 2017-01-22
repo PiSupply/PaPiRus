@@ -1,8 +1,9 @@
 # PaPiRus
 Resources for PaPiRus ePaper eInk display
 
-# Enabling SPI interface on Raspberry Pi
-Before using PaPiRus, do not forget to enable the SPI interface. You can enable it by typing `sudo raspi-config` at the command line and then selecting `Advanced options` > `SPI` and then selecting Enable. 
+# Enabling SPI and I2C interfaces on Raspberry Pi
+Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
+You can enable the SPI by typing `sudo raspi-config` at the command line and then selecting `Interfacing options` > `SPI` and then selecting Enable. Without exiting the tool still in `Interfacing options` > `I2C` and then selecting Enable.
 
 # Setup PaPiRus
 ```bash
@@ -108,7 +109,7 @@ image.write('/path/to/image', 20, (10, 10) )
 ```
 #### Notes
 
-Your python script must be running with root previlages update the screen and change sizes.
+Your python script must be running with root privileges to update the screen and change sizes.
 This code will only allow the script to run as root
 
 ```python
@@ -148,10 +149,10 @@ papirus-clock
 papirus-gol
 
 # Show system information
-papirus-system
+papirus-system (coming soon)
 
 # Push framebuffer to screen
-papirus-framepush
+papirus-framepush (coming soon)
 
 # Demo of using the buttons
 papirus-buttons
@@ -160,5 +161,5 @@ papirus-buttons
 papirus-temp
 
 # Snakes game
-papirus-snakes
+papirus-snakes (coming soon)
 ```

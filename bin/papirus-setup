@@ -17,6 +17,7 @@ cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
 cd /tmp/papirus/gratis/PlatformWithOS
+git checkout ab46fd7
 make rpi PANEL_VERSION=V231_G2 
 sudo make rpi-install PANEL_VERSION=V231_G2
 sudo service epd-fuse start

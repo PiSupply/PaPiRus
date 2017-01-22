@@ -16,11 +16,13 @@ class PapirusImage():
 
         # crop to the middle
         w,h = image.size
-        x = w / 2 - epd.width / 2
-        y = h / 2 - epd.height / 2
+        x = w / 2 - self.papirus.width / 2
+        y = h / 2 - self.papirus.height / 2
 
-        rs = image.resize((epd.width, epd.height))
+        rs = image
+        if w != self.papirus.width or h != self.papirus.height:
+            rs = image.resize((self.papirus.width, self.papirus.height))
         bw = rs.convert("1", dither=Image.FLOYDSTEINBERG)
 
-        epd.display(bw)
-        epd.update()
+        self.papirus.display(bw)
+        self.papirus.update()
