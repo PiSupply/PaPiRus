@@ -163,3 +163,16 @@ papirus-temp
 # Snakes game
 papirus-snakes (coming soon)
 ```
+
+### Tips for using images
+The PaPiRus can only display Bitmap images (.BMP) in black and white (2 bit colour).
+
+Use the following screen resolutions:
+```
+1.44"     128 x 96
+1.9"      144 x 128
+2.0"      200 x 96
+2.6"      232 x 128
+2.7"      264 x 176
+```
+Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and mayb want to create some simple animations. Remember thought that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while.
