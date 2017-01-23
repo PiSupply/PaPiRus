@@ -11,6 +11,12 @@ SW4 = BUT4 = pin 40 = GPIO 21
 ```
 
 ##Jumper settings and meaning
+CN2 (Used to power the board from a different platform e.g. Arduino)
+```
+2-3 for 5V
+1-2 for 3V3
+```
+CN14
 ```
 2-3 for 1.44"-2.0"
 1-2 for 2.7"
