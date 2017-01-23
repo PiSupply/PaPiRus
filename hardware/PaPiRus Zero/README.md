@@ -12,6 +12,6 @@ SW3 = BUT1 = pin 38 = GPIO 20
 
 SW4 = BUT3 = pin 35 = GPIO 19
 
-SW5 = BUT2 = pin 37 = GPIO 2
+SW5 = BUT2 = pin 37 = GPIO 26
 
 Also see the schematic area this refers to here - https://github.com/PiSupply/PaPiRus/blob/master/hardware/PaPiRus%20Zero/button-schematic.jpg
