@@ -137,7 +137,7 @@ papirus-draw /path/to/image -t [resize | crop]
 # Clear the screen
 papirus-clear
 
-#Fill screen with centered text (less than 40 characters)
+# Fill screen with centered text (less than 40 characters)
 papirus-textfill "Some text to write"
 ```
 
