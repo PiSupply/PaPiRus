@@ -43,4 +43,4 @@ On the underside of the PaPiRus HAT ([picture here](https://www.pi-supply.com/wp
 
 ##Pogo Pin
 
-There is a pogo pin included in the packaging for free. The purpose of this is to utilise the wake-on-alarm functionality built into the RTC (real time clock) on the HAT. This ties into the RUN pin on the Raspberry Pi and allows the Pi to be waken from a "halt" state at a specific time that you set in the RTC. There are two available positions for this - one for the A+/B+/2B and one for the new location on the Pi 3B. This needs to be soldered into place if you wish to use this functionality.
+There is a pogo pin included in the packaging for free. The purpose of this is to utilise the wake-on-alarm functionality built into the RTC (real time clock) on the HAT. This ties into the RUN pin on the Raspberry Pi and allows the Pi to be waken from a "halt" state at a specific time that you set in the RTC. There are two available positions for this - one for the A+/B+/2B and one for the new location on the Pi 3B. This needs to be soldered into place if you wish to use this functionality. The part number for the Pogo Pin is a Mil-Max 0908-9-15-20-75-14-11-0
