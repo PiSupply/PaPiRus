@@ -39,7 +39,7 @@ CN12  Raspberry Pi pin 15
 ```
 ##Additional FPC connector
 
-On the underside of the PaPiRus HAT ([picture here](https://www.pi-supply.com/wp-content/uploads/2015/06/PaPiRus-HAT-10-1000.png)) you will see two FPC connectors. The one closest to the edge (with a brown clasp - CN15) is for the ePaper display to connect into. The other FPC connector (CN4), is for use as a GPIO breakout in conjunction with the [GPIO breakout adapter](https://www.pi-supply.com/product/gpio-adapter-for-rpi-display-b-with-choice-of-header/) from Watterott Electronic. This can be used in one of two ways...either to breakout the GPIO pins and use them for additional purposes whilst the HAT is on top of the Pi, or to connect the PaPiRus HAT to the Raspberry Pi from further away, using an FPC cable (for example, if you wanted to mount the screen on the side of a case but have the Pi itself in the base of the case).
+On the underside of the PaPiRus HAT ([picture here](https://www.pi-supply.com/wp-content/uploads/2015/06/PaPiRus-HAT-10-1000.png)) you will see two FPC connectors. The one closest to the edge (with a brown clasp - CN1) is for the ePaper display to connect into. The other FPC connector (CN4), is for use as a GPIO breakout in conjunction with the [GPIO breakout adapter](https://www.pi-supply.com/product/gpio-adapter-for-rpi-display-b-with-choice-of-header/) from Watterott Electronic. This can be used in one of two ways...either to breakout the GPIO pins and use them for additional purposes whilst the HAT is on top of the Pi, or to connect the PaPiRus HAT to the Raspberry Pi from further away, using an FPC cable (for example, if you wanted to mount the screen on the side of a case but have the Pi itself in the base of the case).
 
 ##Pogo Pin
 
