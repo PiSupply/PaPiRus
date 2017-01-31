@@ -165,7 +165,7 @@ papirus-snakes (coming soon)
 ```
 
 ### Tips for using images
-The PaPiRus can only display Bitmap images (.BMP) in black and white (2 bit colour).
+The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the PaPiRus screen using GIMP or Photoshop or similar photo editing tools.
 
 Use the following screen resolutions:
 ```
@@ -175,4 +175,4 @@ Use the following screen resolutions:
 2.6"      232 x 128
 2.7"      264 x 176
 ```
-Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and mayb want to create some simple animations. Remember thought that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while.
+Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and mayb want to create some simple animations. Remember though that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while. You should ideally do a full refresh of the screen every few minutes and it is also recommended to completely power down the screen every few hours.
