@@ -89,7 +89,7 @@ text = PapirusText()
 text.write("hello world")
 ```
 
-#### The Positional Text API
+#### The Positional Text API (example 1)
 ```python (Example 1)
 from papirus import PapirusTextPos
 
@@ -115,8 +115,9 @@ text.RemoveText("Top")
 # Clear all text from the screen
 # This does a full update so is a little slower than just removing the text.
 text.Clear()
+```
 
-
+#### The Positional Text API (example 2)
 ```python (Example 2)
 from papirus import PapirusTextPos
 
@@ -160,6 +161,7 @@ image.write('/path/to/image')
 # image.write(path, width, (x,y))
 image.write('/path/to/image', 20, (10, 10) )
 ```
+
 #### Notes
 PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
 Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
@@ -173,7 +175,7 @@ Meaning text will be aligned to the X position given, it will not return to x=0 
 papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
 
 # Write data to the screen
-papirus-write "Some text to write"
+papirus-write "Some text to write" [-x ] [-y ] [-fszie ]
 
 # Draw image on the screen
 papirus-draw /path/to/image -t [resize | crop]
