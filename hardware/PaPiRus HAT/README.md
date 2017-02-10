@@ -45,10 +45,10 @@ On the underside of the PaPiRus HAT ([picture here](https://www.pi-supply.com/wp
 
 There is a pogo pin included in the packaging for free. The purpose of this is to utilise the wake-on-alarm functionality built into the RTC (real time clock) on the HAT. This ties into the RUN pin on the Raspberry Pi and allows the Pi to be waken from a "halt" state at a specific time that you set in the RTC. There are two available positions for this - one for the A+/B+/2B and one for the new location on the Pi 3B. This needs to be soldered into place if you wish to use this functionality. The part number for the Pogo Pin is a Mil-Max 0908-9-15-20-75-14-11-0
 
-##RTC and Temperature
-The RTC is a Microchip MCP7940N 
-+It's at 0x6F on i2c-1
+##RTC (real time clock) and Temperature Sensor
 
- NXP LM75BD Temperature sensor
-+at 0x48 on i2c-1
- http://www.nxp.com/documents/data_sheet/LM75B.pdf
+The RTC is a [Microchip MCP7940N](http://ww1.microchip.com/downloads/en/DeviceDoc/20005010F.pdf) and on our board it is located at 0x6F on i2c-1 when using a 40 pin Raspberry Pi. If you are using this with a 26 pin Raspberry Pi it will be on i2c-0 at the same address but this is a rare use case. The RTC has a wake-on-alarm output which is connected to the pogo pin output (listed above) and this allows you to wake up the Raspberry Pi from a halt state at a specific time and date - the pogo pin interfaces with the run header.
+
+The temperature sensor in use is a [NXP LM75BD](http://www.nxp.com/documents/data_sheet/LM75B.pdf) and this is located at 0x48 on i2c-1 when using a 40 pin Raspberry Pi. If you are using this with a 26 pin Raspberry Pi it will be on i2c-0 at the same address but this is a rare use case.
+
+Both the RTC and temperature sensor have many more features than we have documented. We will not be officially supporting all of these features as they are already well documented in the datasheets and elsewhere. But we have left them available for advanced users.
