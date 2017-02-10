@@ -37,3 +37,8 @@ CN12  Raspberry Pi pin 15
 CN15  Raspberry Pi pin 32
 CN17  Raspberry Pi pin 29
 ```
+##Temperature Sensor
+
+The temperature sensor in use is a [NXP LM75BD](http://www.nxp.com/documents/data_sheet/LM75B.pdf) and this is located at 0x48 on i2c-1 when using a 40 pin Raspberry Pi. If you are using this with a 26 pin Raspberry Pi it will be on i2c-0 at the same address but this is a rare use case.
+
+The temperature sensor has many more features than we have documented. We will not be officially supporting all of these features as they are already well documented in the datasheets and elsewhere. But we have left them available for advanced users.
