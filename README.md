@@ -176,3 +176,16 @@ Use the following screen resolutions:
 2.7"      264 x 176
 ```
 Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and mayb want to create some simple animations. Remember though that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while. You should ideally do a full refresh of the screen every few minutes and it is also recommended to completely power down the screen every few hours.
+
+# Hardware tips
+In case you have problems assembling the board please [check this article on our website](https://www.pi-supply.com/make/papirus-assembly-tips-and-gotchas/) on which you can find:
+* Connect the screen to the PaPiRus board
+* Connect the GPIO adapter
+* Install the pogo pin connector
+* Install the push buttons
+Not all the sections apply to both the PaPiRus HAT and the PaPiRus Zero.
+
+### Datasheets, connectivity, pinout, jumpers and further information
+For additional information follow the links below:
+* [PaPiRus HAT](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20HAT)
+* [PaPiRus zero](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20Zero)
