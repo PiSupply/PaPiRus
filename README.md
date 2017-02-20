@@ -165,7 +165,7 @@ papirus-snakes (coming soon)
 ```
 
 ### Tips for using images
-The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the PaPiRus screen using GIMP or Photoshop or similar photo editing tools. [Here you can find the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format
+The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the PaPiRus screen using GIMP or Photoshop or similar photo editing tools like [the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format or [WIF (the WyoLum Image Format)](http://wyolum.com/introducing-wif-the-wyolum-image-format/).
 
 Use the following screen resolutions:
 ```
