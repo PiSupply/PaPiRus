@@ -8,10 +8,12 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import argparse
 
-user = os.getuid()
-if user != 0:
-    print ("Please run script as root")
-    sys.exit()
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
 
 # Command line usage
 # papirus-wite "Some text to write"
