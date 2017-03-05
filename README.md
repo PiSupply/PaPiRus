@@ -1,5 +1,5 @@
 # PaPiRus
-Resources for PaPiRus ePaper eInk display
+Resources for PaPiRus ePaper eInk display. This repository is based on the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
 # Enabling SPI and I2C interfaces on Raspberry Pi
 Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
@@ -163,3 +163,29 @@ papirus-temp
 # Snakes game
 papirus-snakes (coming soon)
 ```
+
+### Tips for using images
+The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the PaPiRus screen using GIMP or Photoshop or similar photo editing tools like [the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format or [WIF (the WyoLum Image Format)](http://wyolum.com/introducing-wif-the-wyolum-image-format/).
+
+Use the following screen resolutions:
+```
+1.44"     128 x 96
+1.9"      144 x 128
+2.0"      200 x 96
+2.6"      232 x 128
+2.7"      264 x 176
+```
+Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and mayb want to create some simple animations. Remember though that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while. You should ideally do a full refresh of the screen every few minutes and it is also recommended to completely power down the screen every few hours.
+
+# Hardware tips
+In case you have problems assembling the board please [check this article on our website](https://www.pi-supply.com/make/papirus-assembly-tips-and-gotchas/) on which you can find:
+* Connect the screen to the PaPiRus board
+* Connect the GPIO adapter
+* Install the pogo pin connector
+* Install the push buttons
+Not all the sections apply to both the PaPiRus HAT and the PaPiRus Zero.
+
+### Datasheets, connectivity, pinout, jumpers and further information
+For additional information follow the links below:
+* [PaPiRus HAT](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20HAT)
+* [PaPiRus zero](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20Zero)
