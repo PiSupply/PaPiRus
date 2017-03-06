@@ -51,6 +51,8 @@ if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')
        SW5 = -1
 
 def main():
+    global SIZE
+
     GPIO.setmode(GPIO.BCM)
 
     GPIO.setup(SW1, GPIO.IN)
