@@ -1,0 +1,21 @@
+#! /usr/bin/env python
+
+from papirus import Papirus
+from prtc import readrtc, disablealm0
+from smbusf import SMBus
+from pwrite_text import write_text
+from subprocess import check_output
+from datetime import datetime
+import os
+
+papirus = Papirus()
+i2cbus = SMBus(1)
+
+disablealm0(i2cbus)
+
+upsince = check_output(["uptime", "-s"])
+now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+rtc = readrtc(i2cbus).strftime('%Y-%m-%d %H:%M:%S')
+
+write_text(papirus, 'System up since ' + upsince + ' Current time ' + now + ' Real Time Clock time ' + rtc, y = 50, load = True, ldfile = os.environ['HOME'] + '/rtcreboot.bmp')
+
