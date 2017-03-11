@@ -90,7 +90,7 @@ text.write("hello world")
 ```
 
 #### The Positional Text API (example 1)
-```python (Example 1)
+```python
 from papirus import PapirusTextPos
 
 # Same as calling "PapirusTextPos(True)"
@@ -118,7 +118,7 @@ text.Clear()
 ```
 
 #### The Positional Text API (example 2)
-```python (Example 2)
+```python
 from papirus import PapirusTextPos
 
 # Calling PapirusTextPos this way will mean nothing is written to the screen be default
