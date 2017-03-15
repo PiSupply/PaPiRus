@@ -14,7 +14,8 @@ SW4 = BUT4 = pin 40 = GPIO 21
 ```
 
 ## Jumper settings and meaning
-**CN2** 
+**CN2**
+
 PaPiRus has an on board voltage regulator [MCP1801T](http://ww1.microchip.com/downloads/en/DeviceDoc/22051c.pdf) which guarantees that there is always a 3V3 rail available on the board as the screens require 3V3 power. This could be useful to power the board from different platforms which may not have 3V3 power available natively e.g. Arduino. See [circuit diagram](https://github.com/PiSupply/PaPiRus/blob/master/hardware/PaPiRus%20HAT/Latest%20Version%20-%20v1.9/2014-035-01-Pi-ePaper-circuit_v1_9.pdf) for more info.
 
 You can configure the jumper as follows:
@@ -23,6 +24,7 @@ You can configure the jumper as follows:
 1-2 for 3V3
 ```
 **CN14**
+
 Some of the ePaper screens have a "border control" pin which controls the status of a 1px border around the edge of the screen. The method of driving this differs between the screens and so this jumper is used to configure the border control for different screens. If you configure it incorrectly, the screen will still operate normally but will display a 1px black border around the edge of the screen (but maybe some people will want this effect?).
 
 You can configure the jumper as follows:
