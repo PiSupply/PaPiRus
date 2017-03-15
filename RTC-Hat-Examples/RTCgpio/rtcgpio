@@ -1,0 +1,159 @@
+#!/usr/bin/env python
+
+from smbusf import SMBus
+from datetime import datetime, timedelta
+from prtc import readrtc, writealm, readalm
+from prtc import enablealm0, enablealm1, disablealm0, disablealm1
+from prtc import enablesqw, disablesqw, mfpoutput
+from papirus import Papirus
+from pwrite_text import write_text, replace_line, update_lines
+import os
+import time
+import RPi.GPIO as GPIO
+import threading
+
+def alm_callback(channel):
+  global nrint, alm0time, alm1time
+  if nrint == 0:
+    # If you want to use both alarms to trigger the interrupt, then only one alarm can be enabled.
+    # See the datasheet section 5.5 for details.
+    # On the first interrupt disable alarm 0 en enable alarm 1
+    disablealm0(i2cbus)
+    enablealm1(i2cbus)
+    alm0time = readrtc(i2cbus).strftime('%H:%M:%S') + ' UTC'
+  elif nrint == 1:
+    alm1time = readrtc(i2cbus).strftime('%H:%M:%S') + ' UTC'
+  nrint = nrint + 1
+
+def sqw_callback(channel):
+  global nrint
+  nrint = nrint + 1
+
+def mfpoutputtask():
+  for i in range(4):
+    mfpoutput(i2cbus, 0)
+    time.sleep(0.5)
+    mfpoutput(i2cbus, 1)
+    time.sleep(0.5)
+  for i in range(6):
+    mfpoutput(i2cbus, 0)
+    time.sleep(1)
+    mfpoutput(i2cbus, 1)
+    time.sleep(1)
+  mfpoutput(i2cbus, 0)
+  mfpoutput(i2cbus, 1)
+
+i2cbus = SMBus(1)
+papirus = Papirus()
+papirus.clear()
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(27, GPIO.IN)
+
+# --------- 1. Use of the two alarms ---------
+
+# Set up the GPIO 27 interrupt and disable both alarms on the MCP7940N
+
+nrint = 0
+GPIO.add_event_detect(27, GPIO.FALLING, callback = alm_callback)
+disablealm0(i2cbus)
+disablealm1(i2cbus)
+
+# Set the two alarm times
+
+dtrtc = readrtc(i2cbus)
+alarm0 = dtrtc + timedelta(seconds = 15)
+alarm1 = dtrtc + timedelta(seconds = 25)
+writealm(i2cbus, 0, alarm0)
+writealm(i2cbus, 1, alarm1)
+
+# Display the two alarm times on the Papirus diplay
+
+alm0time = readalm(i2cbus, 0).strftime('%H:%M:%S')
+alm1time = readalm(i2cbus, 1).strftime('%H:%M:%S')
+write_text(papirus, 'Alarm Times Set:', x=20)
+replace_line(papirus, 15, 20, 'Alm0: ' + alm0time + ' UTC')
+replace_line(papirus, 15, 40, 'Alm1: ' + alm1time + ' UTC')
+update_lines(papirus)
+
+# Enable alarm 0
+enablealm0(i2cbus)
+
+# Display the hardware clock time and wait for the 2 alarms
+prevsec = -1
+alm0time = alm1time = ''
+while nrint <= 2:
+  dtrtc = readrtc(i2cbus)
+  if dtrtc.second != prevsec:
+    replace_line(papirus, 60, 150, dtrtc.strftime('%H:%M:%S') + ' UTC')
+    prevsec = dtrtc.second
+    if alm0time != '':
+      replace_line(papirus, 15, 80, 'Alm0 at ' + alm0time)
+      alm0time = ''
+    if alm1time != '':
+      replace_line(papirus, 15, 100, 'Alm1 at ' + alm1time)
+      alm1time = ''
+    update_lines(papirus)
+    if nrint == 2:
+      break
+  time.sleep(0.1)
+ 
+GPIO.remove_event_detect(27)
+time.sleep(0.5)
+replace_line(papirus, 60, 150, '')
+update_lines(papirus)
+time.sleep(2)
+
+# --------- 2. 1 Hz swuare wave ---------
+
+write_text(papirus, '1 Hz square wave', x=15)
+
+GPIO.add_event_detect(27, GPIO.FALLING, callback = sqw_callback)
+enablesqw(i2cbus)
+
+nrint = prevnrint = 0
+prevsec = -1
+while nrint < 21:
+  dtrtc = readrtc(i2cbus)
+  if dtrtc.second != prevsec:
+    replace_line(papirus, 60, 150, dtrtc.strftime('%H:%M:%S') + ' UTC')
+    prevsec = dtrtc.second
+    if nrint != prevnrint:
+      replace_line(papirus, 60, 65, 'Interrupt ' + format(nrint))
+      prevnrint = nrint
+    update_lines(papirus)
+  time.sleep(0.1)
+
+GPIO.remove_event_detect(27)
+disablesqw(i2cbus)
+time.sleep(0.5)
+replace_line(papirus, 60, 150, '')
+update_lines(papirus)
+time.sleep(2)
+
+# --------- 3. Set mfp output directly ---------
+
+write_text(papirus, 'Programmed output', x=20)
+
+GPIO.add_event_detect(27, GPIO.FALLING, callback = sqw_callback)
+
+t = threading.Thread(target=mfpoutputtask)
+t.start()
+
+nrint = prevnrint = 0
+prevsec = -1
+while t.isAlive():
+  dtrtc = readrtc(i2cbus)
+  if dtrtc.second != prevsec:
+    replace_line(papirus, 60, 150, dtrtc.strftime('%H:%M:%S') + ' UTC')
+    prevsec = dtrtc.second
+    if nrint != prevnrint:
+      replace_line(papirus, 60, 65, 'Interrupt ' + format(nrint))
+      prevnrint = nrint
+    update_lines(papirus)
+  time.sleep(0.1)
+
+replace_line(papirus, 60, 150, '')
+update_lines(papirus)
+time.sleep(2)
+
+write_text(papirus, 'End of Demo', x=50, y=papirus.height/2 - 10)
