@@ -25,11 +25,13 @@ from datetime import datetime
 import time
 from papirus import Papirus
 
-user = os.getuid()
-if user != 0:
-    print ("Please run script as root")
-    sys.exit()
-    
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
+
 WHITE = 1
 BLACK = 0
 
@@ -91,9 +93,9 @@ def demo(papirus):
     while True:
         while True:
             now = datetime.today()
-            if now.second % 5 == 0:
+            if now.second != previous_second:
                 break
-            time.sleep(0.5)
+            time.sleep(0.1)
 
         if now.day != previous_day:
             draw.rectangle((2, 2, width - 2, height - 2), fill=WHITE, outline=BLACK)
