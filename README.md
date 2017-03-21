@@ -35,7 +35,7 @@ sudo python setup.py install    # Install PaPirRus python library
 
 #### Install Driver (Option 1)
 ```bash
-papirus-setup    # This will auto install the driver
+sudo papirus-setup    # This will auto install the driver
 ````
 
 #### Install Driver (Option 2)
@@ -43,14 +43,14 @@ papirus-setup    # This will auto install the driver
 # Install fuse driver
 sudo apt-get install libfuse-dev -y
 
-sudo mkdir /tmp/papirus
+mkdir /tmp/papirus
 cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
 cd /tmp/papirus/gratis-master/PlatformWithOS
 make rpi-epd_fuse
 sudo make rpi-install
-sudo service epd-fuse start
+sudo systemctl start epd-fuse.service
 ```
 
 # Python API
@@ -218,6 +218,9 @@ papirus-temp
 
 # Snakes game
 papirus-snakes (coming soon)
+
+# Display Twitter feeds
+papirus-twitter
 ```
 
 ### Tips for using images
