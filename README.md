@@ -72,7 +72,7 @@ screen.update()
 # Update only the changed pixels (faster)
 screen.partial_update()
 
-# Change screen size
+# Change screen size (coming soon)
 # SCREEN SIZES 1_44INCH | 1_9INCH | 2_0INCH | 2_6INCH | 2_7INCH
 screen.set_size(papirus.2_7INCH)
 
@@ -164,19 +164,6 @@ image.write('/path/to/image', 20, (10, 10) )
 #### Notes
 PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
 Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
-
-Your python script must be running with root privileges to update the screen and change sizes.
-This code will only allow the script to run as root
-
-```python
-import os
-import sys
-
-user = os.getuid()
-if user != 0:
-    print "Please run script as root"
-    sys.exit()
-```
 
 # Command Line
 
