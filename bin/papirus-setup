@@ -7,17 +7,18 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Install fuse driver
-sudo apt-get install libfuse-dev -y
+apt-get install libfuse-dev -y
 # Install fonts
-sudo apt-get install fonts-freefont-ttf -y
+apt-get install fonts-freefont-ttf -y
 
-sudo rm -R /tmp/papirus
-sudo mkdir /tmp/papirus
+rm -R /tmp/papirus
+mkdir /tmp/papirus
 cd /tmp/papirus
-git clone https://github.com/repaper/gratis.git
+#git clone https://github.com/repaper/gratis.git
+git clone -b EPD-Service-Commands-Path https://github.com/repaper/gratis.git
 
 cd /tmp/papirus/gratis
 make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
-sudo make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
-sudo systemctl enable epd-fuse.service
-sudo systemctl start epd-fuse
+make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+systemctl enable epd-fuse.service
+systemctl start epd-fuse
