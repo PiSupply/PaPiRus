@@ -72,9 +72,9 @@ screen.update()
 # Update only the changed pixels (faster)
 screen.partial_update()
 
-# Change screen size (coming soon)
+# Change screen size
 # SCREEN SIZES 1_44INCH | 1_9INCH | 2_0INCH | 2_6INCH | 2_7INCH
-screen.set_size(papirus.2_7INCH)
+screen.set_size(papirus.2_7INCH) (coming soon)
 
 ```
 
