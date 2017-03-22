@@ -139,7 +139,7 @@ class PapirusTextPos():
     def WriteAll(self):
         # Push the image to the PaPiRus device, and update only what's needed
         self.papirus.display(self.image)
-        self.papirus.partial_update()
+        self.papirus.update()
 
     def Clear(self):
         # Clear the image, clear the text items, do a full update to the screen

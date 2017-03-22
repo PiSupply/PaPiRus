@@ -1,4 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Make sure only root can run our script
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
 
 OPTION=$(whiptail --title "PaPiRus Config" --menu "Choose an option" 22 78 16 \
 "Screen Size" "Change the screen ePaper screen size." \
@@ -33,20 +39,20 @@ fi
 
 if [ "$OPTION" = "ePaper Driver" ]; then
 
-	#!/bin/bash
+	#!/usr/bin/env bash
 	if (whiptail --title "ePaper Driver" --yes-button "Enable" --no-button "Disable"  --yesno "Enable or disable the ePaper driver" 10 60) then
-        update-rc.d epd-fuse enable
-	    service epd-fuse start
+            systemctl enable epd-fuse.service
+	    systemctl start epd-fuse.service
 	else
-        service epd-fuse stop
-	    update-rc.d epd-fuse disable
+            systemctl stop epd-fuse.service
+	    systemctl disable epd-fuse.service
 	fi
 
 fi
 
 if [ "$OPTION" = "Mirror Framebuffer" ]; then
 
-	#!/bin/bash
+	#!/usr/bin/env bash
 	if (whiptail --title "Framebuffer Mirroring" --yesno "Do you want to enable framebuffer mirroring?" 10 60) then
 	    echo "You chose Skittles Exit status was $?."
 	else
@@ -57,7 +63,7 @@ fi
 
 if [ "$OPTION" = "Web Interface" ]; then
 
-	#!/bin/bash
+	#!/usr/bin/env bash
 	if (whiptail --title "Web Interface"  --yesno "Would you like to enable the web interface?" 10 60) then
 	    echo "You chose Skittles Exit status was $?."
 	else
@@ -68,7 +74,7 @@ fi
 
 if [ "$OPTION" = "Test Mode" ]; then
 
-	#!/bin/bash
+	#!/usr/bin/env bash
 	if (whiptail --title "Test mode"  --yesno "Do you want to enable auto test mode?" 10 60) then
 	    echo "You chose Skittles Exit status was $?."
 	else
