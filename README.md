@@ -161,6 +161,16 @@ image.write('/path/to/image')
 # image.write(path, width, (x,y))
 image.write('/path/to/image', 20, (10, 10) )
 ```
+
+#### Font family
+PaPiRusText and PaPiRusTextPos are using the font _FreeMono.ttf_ by default. It is possible to specify the argument `font_path` in `PapirusText.write`, `PapirusTextPos.AddText`, `PapirusTextPos.UpdateText` and `PapirusTextPos.addToImageText` to change the _font family_. The argument must be a string containing the path to the _.ttf_ file.
+```
+# Change font family
+from papirus import PapirusText
+text = PapirusText()
+text.write("Hello World", font_path='/path/to/ttf')
+```
+
 #### Notes
 PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
 Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
