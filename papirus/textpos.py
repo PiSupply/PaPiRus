@@ -124,7 +124,7 @@ class PapirusTextPos():
         for l in text_lines:
             current_line += 1
             # Find out the size of the line to be drawn
-            textSize = draw.textsize(l, font)
+            textSize = draw.textsize(l, font=font)
             # Adjust the x end point if needed
             if textSize[0]+x> self.allText[Id].endx:
                 self.allText[Id].endx = textSize[0] + x
