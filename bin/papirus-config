@@ -6,79 +6,84 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-OPTION=$(whiptail --title "PaPiRus Config" --menu "Choose an option" 22 78 16 \
-"Screen Size" "Change the screen ePaper screen size." \
-"ePaper Driver" "Enable and disable the ePaper driver." \
-"Mirror Framebuffer" "Use ePaper as a general display." \
-"Web Interface" "Enable the web interface." \
-"Test Mode" "Enable auto test when HAT is plugged in." 3>&1 1>&2 2>&3)
+do_screen_size() {
+    EPD_SIZE=""
+    if [ -f /etc/default/epd-fuse ]; then
+        source /etc/default/epd-fuse
+    fi
+    SEL=$(whiptail --title "Please select your screen size" --default-item " $EPD_SIZE" \
+    --menu  "" 12 50 5 \
+    " 1.44" "Inch (128 *  98) " \
+    " 1.9"  "Inch (144 * 128) " \
+    " 2.0"  "Inch (200 *  96) " \
+    " 2.6"  "Inch (232 * 128) " \
+    " 2.7"  "Inch (264 * 176) "  3>&1 1>&2 2>&3)
 
-exitstatus=$?
-if [ $exitstatus = 0 ]; then
-    echo "Your chosen option:" $OPTION
-else
-    echo "You chose Cancel."
-fi
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+        papirus-set $SEL
+        whiptail  --msgbox "Screen size set to$SEL inch" 8 40
+    fi
+}
 
-if [ "$OPTION" = "Screen Size" ]; then
-
-	DISTROS=$(whiptail --title "Screen Size" --radiolist \
-	"Please select your display size" 15 60 6 \
-	"1.44" "Inch                    " ON \
-	"1.9" "Inch                    " OFF \
-	"2.0" "Inch                    " OFF \
-	"2.6" "Inch                    " OFF \
-	"2.7" "Inch                    " OFF 3>&1 1>&2 2>&3)
-
-	exitstatus=$?
-	if [ $exitstatus = 0 ]; then
-	    papirus-set $DISTROS
-	fi
-
-fi
-
-if [ "$OPTION" = "ePaper Driver" ]; then
-
-	#!/usr/bin/env bash
-	if (whiptail --title "ePaper Driver" --yes-button "Enable" --no-button "Disable"  --yesno "Enable or disable the ePaper driver" 10 60) then
+do_epaper_driver() {
+    if (whiptail --title "ePaper Driver" --yes-button "Enable" --no-button "Disable" \
+            --yesno "Enable or disable the ePaper driver" 10 60) then
             systemctl enable epd-fuse.service
-	    systemctl start epd-fuse.service
-	else
+        systemctl start epd-fuse.service
+        whiptail --msgbox "ePaper Driver enabled and started" 8 40
+    else
             systemctl stop epd-fuse.service
-	    systemctl disable epd-fuse.service
-	fi
+        systemctl disable epd-fuse.service
+        whiptail --msgbox "ePaper Driver stopped and disabled" 8 40
+    fi
+}
 
-fi
+do_mirror_framebuffer() {
+    if (whiptail --title "Framebuffer Mirroring" --yesno "Do you want to enable framebuffer mirroring?" 10 60) then
+        :
+    else
+        :
+    fi
+    whiptail --msgbox "Sorry, not implemented yet" 8 40
+}
 
-if [ "$OPTION" = "Mirror Framebuffer" ]; then
+do_web_interface () {
+    if (whiptail --title "Web Interface"  --yesno "Would you like to enable the web interface?" 10 60) then
+        :
+    else
+        :
+    fi
+    whiptail --msgbox "Sorry, not implemented yet" 8 40
+}
 
-	#!/usr/bin/env bash
-	if (whiptail --title "Framebuffer Mirroring" --yesno "Do you want to enable framebuffer mirroring?" 10 60) then
-	    echo "You chose Skittles Exit status was $?."
-	else
-	    echo "You chose M&M's. Exit status was $?."
-	fi
+do_test_mode() {
+    if (whiptail --title "Test mode"  --yesno "Do you want to enable auto test mode?" 10 60) then
+        :
+    else
+        :
+    fi
+    whiptail --msgbox "Sorry, not implemented yet" 8 40
+}
 
-fi
-
-if [ "$OPTION" = "Web Interface" ]; then
-
-	#!/usr/bin/env bash
-	if (whiptail --title "Web Interface"  --yesno "Would you like to enable the web interface?" 10 60) then
-	    echo "You chose Skittles Exit status was $?."
-	else
-	    echo "You chose M&M's. Exit status was $?."
-	fi
-
-fi
-
-if [ "$OPTION" = "Test Mode" ]; then
-
-	#!/usr/bin/env bash
-	if (whiptail --title "Test mode"  --yesno "Do you want to enable auto test mode?" 10 60) then
-	    echo "You chose Skittles Exit status was $?."
-	else
-	    echo "You chose M&M's. Exit status was $?."
-	fi
-
-fi
+while true; do
+    OPTION=$(whiptail --title "PaPiRus Config" --menu "Choose an option" 14 78 6 \
+            --cancel-button Finish --ok-button Select \
+            "1 Screen Size" "Change the screen ePaper screen size." \
+            "2 ePaper Driver" "Enable and disable the ePaper driver." \
+            "3 Mirror Framebuffer" "Use ePaper as a general display." \
+            "4 Web Interface" "Enable the web interface." \
+            "5 Test Mode" "Enable auto test when HAT is plugged in." 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus = 1 ]; then
+        exit 0
+    elif [ $exitstatus = 0 ]; then
+        case "$OPTION" in
+            1\ *) do_screen_size ;;
+            2\ *) do_epaper_driver ;;
+            3\ *) do_mirror_framebuffer ;;
+            4\ *) do_web_interface ;;
+            5\ *) do_test_mode ;;
+        esac
+    fi
+done
