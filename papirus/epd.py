@@ -15,6 +15,7 @@
 
 from PIL import Image
 from PIL import ImageOps
+from papirus import LM75B
 import re
 import os
 
@@ -54,6 +55,7 @@ to use:
         self._cog = 0
         self._film = 0
         self._auto = False
+        self._lm75b = LM75B()
 
         if len(args) > 0:
             self._epd_path = args[0]
@@ -120,6 +122,9 @@ to use:
         else:
             self._auto = False
 
+    def error_status(self):
+        with open(os.path.join(self._epd_path, 'error'), 'r') as f:
+            return(f.readline().rstrip('\n'))
 
     def display(self, image):
 
@@ -152,5 +157,7 @@ to use:
         self._command('C')
 
     def _command(self, c):
+        with open(os.path.join(self._epd_path, 'temperature'), 'wb') as f:
+            f.write(repr(self._lm75b.getTempC()))
         with open(os.path.join(self._epd_path, 'command'), 'wb') as f:
             f.write(c)
