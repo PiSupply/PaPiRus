@@ -21,7 +21,15 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
         print("Please run script as root")
         sys.exit()
 
-#Colours the cells green for life and white for no life
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
+# Colours the cells black for life and white for no life
 def colourGrid(draw, item, lifeDict):
     x = item[0]
     y = item[1]
@@ -33,8 +41,8 @@ def colourGrid(draw, item, lifeDict):
 	draw.rectangle(( (x, y), (x + CELLSIZE, y + CELLSIZE) ), fill=BLACK, outline=WHITE)
     return None
 
-#Creates an dictionary of all the cells
-#Sets all cells as dead (0)
+# Creates an dictionary of all the cells
+# Sets all cells as dead (0)
 def generateGrid(height, width):
     gridDict = {}
     #creates dictionary for all cells
@@ -43,14 +51,14 @@ def generateGrid(height, width):
             gridDict[x,y] = 0 #Sets cells as dead
     return gridDict
 
-#Assigns a 0 or a 1 to all cells
+# Assigns a 0 or a 1 to all cells
 def startingGridRandom(lifeDict):
     for item in lifeDict:
         lifeDict[item] = random.randint(0,1)
     return lifeDict
 
 
-#Determines how many alive neighbours there are around each cell
+# Determines how many alive neighbours there are around each cell
 def getNeighbours(epd, item,lifeDict):
     neighbours = 0
     for x in range (-1,2):
@@ -65,7 +73,7 @@ def getNeighbours(epd, item,lifeDict):
                             neighbours += 1
     return neighbours
 
-#determines the next generation by running a 'tick'
+# Determines the next generation by running a 'tick'
 def tick(epd, lifeDict):
     newTick = {}
     for item in lifeDict:
@@ -85,7 +93,7 @@ def tick(epd, lifeDict):
                 newTick[item] = 0 # keep status quo (death)
     return newTick
 
-#main function
+# main function
 def main():
 
     epd = Papirus()
