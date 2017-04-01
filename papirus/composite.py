@@ -19,7 +19,7 @@ class DispImg():
         self.endx = 0
         self.endy = 0
 
-class Composite (PapirusTextPos):
+class PapirusComposite (PapirusTextPos):
 
     def __init__(self, autoUpdate = True):
         super(Composite, self).__init__(autoUpdate)
