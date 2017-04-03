@@ -11,13 +11,14 @@ BLACK = 0
 
 # Class for holding the details of the text
 class DispText():
-    def __init__(self, text, x, y, size):
+    def __init__(self, text, x, y, size, invert):
         self.text = text
         self.x = x
         self.y = y
         self.size = size
         self.endx = 0
         self.endy = 0
+	self.invert = invert
 
 
 class PapirusTextPos():
@@ -28,17 +29,17 @@ class PapirusTextPos():
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.autoUpdate = autoUpdate
 
-    def AddText(self, text, x=0, y=0, size = 20, Id = None):
+    def AddText(self, text, x=0, y=0, size = 20, Id = None, invert=False):
         # Create a new Id if none is supplied
         if Id == None:
             Id = str(uuid.uuid4())
 
         # If the Id doesn't exist, add it  to the dictionary
 	if Id not in self.allText:
-            self.allText[Id] = DispText(text.decode('string_escape'), x, y, size)
+            self.allText[Id] = DispText(text.decode('string_escape'), x, y, size, invert)
             # add the text to the image
             self.addToImageText(Id)
-            #Automatically show?
+            # Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
@@ -78,6 +79,12 @@ class PapirusTextPos():
         size = self.allText[Id].size
         x =  self.allText[Id].x
         y =  self.allText[Id].y
+        font_col = BLACK
+        back_col = WHITE
+
+        if self.allText[Id].invert:
+            font_col = WHITE
+            back_col = BLACK
 
         # prepare for drawing
         draw = ImageDraw.Draw(self.image)
@@ -104,7 +111,10 @@ class PapirusTextPos():
             for word in line.split():
                 # If there is space on line add the word to it
                 if (len(text_lines[current_line]) + len(word)) < line_size:
-                    text_lines[current_line] += " " + word
+                    # Only add a space if there`s something on the line
+                    if len(text_lines[current_line]) > 0:
+                        text_lines[current_line] += " "
+                    text_lines[current_line] += word
                 else:
                     # No space left on line so move to next one
                     text_lines.append("")
@@ -119,32 +129,44 @@ class PapirusTextPos():
         self.allText[Id].endy = y
         self.allText[Id].endx = x
 
-        # Start at the beginning
+        # Start at the beginning, calc all the end locations
         current_line = 0
         for l in text_lines:
             current_line += 1
             # Find out the size of the line to be drawn
             textSize = draw.textsize(l, font=font)
             # Adjust the x end point if needed
-            if textSize[0]+x> self.allText[Id].endx:
+            if textSize[0]+x > self.allText[Id].endx:
                 self.allText[Id].endx = textSize[0] + x
             # Add on the y end point
             self.allText[Id].endy += textSize[1]
-            # Draw the text to the image
-            draw.text( (x, ((size*current_line)-size) + y) , l, font=font, fill=BLACK)
 
         # Little adjustment to make sure the text gets covered
         self.allText[Id].endy += 3
 
-    def WriteAll(self):
+        # If the text is wanted inverted, put a rectangle down first
+        if self.allText[Id].invert:
+            draw.rectangle([self.allText[Id].x, self.allText[Id].y, self.allText[Id].endx, self.allText[Id].endy], fill=back_col)
+
+        # Start at the beginning, add all the lines to the image
+        current_line = 0
+        for l in text_lines:
+            current_line += 1
+            # Draw the text to the image
+            draw.text( (x, ((size*current_line)-size) + y) , l, font=font, fill=font_col)
+
+    def WriteAll(self, full_update=False):
         # Push the image to the PaPiRus device, and update only what's needed
+        # (unless asked to do a full update)
         self.papirus.display(self.image)
-        self.papirus.update()
+        if full_update:
+            self.papirus.update()
+        else:
+            self.papirus.partial_update()
 
     def Clear(self):
         # Clear the image, clear the text items, do a full update to the screen
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.allText = dict()
-        self.papirus.display(self.image)
-        self.papirus.update()
+        self.papirus.clear()
         
