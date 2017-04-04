@@ -177,6 +177,10 @@ image.write('/path/to/image', 20, (10, 10) )
 PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
 Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
 
+When using the PapirusTextPos, in either mode, setting the "partial_updates" property to True will cause partial updates to be done, meaning only the section of the PaPiRus screen that has been changed will be updated.  These can be vastly quicker than a full update for each piece of text.
+
+If not using the "partial_updates" property, calling "WriteAll(True)" will do the same thing on a one off basis.
+
 # Command Line
 
 ```bash
