@@ -28,6 +28,7 @@ class PapirusTextPos():
         self.allText = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.autoUpdate = autoUpdate
+	self.partial_updates = False
 
     def AddText(self, text, x=0, y=0, size = 20, Id = None, invert=False):
         # Create a new Id if none is supplied
@@ -155,14 +156,14 @@ class PapirusTextPos():
             # Draw the text to the image
             draw.text( (x, ((size*current_line)-size) + y) , l, font=font, fill=font_col)
 
-    def WriteAll(self, full_update=False):
+    def WriteAll(self, partial_update=False):
         # Push the image to the PaPiRus device, and update only what's needed
         # (unless asked to do a full update)
         self.papirus.display(self.image)
-        if full_update:
-            self.papirus.update()
-        else:
+        if partial_update or self.partial_updates:
             self.papirus.partial_update()
+        else:
+            self.papirus.update()
 
     def Clear(self):
         # Clear the image, clear the text items, do a full update to the screen
