@@ -19,5 +19,21 @@ git clone https://github.com/repaper/gratis.git
 cd /tmp/papirus/gratis
 make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
 make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+
 systemctl enable epd-fuse.service
+
+# Let the user specify the screen size
+SIZE=""
+while [ "$SIZE" = "" ]; do
+   SIZE=$(whiptail --title "Please select your screen size"  --menu  "" 12 50 5 \
+   " 1.44" "Inch (128 *  98) " \
+   " 1.9"  "Inch (144 * 128) " \
+   " 2.0"  "Inch (200 *  96) " \
+   " 2.6"  "Inch (232 * 128) " \
+   " 2.7"  "Inch (264 * 176) "  3>&1 1>&2 2>&3)
+   if [ $? = 1 ]; then
+      whiptail --msgbox "No size selected. Try again" 8 40
+   fi
+done
+papirus-set $SIZE
 systemctl start epd-fuse
