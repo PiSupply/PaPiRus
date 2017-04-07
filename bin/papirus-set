@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Make sure only root can run our script
 if [[ $EUID -ne 0 ]]; then
@@ -6,7 +6,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-service epd-fuse stop
+systemctl stop epd-fuse
 
 CONFIG="/etc/default/epd-fuse"
 
@@ -27,6 +27,6 @@ EPD_SIZE=$1
 echo "${EPD_SIZE}" # SHOULD OUTPUT Erl
 set_config EPD_SIZE $EPD_SIZE # SETS THE NEW VALUE
 
-service epd-fuse start
+systemctl start epd-fuse
 
 # sudo reboot

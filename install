@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # install git
-sudo apt-get install git -y
-sudo apt-get install python-imaging -y
+apt-get install git -y
+apt-get install python-imaging -y
 
 # packages needed by papirus-temp
-sudo apt-get install bc i2c-tools -y
+apt-get install bc i2c-tools -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
-sudo python setup.py install    # Install PaPirRus python library
+python setup.py install    # Install PaPirRus python library
 papirus-setup    # Install drivers and setup epaper

@@ -1,5 +1,5 @@
 # PaPiRus
-Resources for PaPiRus ePaper eInk display
+Resources for PaPiRus ePaper eInk displays. This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
 # Enabling SPI and I2C interfaces on Raspberry Pi
 Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
@@ -35,7 +35,7 @@ sudo python setup.py install    # Install PaPirRus python library
 
 #### Install Driver (Option 1)
 ```bash
-papirus-setup    # This will auto install the driver
+sudo papirus-setup    # This will auto install the driver
 ````
 
 #### Install Driver (Option 2)
@@ -43,14 +43,14 @@ papirus-setup    # This will auto install the driver
 # Install fuse driver
 sudo apt-get install libfuse-dev -y
 
-sudo mkdir /tmp/papirus
+mkdir /tmp/papirus
 cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
 cd /tmp/papirus/gratis-master/PlatformWithOS
 make rpi-epd_fuse
 sudo make rpi-install
-sudo service epd-fuse start
+sudo systemctl start epd-fuse.service
 ```
 
 # Python API
@@ -74,7 +74,7 @@ screen.partial_update()
 
 # Change screen size
 # SCREEN SIZES 1_44INCH | 1_9INCH | 2_0INCH | 2_6INCH | 2_7INCH
-screen.set_size(papirus.2_7INCH)
+screen.set_size(papirus.2_7INCH) (coming soon)
 
 ```
 
@@ -87,10 +87,64 @@ text = PapirusText()
 # Write text to the screen
 # text.write(text)
 text.write("hello world")
+```
 
-# Write text to the screen at selected point
-# text.write(text, (x,y))
-text.write("hello world", (10, 10) )
+#### The Positional Text API (example 1)
+```python
+from papirus import PapirusTextPos
+
+# Same as calling "PapirusTextPos(True)"
+text = PapirusTextPos()
+
+# Write text to the screen at selected point, with an Id
+# "hello world" will appear on the screen at (10, 10), font size 20, straight away
+text.AddText("hello world", 10, 10, Id="Start" )
+
+# Add another line of text, at the default location
+# "Another line" will appear on screen at (0, 0), font size 20, straight away
+text.AddText("Another line", Id="Top")
+
+# Update the first line
+# "hello world" will disappear and "New Text" will be displayed straight away
+text.UpdateText("Start", "New Text")
+
+# Remove The second line of text
+# "Another line" will be removed from the screen straight away
+text.RemoveText("Top")
+
+# Clear all text from the screen
+# This does a full update so is a little slower than just removing the text.
+text.Clear()
+```
+
+#### The Positional Text API (example 2)
+```python
+from papirus import PapirusTextPos
+
+# Calling PapirusTextPos this way will mean nothing is written to the screen be default
+text = PapirusTextPos(False)
+
+# Write text to the screen at selected point, with an Id
+# Nothing will show on the screen
+text.AddText("hello world", 10, 10, Id="Start" )
+
+# Add another line of text, at the default location
+# Nothing will show on the screen
+text.AddText("Another line", Id="Top")
+
+# Now display BOTH lines on the scrren
+text.WriteAll()
+
+# Update the first line
+# No change will happen on the screen
+text.UpdateText("Start", "New Text")
+
+# Remove The second line of text
+# The text won't be removed just yet from the screen
+text.RemoveText("Top")
+
+# Now update the screen to show the changes
+text.WriteAll()
 ```
 
 #### The Image API
@@ -108,19 +162,8 @@ image.write('/path/to/image')
 image.write('/path/to/image', 20, (10, 10) )
 ```
 #### Notes
-
-Your python script must be running with root privileges to update the screen and change sizes.
-This code will only allow the script to run as root
-
-```python
-import os
-import sys
-
-user = os.getuid()
-if user != 0:
-    print "Please run script as root"
-    sys.exit()
-```
+PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
+Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
 
 # Command Line
 
@@ -129,7 +172,7 @@ if user != 0:
 papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
 
 # Write data to the screen
-papirus-write "Some text to write"
+papirus-write "Some text to write" [-x ] [-y ] [-fszie ]
 
 # Draw image on the screen
 papirus-draw /path/to/image -t [resize | crop]
@@ -165,12 +208,16 @@ papirus-temp
 
 # Snakes game
 papirus-snakes (coming soon)
+
+# Display Twitter feeds
+papirus-twitter
 ```
 
 ### Tips for using images
-The PaPiRus can only display Bitmap images (.BMP) in black and white (2 bit colour).
+The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the PaPiRus screen using GIMP or Photoshop or similar photo editing tools like [the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format or [WIF (the WyoLum Image Format)](http://wyolum.com/introducing-wif-the-wyolum-image-format/).
 
-Use the following screen resolutions:
+### Screen Resolutions
+The screens have the following screen resolutions:
 ```
 1.44"     128 x 96
 1.9"      144 x 128
@@ -178,4 +225,20 @@ Use the following screen resolutions:
 2.6"      232 x 128
 2.7"      264 x 176
 ```
-Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and mayb want to create some simple animations. Remember thought that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while.
+
+### Full and Partial Updates
+Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and maybe want to create some simple animations. Remember though that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while. You should ideally do a full refresh of the screen every few minutes and it is also recommended to completely power down the screen every few hours.
+
+# Hardware tips
+In case you have problems assembling the board please [check this article on our website](https://www.pi-supply.com/make/papirus-assembly-tips-and-gotchas/) on which you can find:
+* Connect the screen to the PaPiRus board
+* Connect the GPIO adapter
+* Install the pogo pin connector
+* Install the push buttons
+Not all the sections apply to both the PaPiRus HAT and the PaPiRus Zero.
+
+### Datasheets, connectivity, pinout, jumpers and further information
+For additional information follow the links below:
+* [PaPiRus HAT](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20HAT)
+* [PaPiRus Zero](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20Zero)
+* [Pinout.xyz resources](https://pinout.xyz/boards#manufacturer=Pi%20Supply)
