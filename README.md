@@ -266,3 +266,4 @@ It is safe to say we have an awesome and growing community of people using epape
 
 * [Go software library for driving PaPiRus](https://github.com/wmarbut/go-epdfuse)
 * [RISC OS software library for driving PaPiRus](https://www.riscosopen.org/forum/forums/1/topics/9142?page=1)
+* [PaPiRus HAT working with resin.io](https://github.com/resin-io-playground/resinio-PaPiRus)
