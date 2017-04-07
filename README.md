@@ -22,35 +22,43 @@ sudo papirus-config
 
 # Manual Installation
 
-#### Install Python API
+#### Install Python API (best to run all of these commands as root using sudo)
 ```bash
-
 # Install dependencies
-sudo apt-get install python-imaging
+apt-get install git -y
+apt-get install python-imaging -y
+
+# Packages needed by papirus-temp
+apt-get install bc i2c-tools -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
-sudo python setup.py install    # Install PaPirRus python library
+python setup.py install    # Install PaPirRus python library
 ```
 
-#### Install Driver (Option 1)
+#### Install Driver - Option 1 (best to run all of these commands as root using sudo)
 ```bash
 sudo papirus-setup    # This will auto install the driver
-````
+```
 
-#### Install Driver (Option 2)
+#### Install Driver - Option 2 (best to run all of these commands as root using sudo)
+
 ```bash
 # Install fuse driver
-sudo apt-get install libfuse-dev -y
+apt-get install libfuse-dev -y
+# Install fonts
+apt-get install fonts-freefont-ttf -y
 
+rm -R /tmp/papirus
 mkdir /tmp/papirus
 cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
-cd /tmp/papirus/gratis-master/PlatformWithOS
-make rpi-epd_fuse
-sudo make rpi-install
-sudo systemctl start epd-fuse.service
+cd /tmp/papirus/gratis
+make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+systemctl enable epd-fuse.service
+systemctl start epd-fuse
 ```
 
 # Python API
@@ -159,9 +167,8 @@ image.write('/path/to/image')
 
 # write image to the screen with size and position
 # image.write(path, width, (x,y))
-image.write('/path/to/image', 20, (10, 10) )
+image.write('/path/to/image', 20, (10, 10) ) # This is not confirmed to work correctly yet!!
 ```
-
 #### Font family
 PaPiRusText and PaPiRusTextPos are using the font _FreeMono.ttf_ by default. It is possible to specify the argument `font_path` in `PapirusText.write`, `PapirusTextPos.AddText`, `PapirusTextPos.UpdateText` and `PapirusTextPos.addToImageText` to change the _font family_. The argument must be a string containing the path to the _.ttf_ file.
 ```
@@ -189,6 +196,9 @@ papirus-draw /path/to/image -t [resize | crop]
 
 # Clear the screen
 papirus-clear
+
+# Fill screen with centered text (less than 40 characters)
+papirus-textfill "Some text to write"
 ```
 
 #### Demos
@@ -249,3 +259,10 @@ For additional information follow the links below:
 * [PaPiRus HAT](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20HAT)
 * [PaPiRus Zero](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20Zero)
 * [Pinout.xyz resources](https://pinout.xyz/boards#manufacturer=Pi%20Supply)
+
+# Third party software libraries
+
+It is safe to say we have an awesome and growing community of people using epaper with PaPiRus and beyond and we get a huge amount of contributions of code, some of which we can easily integrate here and others which we can't (we are only a small team). However we want to make sure that any contributions are easy to find, for anyone looking. So here is a list of other software libraries that might be useful to you:
+
+* [Go software library for driving PaPiRus](https://github.com/wmarbut/go-epdfuse)
+* [RISC OS software library for driving PaPiRus](https://www.riscosopen.org/forum/forums/1/topics/9142?page=1)
