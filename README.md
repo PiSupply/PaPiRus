@@ -22,35 +22,43 @@ sudo papirus-config
 
 # Manual Installation
 
-#### Install Python API
+#### Install Python API (best to run all of these commands as root using sudo)
 ```bash
-
 # Install dependencies
-sudo apt-get install python-imaging
+apt-get install git -y
+apt-get install python-imaging -y
+
+# Packages needed by papirus-temp
+apt-get install bc i2c-tools -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
-sudo python setup.py install    # Install PaPirRus python library
+python setup.py install    # Install PaPirRus python library
 ```
 
-#### Install Driver (Option 1)
+#### Install Driver - Option 1 (best to run all of these commands as root using sudo)
 ```bash
 sudo papirus-setup    # This will auto install the driver
-````
+```
 
-#### Install Driver (Option 2)
+#### Install Driver - Option 2 (best to run all of these commands as root using sudo)
+
 ```bash
 # Install fuse driver
-sudo apt-get install libfuse-dev -y
+apt-get install libfuse-dev -y
+# Install fonts
+apt-get install fonts-freefont-ttf -y
 
+rm -R /tmp/papirus
 mkdir /tmp/papirus
 cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
-cd /tmp/papirus/gratis-master/PlatformWithOS
-make rpi-epd_fuse
-sudo make rpi-install
-sudo systemctl start epd-fuse.service
+cd /tmp/papirus/gratis
+make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+systemctl enable epd-fuse.service
+systemctl start epd-fuse
 ```
 
 # Python API
@@ -159,7 +167,7 @@ image.write('/path/to/image')
 
 # write image to the screen with size and position
 # image.write(path, width, (x,y))
-image.write('/path/to/image', 20, (10, 10) )
+image.write('/path/to/image', 20, (10, 10) ) # This is not confirmed to work correctly yet!!
 ```
 #### Notes
 PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
