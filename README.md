@@ -8,7 +8,7 @@ You can enable the SPI by typing `sudo raspi-config` at the command line and the
 # Setup PaPiRus
 ```bash
 # Run this line and PaPiRus will be setup and installed
-curl -sSL https://goo.gl/i1Imel | sudo bash
+curl -sSL https://pisupp.ly/papiruscode | sudo bash
 ```
 
 # Getting Started
