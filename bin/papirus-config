@@ -29,7 +29,7 @@ do_screen_size() {
 do_epaper_driver() {
     if (whiptail --title "ePaper Driver" --yes-button "Enable" --no-button "Disable" \
             --yesno "Enable or disable the ePaper driver" 10 60) then
-            systemctl enable epd-fuse.service
+        systemctl enable epd-fuse.service
         systemctl start epd-fuse.service
         whiptail --msgbox "ePaper Driver enabled and started" 8 40
     else
