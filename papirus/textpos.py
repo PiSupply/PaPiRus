@@ -35,7 +35,7 @@ class PapirusTextPos():
 
         # If the Id doesn't exist, add it  to the dictionary
 	if Id not in self.allText:
-            self.allText[Id] = DispText(text.decode('string_escape'), x, y, size)
+            self.allText[Id] = DispText(text, x, y, size)
             # add the text to the image
             self.addToImageText(Id, font_path)
             #Automatically show?
@@ -91,7 +91,8 @@ class PapirusTextPos():
 
         # Starting vars
         current_line = 0
-        text_lines = []
+        # unicode by default
+        text_lines = [u""]
 
         # Split the text by \n first
         toProcess = self.allText[Id].text.splitlines()

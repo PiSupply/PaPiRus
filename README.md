@@ -153,6 +153,18 @@ text.RemoveText("Top")
 text.WriteAll()
 ```
 
+#### Unicode Support in the Text API
+```python
+from papirus import PapirusText
+
+text = PapirusText()
+
+# Write text to the screen, in this case forty stars alternating black and white
+# note the use of u"" syntax to specify unicode
+text.write(u"\u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606")
+```
+Note: the default font, FreeMono, has [limited unicode support](http://www.fileformat.info/info/unicode/font/freemono/blocklist.htm), so you may want to specify an alternate font to use a fuller range characters.
+
 #### The Image API
 ```python
 from papirus import PapirusImage
