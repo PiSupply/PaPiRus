@@ -1,26 +1,17 @@
 # PaPiRus
 Resources for PaPiRus ePaper eInk displays. This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
-# Enabling SPI and I2C interfaces on Raspberry Pi
-Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
-You can enable the SPI by typing `sudo raspi-config` at the command line and then selecting `Interfacing options` > `SPI` and then selecting Enable. Without exiting the tool still in `Interfacing options` > `I2C` and then selecting Enable.
-
 # Setup PaPiRus
 ```bash
 # Run this line and PaPiRus will be setup and installed
 curl -sSL https://pisupp.ly/papiruscode | sudo bash
 ```
 
-# Getting Started
-```bash
-# Select your screen size
-sudo papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
-or
-sudo papirus-config
-# System will now reboot
-```
-
 # Manual Installation
+
+#### Enabling SPI and I2C interfaces on Raspberry Pi
+Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
+You can enable the SPI by typing `sudo raspi-config` at the command line and then selecting `Interfacing options` > `SPI` and then selecting Enable. Without exiting the tool still in `Interfacing options` > `I2C` and then selecting Enab$
 
 #### Install Python API (best to run all of these commands as root using sudo)
 ```bash
@@ -59,6 +50,13 @@ make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
 make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
 systemctl enable epd-fuse.service
 systemctl start epd-fuse
+```
+
+#### Select your screen size
+```bash
+sudo papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
+or
+sudo papirus-config
 ```
 
 # Python API
