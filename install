@@ -3,7 +3,7 @@
 # install required packages
 apt-get install git -y
 apt-get install python-imaging -y
-apt-get install python-smbus
+apt-get install python-smbus -y
 apt-get install bc i2c-tools -y
 
 # enable SPI and I2C
