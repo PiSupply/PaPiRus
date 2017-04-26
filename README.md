@@ -18,8 +18,7 @@ You can enable the SPI by typing `sudo raspi-config` at the command line and the
 # Install dependencies
 apt-get install git -y
 apt-get install python-imaging -y
-
-# Packages needed by papirus-temp
+apt-get install python-smbus -y
 apt-get install bc i2c-tools -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
