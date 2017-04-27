@@ -27,7 +27,8 @@ class PapirusText():
         line_size = (self.papirus.width / (size*0.65))
 
         current_line = 0
-        text_lines = [""]
+        # unicode by default
+        text_lines = [u""]
 
         # Compute each line
         for word in text.split():
