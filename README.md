@@ -2,12 +2,15 @@
 Resources for PaPiRus ePaper eInk displays. This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
 # Setup PaPiRus
+## Auto Installation
+Just run the following script in a terminal window and PaPiRus will be automatically setup.
 ```bash
 # Run this line and PaPiRus will be setup and installed
 curl -sSL https://pisupp.ly/papiruscode | sudo bash
 ```
 
-# Manual Installation
+## Manual Installation
+If you have any troubles with the auto installation or if for some reason you prefer to install PaPiRus manually, then follow the steps below.
 
 #### Enabling SPI and I2C interfaces on Raspberry Pi
 Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
