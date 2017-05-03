@@ -21,7 +21,7 @@ if EPD_SIZE == 0.0:
     sys.exit()
 
 # Command line usage
-# papirus-wite "Some text to write"  -x  -y -fsize
+# papirus-write "Some text to write"  -x  -y -fsize
 
 def main():
     p = argparse.ArgumentParser()
