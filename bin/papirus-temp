@@ -23,7 +23,7 @@ else
     id=$(echo "ibase=2;${ic}" | bc)
 fi
 [ $DEBUG ] && echo "ID is ${id}"
-ie=$(echo "scale=3;${id}*0.125" | bc)
-if=$(echo "scale=3;${ie}*1.8+32" | bc)
+ie=$(echo "scale=1;(${id}*0.125)*10/10" | bc)
+if=$(echo "scale=1;${ie}*1.8+32" | bc)
 echo "Temp is ${ie} deg C (${if} deg F)."
-papirus-write "Temp is ${ie} deg C (${if} deg F)."
+./papirus-write "Temp is ${ie}"$'\xb0'"C (${if}"$'\xb0'"F)."

@@ -58,7 +58,7 @@ if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')
        SW4 = 21
        SW5 = -1
 
-def main():
+def main(argv):
     global SIZE
 
     GPIO.setmode(GPIO.BCM)
@@ -70,7 +70,8 @@ def main():
     if SW5 != -1:
         GPIO.setup(SW5, GPIO.IN)
 
-    papirus = Papirus()
+    papirus = Papirus(rotation = int(argv[0]) if len(sys.argv) > 1 else 0)
+
 
     # Use smaller font for smaller dislays
     if papirus.height <= 96:
@@ -141,4 +142,8 @@ def write_text(papirus, text, size):
     papirus.partial_update()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main(sys.argv[1:])
+    except KeyboardInterrupt:
+        sys.exit('interrupted')
+

@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 from papirus import PapirusTextPos
 import argparse
 
@@ -29,12 +30,13 @@ def main():
     p.add_argument('--posX', '-x', type=int, default=0, help="X position of the start of the text")
     p.add_argument('--posY', '-y', type=int, default=0, help="Y position of the start of the text")
     p.add_argument('--fsize', '-s',type=int , default=20, help="Font size to use for the text")
+    p.add_argument('--rotation', '-r',type=int , default=0, help="Rotation one of 0, 90, 180, 270")
 
     args = p.parse_args()
 
     if args.content:
-	print("Writing to Papirus.......")
-        text = PapirusTextPos()
+        text = PapirusTextPos(rotation=args.rotation)
+        print("Writing to Papirus.......")
         text.AddText(args.content, args.posX, args.posY, args.fsize)
         print("Finished!")
 

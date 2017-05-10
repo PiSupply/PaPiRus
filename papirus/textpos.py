@@ -21,9 +21,9 @@ class DispText():
 
 
 class PapirusTextPos():
-    def __init__(self, autoUpdate = True):
+    def __init__(self, autoUpdate = True, rotation = 0):
         # Set up the PaPirus and dictionary for text
-        self.papirus = Papirus()
+        self.papirus = Papirus(rotation = rotation)
         self.allText = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.autoUpdate = autoUpdate
