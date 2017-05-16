@@ -5,11 +5,12 @@ from PIL import Image
 from PIL import ImageOps
 from papirus import Papirus
 from papirus import PapirusTextPos
+import uuid
 
 WHITE = 1
 BLACK = 0
 
-# Class for holding the details of the text
+# Class for holding the details of the img
 class DispImg():
     def __init__(self, image, x, y, size):
         self.image = image
@@ -27,7 +28,7 @@ class PapirusComposite (PapirusTextPos):
         self.allImg = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
 
-    def AddImage(self, image, x=0, y=0, size = (10,10), Id = None):
+    def AddImg(self, image, x=0, y=0, size = (10,10), Id = None):
         # Create a new Id if none is supplied
         if Id == None:
             Id = str(uuid.uuid4())
@@ -40,15 +41,15 @@ class PapirusComposite (PapirusTextPos):
         # If the Id doesn't exist, add it  to the dictionary
         if Id not in self.allImg:
             self.allImg[Id] = DispImg(image, x, y, size)
-            # add the text to the image
-            self.addToImageImage(Id)
+            # add the img to the image
+            self.addToImageImg(Id)
             #Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
     def UpdateImg(self, Id, image):
-        # If the ID supplied is in the dictionary, update the text
-        # Currently ONLY the text is update
+        # If the ID supplied is in the dictionary, update the img
+        # Currently ONLY the img is update
         if Id in self.allImg:
             image = Image.open(image)
             image = ImageOps.grayscale(image)
@@ -57,10 +58,10 @@ class PapirusComposite (PapirusTextPos):
 
             self.allImg[Id].image = image
             
-            # Remove from the old text from the image (that doesn't use the actual text)
-            self.removeImageImage(Id)
-            # Add the new text to the image
-            self.addToImageImage(Id)
+            # Remove from the old img from the image (that doesn't use the actual img)
+            self.removeImageImg(Id)
+            # Add the new img to the image
+            self.addToImageImg(Id)
             #Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
@@ -68,22 +69,22 @@ class PapirusComposite (PapirusTextPos):
     def RemoveImg(self, Id):
         # If the ID supplied is in the dictionary, remove it.
         if Id in self.allImg:
-            self.removeImageImage(Id)
+            self.removeImageImg(Id)
             del self.allImg[Id]
 
             #Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
-    def removeImageImage(self, Id):
+    def removeImageImg(self, Id):
         # prepare for drawing
         filler = Image.new('1', self.allImg[Id].size, WHITE)
-        # Draw over the top of the text with a rectangle to cover it
+        # Draw over the top of the img with a rectangle to cover it
         x =  self.allImg[Id].x
         y =  self.allImg[Id].y
         self.image.paste(filler,(x,y))
 
-    def addToImageImage(self, Id):
+    def addToImageImg(self, Id):
         x =  self.allImg[Id].x
         y =  self.allImg[Id].y
 
