@@ -191,7 +191,7 @@ textNImg.UpdateText("Start", "New Text")
 
 # Update the BigImg
 # No change will happen on the screen
-textNImg.UpdateImg("Start", "/path/to/new/images")
+textNImg.UpdateImg("BigImg", "/path/to/new/images")
 
 # Remove top image
 # The images won't be removed just yet from the screen
