@@ -57,6 +57,7 @@ to use:
         self._auto = False
         self._lm75b = LM75B()
         self._rotation = 0
+        self._uselm75b = True
 
         if len(args) > 0:
             self._epd_path = args[0]
@@ -146,6 +147,17 @@ to use:
             self._width = w
         self._rotation = rot
 
+    @property
+    def use_lm75b(self):
+        return self._uselm75b
+
+    @use_lm75b.setter
+    def use_lm75b(self, flag):
+        if flag:
+            self._uselm75b = True
+        else:
+            self._uselm75b = False
+
     def error_status(self):
         with open(os.path.join(self._epd_path, 'error'), 'r') as f:
             return(f.readline().rstrip('\n'))
@@ -184,7 +196,8 @@ to use:
         self._command('C')
 
     def _command(self, c):
-        with open(os.path.join(self._epd_path, 'temperature'), 'wb') as f:
-            f.write(repr(self._lm75b.getTempC()))
+        if self._uselm75b:
+            with open(os.path.join(self._epd_path, 'temperature'), 'wb') as f:
+                f.write(repr(self._lm75b.getTempC()))
         with open(os.path.join(self._epd_path, 'command'), 'wb') as f:
             f.write(c)

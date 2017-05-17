@@ -1,3 +1,4 @@
+
 # PaPiRus
 Resources for PaPiRus ePaper eInk displays. This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
@@ -8,7 +9,7 @@ You can enable the SPI by typing `sudo raspi-config` at the command line and the
 # Setup PaPiRus
 ```bash
 # Run this line and PaPiRus will be setup and installed
-curl -sSL https://goo.gl/i1Imel | sudo bash
+curl -sSL https://pisupp.ly/papiruscode | sudo bash
 ```
 
 # Getting Started
@@ -148,6 +149,22 @@ text.RemoveText("Top")
 text.WriteAll()
 ```
 
+#### Notes
+PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
+Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
+
+#### Unicode Support in the Text API
+```python
+from papirus import PapirusText
+
+text = PapirusText()
+
+# Write text to the screen, in this case forty stars alternating black and white
+# note the use of u"" syntax to specify unicode
+text.write(u"\u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606")
+```
+Note: the default font, FreeMono, has [limited unicode support](http://www.fileformat.info/info/unicode/font/freemono/blocklist.htm), so you may want to specify an alternate font to use a fuller range characters.
+
 #### The Image API
 ```python
 from papirus import PapirusImage
@@ -162,9 +179,54 @@ image.write('/path/to/image')
 # image.write(path, width, (x,y))
 image.write('/path/to/image', 20, (10, 10) )
 ```
-#### Notes
-PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
-Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
+
+#### The composite API (Text and image)
+```python
+from papirus import PapirusComposite
+
+# Calling PapirusComposite this way will mean nothing is written to the screen until WriteAll is called
+textNImg = PapirusComposite(False)
+
+# Write text to the screen at selected point, with an Id
+# Nothing will show on the screen
+textNImg.AddText("hello world", 10, 10, Id="Start" )
+
+# Add image
+# Nothing will show on the screen
+# textNImg.AddImg(path, posX,posY,(w,h),id)
+textNImg.AddImg("/path/to/image",20,20,(25,25), Id="BigImg")
+
+# Add image to the default place and size
+# Nothing will show on the screen
+textNImg.AddImg("/path/to/image", Id="Top")
+
+# Now display all elements on the scrren
+textNImg.WriteAll()
+
+# Update the first line
+# No change will happen on the screen
+textNImg.UpdateText("Start", "New Text")
+
+# Update the BigImg
+# No change will happen on the screen
+textNImg.UpdateImg("BigImg", "/path/to/new/images")
+
+# Remove top image
+# The images won't be removed just yet from the screen
+textNImg.RemoveImg("Top")
+
+# Now update the screen to show the changes
+textNImg.WriteAll()
+```
+
+#### Font family
+PaPiRusText and PaPiRusTextPos are using the font _FreeMono.ttf_ by default. It is possible to specify the argument `font_path` in `PapirusText.write`, `PapirusTextPos.AddText`, `PapirusTextPos.UpdateText` and `PapirusTextPos.addToImageText` to change the _font family_. The argument must be a string containing the path to the _.ttf_ file.
+```
+# Change font family
+from papirus import PapirusText
+text = PapirusText()
+text.write("Hello World", font_path='/path/to/ttf')
+```
 
 # Command Line
 
@@ -203,6 +265,9 @@ papirus-buttons [rotation]
 
 # Demo of getting temperature from LM75
 papirus-temp
+
+# Demo showing depdency of update rate on temperature
+papirus-radar
 
 # Display text filling the width of the display
 papirus-textfill 'Some text' [rotation]
