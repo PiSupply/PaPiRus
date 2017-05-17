@@ -1,4 +1,4 @@
-# Copyright 2013-2015 Pervasive Displays, Inc.
+#qCopyright 2013-2015 Pervasive Displays, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ class EPD(object):
 to use:
   from EPD import EPD
 
-  epd = EPD([path='/path/to/epd'], [auto=boolean])
+  epd = EPD([path='/path/to/epd'], [auto=boolean], [rotation = 0|90|180|270])
 
   image = Image.new('1', epd.size, 0)
   # draw on image
@@ -56,6 +56,7 @@ to use:
         self._film = 0
         self._auto = False
         self._lm75b = LM75B()
+        self._rotation = 0
         self._uselm75b = True
 
         if len(args) > 0:
@@ -65,6 +66,12 @@ to use:
 
         if ('auto' in kwargs) and kwargs['auto']:
             self._auto = True
+        if ('rotation' in kwargs):
+            rot = kwargs['rotation']
+            if rot == 0 or rot == 90 or rot == 180 or rot == 270:
+                self._rotation = rot
+            else:
+                raise EPDError('rotation can only be 0, 90, 180 or 270')
 
         with open(os.path.join(self._epd_path, 'version')) as f:
             self._version = f.readline().rstrip('\n')
@@ -82,7 +89,10 @@ to use:
 
         if self._width < 1 or self._height < 1:
             raise EPDError('invalid panel geometry')
-
+        if self._rotation == 90 or self._rotation == 270:
+            w = self._height
+            self._height = self._width
+            self._width = w
 
     @property
     def size(self):
@@ -124,6 +134,20 @@ to use:
             self._auto = False
 
     @property
+    def rotation(self):
+        return self._rotation
+
+    @rotation.setter
+    def rotation(self, rot):
+        if rot != 0 and rot != 90 and rot != 180 and rot != 270:
+            raise EPDError('rotation can only be 0, 90, 180 or 270')
+        if abs(self._rotation - rot) == 90 or abs(self._rotation - rot) == 270:
+            w = self._height
+            self._height = self._width
+            self._width = w
+        self._rotation = rot
+
+    @property
     def use_lm75b(self):
         return self._uselm75b
 
@@ -151,6 +175,9 @@ to use:
 
         if image.size != self.size:
             raise EPDError('image size mismatch')
+
+        if self._rotation != 0:
+            image = image.rotate(self._rotation)
 
         with open(os.path.join(self._epd_path, 'LE', 'display_inverse'), 'r+b') as f:
             f.write(image.tobytes())

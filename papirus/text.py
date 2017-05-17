@@ -10,8 +10,8 @@ BLACK = 0
 
 class PapirusText():
 
-    def __init__(self):
-        self.papirus = Papirus()
+    def __init__(self, rotation = 0):
+        self.papirus = Papirus(rotation = rotation)
 
     def write(self, text, size = 20, font_path='/usr/share/fonts/truetype/freefont/FreeMono.ttf'):
         
