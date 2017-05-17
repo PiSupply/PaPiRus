@@ -13,7 +13,7 @@ class PapirusText():
     def __init__(self):
         self.papirus = Papirus()
 
-    def write(self, text, size = 20):
+    def write(self, text, size = 20, font_path='/usr/share/fonts/truetype/freefont/FreeMono.ttf'):
         
         # initially set all white background
         image = Image.new('1', self.papirus.size, WHITE)
@@ -21,13 +21,14 @@ class PapirusText():
         # prepare for drawing
         draw = ImageDraw.Draw(image)
 
-        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', size)
+        font = ImageFont.truetype(font_path, size)
 
         # Calculate the max number of char to fit on line
         line_size = (self.papirus.width / (size*0.65))
 
         current_line = 0
-        text_lines = [""]
+        # unicode by default
+        text_lines = [u""]
 
         # Compute each line
         for word in text.split():

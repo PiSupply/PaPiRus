@@ -28,21 +28,21 @@ class PapirusTextPos(object):
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.autoUpdate = autoUpdate
 
-    def AddText(self, text, x=0, y=0, size = 20, Id = None):
+    def AddText(self, text, x=0, y=0, size = 20, Id = None, font_path='/usr/share/fonts/truetype/freefont/FreeMono.ttf'):
         # Create a new Id if none is supplied
         if Id == None:
             Id = str(uuid.uuid4())
 
         # If the Id doesn't exist, add it  to the dictionary
 	if Id not in self.allText:
-            self.allText[Id] = DispText(text.decode('string_escape'), x, y, size)
+            self.allText[Id] = DispText(text, x, y, size)
             # add the text to the image
-            self.addToImageText(Id)
+            self.addToImageText(Id, font_path)
             #Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
-    def UpdateText(self, Id, newText):
+    def UpdateText(self, Id, newText, font_path='/usr/share/fonts/truetype/freefont/FreeMono.ttf'):
         # If the ID supplied is in the dictionary, update the text
         # Currently ONLY the text is update
         if Id in self.allText:
@@ -51,7 +51,7 @@ class PapirusTextPos(object):
             # Remove from the old text from the image (that doesn't use the actual text)
             self.removeImageText(Id)
             # Add the new text to the image
-            self.addToImageText(Id)
+            self.addToImageText(Id, font_path)
             #Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
@@ -73,7 +73,7 @@ class PapirusTextPos(object):
         draw.rectangle([self.allText[Id].x, self.allText[Id].y, self.allText[Id].endx, self.allText[Id].endy], fill="white")
 
 
-    def addToImageText(self, Id):
+    def addToImageText(self, Id, font_path='/usr/share/fonts/truetype/freefont/FreeMono.ttf'):
         # Break the text item back in to parts
         size = self.allText[Id].size
         x =  self.allText[Id].x
@@ -83,7 +83,7 @@ class PapirusTextPos(object):
         draw = ImageDraw.Draw(self.image)
 
         # Grab the font to use, fixed at the moment
-        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', size)
+        font = ImageFont.truetype(font_path, size)
 
         # Calculate the max number of char to fit on line
         # Taking in to account the X starting position
@@ -91,7 +91,8 @@ class PapirusTextPos(object):
 
         # Starting vars
         current_line = 0
-        text_lines = []
+        # unicode by default
+        text_lines = [u""]
 
         # Split the text by \n first
         toProcess = self.allText[Id].text.splitlines()
@@ -147,4 +148,3 @@ class PapirusTextPos(object):
         self.allText = dict()
         self.papirus.display(self.image)
         self.papirus.update()
-        
