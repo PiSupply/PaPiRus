@@ -80,6 +80,9 @@ screen.update()
 # Update only the changed pixels (faster)
 screen.partial_update()
 
+# Disable automatic use of LM75B temperature sensor
+screen.use_lm75b = False
+
 # Change screen size
 # SCREEN SIZES 1_44INCH | 1_9INCH | 2_0INCH | 2_6INCH | 2_7INCH
 screen.set_size(papirus.2_7INCH) (coming soon)
@@ -274,6 +277,9 @@ papirus-buttons
 
 # Demo of getting temperature from LM75
 papirus-temp
+
+# Demo showing depdency of update rate on temperature
+papirus-radar
 
 # Snakes game
 papirus-snakes (coming soon)
