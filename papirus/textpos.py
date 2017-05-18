@@ -19,7 +19,7 @@ class DispText():
         self.endx = 0
         self.endy = 0
 
-class PapirusTextPos():
+class PapirusTextPos(object):
     def __init__(self, autoUpdate = True, rotation = 0):
         # Set up the PaPirus and dictionary for text
         self.papirus = Papirus(rotation = rotation)
