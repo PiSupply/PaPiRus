@@ -2,44 +2,38 @@
 # PaPiRus
 Resources for PaPiRus ePaper eInk displays. This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
-# Enabling SPI and I2C interfaces on Raspberry Pi
-Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
-You can enable the SPI by typing `sudo raspi-config` at the command line and then selecting `Interfacing options` > `SPI` and then selecting Enable. Without exiting the tool still in `Interfacing options` > `I2C` and then selecting Enable.
-
 # Setup PaPiRus
+## Auto Installation
+Just run the following script in a terminal window and PaPiRus will be automatically setup.
 ```bash
 # Run this line and PaPiRus will be setup and installed
 curl -sSL https://pisupp.ly/papiruscode | sudo bash
 ```
 
-# Getting Started
+## Manual Installation
+If you have any troubles with the auto installation or if for some reason you prefer to install PaPiRus manually, then follow the steps below.
+#### Enabling SPI and I2C interfaces on Raspberry Pi
+Before using PaPiRus, do not forget to enable the SPI and the I2C interfaces.
+You can enable the SPI by typing `sudo raspi-config` at the command line and then selecting `Interfacing options` > `SPI` and then selecting Enable. Without exiting the tool still in `Interfacing options` > `I2C` and then selecting Enable.
+#### Install Python API (best to run all of these commands as root using sudo)
 ```bash
-# Select your screen size
-sudo papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
-or
-sudo papirus-config
-# System will now reboot
-```
-
-# Manual Installation
-
-#### Install Python API
-```bash
-
 # Install dependencies
-sudo apt-get install python-imaging
+apt-get install git -y
+apt-get install python-imaging -y
+apt-get install python-smbus -y
+apt-get install bc i2c-tools -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
 sudo python setup.py install    # Install PaPirRus python library
 ```
 
-#### Install Driver (Option 1)
+#### Install Driver (Option 1) (best to run all of these commands as root using sudo)
 ```bash
 sudo papirus-setup    # This will auto install the driver
-````
+```
 
-#### Install Driver (Option 2)
+#### Install Driver (Option 2) (best to run all of these commands as root using sudo)
 ```bash
 # Install fuse driver
 sudo apt-get install libfuse-dev -y
@@ -48,10 +42,18 @@ mkdir /tmp/papirus
 cd /tmp/papirus
 git clone https://github.com/repaper/gratis.git
 
-cd /tmp/papirus/gratis-master/PlatformWithOS
-make rpi-epd_fuse
-sudo make rpi-install
-sudo systemctl start epd-fuse.service
+cd /tmp/papirus/gratis
+make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+systemctl enable epd-fuse.service
+systemctl start epd-fuse
+```
+
+#### Select your screen size
+```bash
+sudo papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
+or
+sudo papirus-config
 ```
 
 # Python API
@@ -73,6 +75,9 @@ screen.update()
 
 # Update only the changed pixels (faster)
 screen.partial_update()
+
+# Disable automatic use of LM75B temperature sensor
+screen.use_lm75b = False
 
 # Change screen size
 # SCREEN SIZES 1_44INCH | 1_9INCH | 2_0INCH | 2_6INCH | 2_7INCH
@@ -163,7 +168,8 @@ text = PapirusText()
 # note the use of u"" syntax to specify unicode
 text.write(u"\u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606")
 ```
-Note: the default font, FreeMono, has [limited unicode support](http://www.fileformat.info/info/unicode/font/freemono/blocklist.htm), so you may want to specify an alternate font to use a fuller range characters.
+#### Note
+The default font, FreeMono, has [limited unicode support](http://www.fileformat.info/info/unicode/font/freemono/blocklist.htm), so you may want to specify an alternate font to use a fuller range characters.
 
 #### The Image API
 ```python
@@ -177,7 +183,7 @@ image.write('/path/to/image')
 
 # write image to the screen with size and position
 # image.write(path, width, (x,y))
-image.write('/path/to/image', 20, (10, 10) )
+image.write('/path/to/image', 20, (10, 10) ) # This is not confirmed to work correctly yet!!
 ```
 
 #### The composite API (Text and image)
@@ -242,6 +248,7 @@ papirus-draw /path/to/image -t [resize | crop] -r [0 | 90 | 180 | 270]
 
 # Clear the screen
 papirus-clear
+
 ```
 
 #### Demos
@@ -277,6 +284,9 @@ papirus-snakes (coming soon)
 
 # Display Twitter feeds
 papirus-twitter
+
+# Composite text and graphics
+papirus-composite-write
 ```
 
 ### Tips for using images
@@ -308,3 +318,11 @@ For additional information follow the links below:
 * [PaPiRus HAT](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20HAT)
 * [PaPiRus Zero](https://github.com/PiSupply/PaPiRus/tree/master/hardware/PaPiRus%20Zero)
 * [Pinout.xyz resources](https://pinout.xyz/boards#manufacturer=Pi%20Supply)
+
+# Third party software libraries
+
+It is safe to say we have an awesome and growing community of people using epaper with PaPiRus and beyond and we get a huge amount of contributions of code, some of which we can easily integrate here and others which we can't (we are only a small team). However we want to make sure that any contributions are easy to find, for anyone looking. So here is a list of other software libraries that might be useful to you:
+
+* [Go software library for driving PaPiRus](https://github.com/wmarbut/go-epdfuse)
+* [RISC OS software library for driving PaPiRus](https://www.riscosopen.org/forum/forums/1/topics/9142?page=1)
+* [PaPiRus HAT working with resin.io](https://github.com/resin-io-playground/resinio-PaPiRus)
