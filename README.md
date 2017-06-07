@@ -302,8 +302,14 @@ The screens have the following screen resolutions:
 2.7"      264 x 176
 ```
 
+### Refresh rates and screen lifespan
+A typical ePaper refresh rate for a full-screen update is around 1 to 2 Hz (1 to 2 updates per second). The refresh rate of the ePaper displays is dependent on a number of factors including temperature. At lower temperatures you have to drive the display more slowly otherwise you can get "ghosting" and also can damage the display. By fiddling with the temperature variables we have had customers who we know have got this level to ~15 Hz but this is not advised unless you know what you are doing as it will severely reduce the life of the display and may cause other bizarre side-effects.
+
+Lastly, a good way to increase the refresh rate of information on the screen is to not use full screen updates but use partial updates as described below.
+
 ### Full and Partial Updates
 Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and maybe want to create some simple animations. Remember though that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while. You should ideally do a full refresh of the screen every few minutes and it is also recommended to completely power down the screen every few hours.
+
 
 # Hardware tips
 In case you have problems assembling the board please [check this article on our website](https://www.pi-supply.com/make/papirus-assembly-tips-and-gotchas/) on which you can find:
