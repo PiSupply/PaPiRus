@@ -14,7 +14,6 @@
 # express or implied.  See the License for the specific language
 # governing permissions and limitations under the License.
 
-
 import os
 import sys
 
@@ -25,43 +24,32 @@ from datetime import datetime
 import time
 from papirus import Papirus
 
-user = os.getuid()
-if user != 0:
-    print "Please run script as root"
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
     sys.exit()
-    
+
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
+
 WHITE = 1
 BLACK = 0
 
-# fonts are in different places on Raspbian/Angstrom so search
-possible_fonts = [
-    '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSansMono-Bold.ttf',   # R.Pi
-    '/usr/share/fonts/truetype/freefont/FreeMono.ttf',                # R.Pi
-    '/usr/share/fonts/truetype/LiberationMono-Bold.ttf',              # B.B
-    '/usr/share/fonts/truetype/DejaVuSansMono-Bold.ttf',              # B.B
-    '/usr/share/fonts/TTF/FreeMonoBold.ttf',                          # Arch
-    '/usr/share/fonts/TTF/DejaVuSans-Bold.ttf'                        # Arch
-]
-
-
-FONT_FILE = ''
-for f in possible_fonts:
-    if os.path.exists(f):
-        FONT_FILE = f
-        break
-
-if '' == FONT_FILE:
-    raise 'no font file found'
-
-CLOCK_FONT_SIZE = 40
-DATE_FONT_SIZE  = 30
-
-MAX_START = 0xffff
+CLOCK_FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
+DATE_FONT_FILE  = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
 
 def main(argv):
-    """main program - draw and display a test image"""
 
-    papirus = Papirus()
+    """main program - draw and display time and date"""
+
+    papirus = Papirus(rotation = int(argv[0]) if len(sys.argv) > 1 else 0)
 
     print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
 
@@ -71,7 +59,7 @@ def main(argv):
 
 
 def demo(papirus):
-    """simple partial update demo - draw draw a clock"""
+    """simple partial update demo - draw a clock"""
 
     # initially set all white background
     image = Image.new('1', papirus.size, WHITE)
@@ -80,8 +68,10 @@ def demo(papirus):
     draw = ImageDraw.Draw(image)
     width, height = image.size
 
-    clock_font = ImageFont.truetype(FONT_FILE, CLOCK_FONT_SIZE)
-    date_font = ImageFont.truetype(FONT_FILE, DATE_FONT_SIZE)
+    clock_font_size = int((width - 4)/(8*0.65))      # 8 chars HH:MM:SS
+    clock_font = ImageFont.truetype(CLOCK_FONT_FILE, clock_font_size)
+    date_font_size = int((width - 10)/(10*0.65))     # 10 chars YYYY-MM-DD
+    date_font = ImageFont.truetype(DATE_FONT_FILE, date_font_size)
 
     # clear the display buffer
     draw.rectangle((0, 0, width, height), fill=WHITE, outline=WHITE)
@@ -91,16 +81,16 @@ def demo(papirus):
     while True:
         while True:
             now = datetime.today()
-            if now.second % 5 == 0:
+            if now.second != previous_second:
                 break
-            time.sleep(0.5)
+            time.sleep(0.1)
 
         if now.day != previous_day:
             draw.rectangle((2, 2, width - 2, height - 2), fill=WHITE, outline=BLACK)
-            draw.text((10, 55), '{y:04d}-{m:02d}-{d:02d}'.format(y=now.year, m=now.month, d=now.day), fill=BLACK, font=date_font)
+            draw.text((10, clock_font_size + 10), '{y:04d}-{m:02d}-{d:02d}'.format(y=now.year, m=now.month, d=now.day), fill=BLACK, font=date_font)
             previous_day = now.day
         else:
-            draw.rectangle((5, 10, width - 5, 10 + CLOCK_FONT_SIZE), fill=WHITE, outline=WHITE)
+            draw.rectangle((5, 10, width - 5, 10 + clock_font_size), fill=WHITE, outline=WHITE)
 
         draw.text((5, 10), '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second), fill=BLACK, font=clock_font)
 

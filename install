@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
-# install git
-sudo apt-get install git -y
-sudo apt-get install python-imaging -y
+# install required packages
+apt-get install git -y
+apt-get install python-imaging -y
+apt-get install python-smbus -y
+apt-get install bc i2c-tools -y
 
-# packages needed by papirus-temp
-sudo apt-get install bc i2c-tools -y
+# enable SPI and I2C
+raspi-config nonint do_spi 0
+raspi-config nonint do_i2c 0
 
 git clone https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
-sudo python setup.py install    # Install PaPirRus python library
+python setup.py install    # Install PaPirRus python library
 papirus-setup    # Install drivers and setup epaper
+whiptail --msgbox "The system will now reboot" 8 40
+reboot

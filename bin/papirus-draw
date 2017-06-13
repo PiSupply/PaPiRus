@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 from papirus import Papirus
 from PIL import Image
 import argparse
@@ -9,15 +10,39 @@ import argparse
 # Command line usage
 # papirus-draw "filepath" -t "crop|resize"
 
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
+
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
 def main():
     papirus = Papirus()
     p = argparse.ArgumentParser()
     p.add_argument('filepath', type=str)
     p.add_argument('--type', '-t',type=str, default="resize", help="display type: crop or resize")
+    p.add_argument('--rotate', '-r',type=int, default=0, help="rotate = 0, 90, 180 or 270")
     args = p.parse_args()
+    papirus = Papirus(rotation = args.rotate)
     if args.filepath:
         print("Drawing on PaPiRus.......")
-        draw_image(papirus, args.filepath, args.type)
+        for i in range(0, 5):
+            print("Rotation = " + str(papirus.rotation))
+            draw_image(papirus, args.filepath, args.type)
+            time.sleep(2)
+            if papirus.rotation == 270:
+                papirus.rotation = 0
+            else:
+                papirus.rotation = papirus.rotation + 90 
 
 def draw_image(papirus, filepath, type):
     message = ""
@@ -34,12 +59,14 @@ def draw_image(papirus, filepath, type):
             file.thumbnail((wsize, papirus.size[1]), Image.ANTIALIAS)
             # centering the image
             xpadding = int((papirus.size[0] - file.size[0]) / 2)
+            ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Landscape image cropped!"
         # Portrait image
         else:
             hsize = int(float(file.size[0]) * float(float(papirus.size[1]) / float(papirus.size[0])))
             file.thumbnail((papirus.size[0], hsize), Image.ANTIALIAS)
             # centering the image
+            xpadding = int((papirus.size[0] - file.size[0]) / 2)
             ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Portrait image cropped!"
     # display resize option
@@ -47,12 +74,14 @@ def draw_image(papirus, filepath, type):
         # Landscape image
         if file.size[0] > file.size[1]:
             file.thumbnail(papirus.size, Image.ANTIALIAS)
+            xpadding = int((papirus.size[0] - file.size[0]) / 2)
             ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Landscape image resized!"
         # Portrait image
         else:
             file.thumbnail(papirus.size, Image.ANTIALIAS)
             xpadding = int((papirus.size[0] - file.size[0]) / 2)
+            ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Portrait image resized!"
     # initially set all white background
     image = Image.new('1', papirus.size, 1)

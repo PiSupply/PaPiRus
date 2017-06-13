@@ -1,0 +1,160 @@
+#!/usr/bin/env python
+# coding: utf-8
+# ------------------------------------------------------
+# Filename papirus-twitter
+# ------------------------------------------------------
+# Displays Tweets on PaPiRus Zero or PaPiRus HAT display
+#
+# v1.0 by James West June 2016
+# 
+# I used the Twython tutorials at tecoed.co.uk
+# to get me started
+#
+# v1.1 added HAT support and some cleanup
+#      by Ton van Overbeek March 2017
+# ------------------------------------------------------
+
+# import libraries to make it work
+import os
+import sys
+import string
+import re
+import time
+import RPi.GPIO as GPIO
+from twython import Twython
+from papirus import Papirus
+from papirus import PapirusText
+
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
+
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
+hatdir = '/proc/device-tree/hat'
+
+# set up PaPiRus
+screen = Papirus()
+text = PapirusText()
+
+# Twitter authorisation keys
+CONSUMER_KEY = 'YOUR CONSUMER KEY HERE'
+CONSUMER_SECRET = 'YOUR CONSUMER SECRET HERE'
+ACCESS_KEY = 'YOUR ACCESS KEY HERE'
+ACCESS_SECRET = 'YOUR ACCESS SECRET HERE'
+
+api = Twython(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET)
+
+# Identifies the GPIOs that the buttons operate on
+# Assume Papirus Zero
+SW1 = 21
+SW2 = 16
+SW3 = 20
+SW4 = 19
+SW5 = 26
+off_text = '5 = Off'
+
+# Check for HAT, and if detected redefine SW1 .. SW5
+if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')) :
+   f = open(hatdir + '/product')
+   prod = f.read()
+   f.close()
+   f = open(hatdir + '/vendor')
+   vend = f.read()
+   f.close
+   if (string.find(prod, 'PaPiRus ePaper HAT') == 0) and (string.find(vend, 'Pi Supply') == 0) :
+       # Papirus HAT detected
+       SW1 = 16
+       SW2 = 26
+       SW3 = 20
+       SW4 = 21
+       SW5 = -1
+       off_text = '1+2 = Off'
+
+def display_tweets(tweets):
+    for tweet in tweets:
+        clean_tweet = '%s: %s' % (tweet['user']['screen_name'].encode('utf-8'),
+                                  tweet['text'].encode('utf-8'))
+
+        # These lines clear URLs from the tweets and tidies up other elements
+        # the display doesn't seem to like
+        clean_tweet = re.sub(r"(https?\://|http?\://|https?\:)\S+", "", clean_tweet)
+        clean_tweet = re.sub(r"&amp;", "&", clean_tweet)
+        clean_tweet = re.sub(r"&horbar|&hyphen|&mdash|&ndash", "-", clean_tweet)
+        clean_tweet = re.sub(r"&apos|&rsquo|&rsquor|&prime", "'", clean_tweet)
+        clean_tweet = re.sub(r"£", "", clean_tweet)
+        text.write(clean_tweet, 14)
+
+        # Sets how many seconds each tweet is on screen for
+        time.sleep(5)
+
+def main():
+    GPIO.setmode(GPIO.BCM)
+
+    GPIO.setup(SW1, GPIO.IN)
+    GPIO.setup(SW2, GPIO.IN)
+    GPIO.setup(SW3, GPIO.IN)
+    GPIO.setup(SW4, GPIO.IN)
+    if SW5 != -1:
+       GPIO.setup(SW5, GPIO.IN)
+
+    # Writes the menu to the PaPiRus - 14 is the font size
+    text.write('1 = News\n2 = Weather\n3 = My timeline\n4 = My mentions\n' + off_text, 14)
+    while True:
+        # Test for only SW1 to allow for both SW1 and SW2 to select 'Off' on HAT
+        if GPIO.input(SW1) == False and GPIO.input(SW2) == True:
+
+            # Put the Twitter usernames of the news organisations you want to read here
+            twits = ["BBCNews", "GranadaReports", "SkyNews", "itvnews", "MENnewsdesk"]
+            for index in range (len(twits)):
+                # The count parameter defines how many tweets from each account you'll read            
+                tweets = api.get_user_timeline(screen_name=twits[index], count=4)
+                display_tweets(tweets)
+
+            text.write('1 = News\n2 = Weather\n3 = My timeline\n4 = My mentions\n' + off_text, 14)
+
+        # Test for only SW2 to allow for both SW1 and SW2 to select 'Off' on HAT
+        if GPIO.input(SW2) == False and GPIO.input(SW1) == True:
+            # usernames of the weather accounts you'll be using        
+            twitweather = ["mcrweather", "Manches_Weather"]
+            for index in range (len(twitweather)):
+                tweets = api.get_user_timeline(screen_name=twitweather[index], count=1)
+                display_tweets(tweets)
+
+            text.write('1 = News\n2 = Weather\n3 = My timeline\n4 = My mentions\n' + off_text, 14)
+
+        if GPIO.input(SW3) == False:
+            # Gets your home timeline
+            tweets = api.get_home_timeline(count=20)
+            display_tweets(tweets)
+
+            text.write('1 = News\n2 = Weather\n3 = My timeline\n4 = My mentions\n' + off_text, 14)
+
+        if GPIO.input(SW4) == False:
+            # gets your mentions
+            tweets = api.get_mentions_timeline(count=5)
+            display_tweets(tweets)
+
+            text.write('1 = News\n2 = Weather\n3 = My timeline\n4 = My mentions\n' + off_text, 14)
+
+        if (((SW5 != -1) and (GPIO.input(SW5) == False)) or
+            ((SW5 == -1) and (GPIO.input(SW1) == False) and (GPIO.input(SW2) == False))):
+            # Says goodbye, clears the screen and shuts the Pi down
+            text.write('Goodbye..., Shutting down ...')
+            text.write(' ')
+            os.system("sudo shutdown -h now")
+
+        # Small delay to allow for SW1 + SW2 detection on HAT
+        time.sleep(0.1)
+
+if __name__ == '__main__':
+    main()
