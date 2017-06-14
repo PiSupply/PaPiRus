@@ -60,3 +60,10 @@ The RTC is a [Microchip MCP7940N](http://ww1.microchip.com/downloads/en/DeviceDo
 The temperature sensor in use is a [NXP LM75BD](http://www.nxp.com/documents/data_sheet/LM75B.pdf) and this is located at 0x48 on i2c-1 when using a 40 pin Raspberry Pi. If you are using this with a 26 pin Raspberry Pi it will be on i2c-0 at the same address but this is a rare use case.
 
 Both the RTC and temperature sensor have many more features than we have documented. We will not be officially supporting all of these features as they are already well documented in the datasheets and elsewhere. But we have left them available for advanced users.
+
+## PWM Pin - BCM 18 / Pin 12
+
+The latest hardware version of the ePaper / eInk displays themselves no longer require the PWM pin found on the PaPiRus HAT v1.9 (BCM18 / Pin 12). This is why the PaPiRus Zero hardware no longer makes use of this pin. Because of this, whilst it is connected with a trace on the PCB itself, it is not needed to be connected for the latest displays...it only remains because the PaPiRus HAT also supports some of the legacy displays from Pervasive Displays (this will likely be phased out in version 2.0).
+
+For this reason, if you need to use BCM18 / Pin 12 for another reason, you can just cut the trace or desolder the header for that pin.
+Alternatively, we have had success in "disconnecting" this pin by getting a 40 pin through hole extension header and removing pin 12 out  - by pulling it or cutting it out.
