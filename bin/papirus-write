@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 from papirus import PapirusTextPos
 import argparse
 
@@ -12,8 +13,16 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
         print("Please run script as root")
         sys.exit()
 
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
 # Command line usage
-# papirus-wite "Some text to write"  -x  -y -fsize
+# papirus-write "Some text to write"  -x  -y -fsize
 
 def main():
     p = argparse.ArgumentParser()
@@ -21,12 +30,13 @@ def main():
     p.add_argument('--posX', '-x', type=int, default=0, help="X position of the start of the text")
     p.add_argument('--posY', '-y', type=int, default=0, help="Y position of the start of the text")
     p.add_argument('--fsize', '-s',type=int , default=20, help="Font size to use for the text")
+    p.add_argument('--rotation', '-r',type=int , default=0, help="Rotation one of 0, 90, 180, 270")
 
     args = p.parse_args()
 
     if args.content:
-	print("Writing to Papirus.......")
-        text = PapirusTextPos()
+        text = PapirusTextPos(rotation=args.rotation)
+        print("Writing to Papirus.......")
         text.AddText(args.content, args.posX, args.posY, args.fsize)
         print("Finished!")
 

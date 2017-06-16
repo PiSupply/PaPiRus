@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 # coding: utf-8
 # ------------------------------------------------------
 # Filename papirus-twitter
@@ -31,6 +31,14 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
     if user != 0:
         print("Please run script as root")
         sys.exit()
+
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
 
 hatdir = '/proc/device-tree/hat'
 

@@ -10,6 +10,14 @@ from PIL import ImageFont
 from time import sleep
 import RPi.GPIO as GPIO
 
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
 # Running as root only needed for older Raspbians without /dev/gpiomem
 if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
     user = os.getuid()
@@ -50,7 +58,7 @@ if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')
        SW4 = 21
        SW5 = -1
 
-def main():
+def main(argv):
     global SIZE
 
     GPIO.setmode(GPIO.BCM)
@@ -62,7 +70,8 @@ def main():
     if SW5 != -1:
         GPIO.setup(SW5, GPIO.IN)
 
-    papirus = Papirus()
+    papirus = Papirus(rotation = int(argv[0]) if len(sys.argv) > 1 else 0)
+
 
     # Use smaller font for smaller dislays
     if papirus.height <= 96:
@@ -133,4 +142,8 @@ def write_text(papirus, text, size):
     papirus.partial_update()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main(sys.argv[1:])
+    except KeyboardInterrupt:
+        sys.exit('interrupted')
+

@@ -9,5 +9,6 @@ setup(name='papirus',
       author_email='example@example.com',
       url='pi-supply.com',
       packages=['papirus'],
-      scripts=['bin/papirus-clear', 'bin/papirus-write', 'bin/papirus-set', 'bin/papirus-gol', 'bin/papirus-clock', 'bin/papirus-config', 'bin/papirus-setup', 'bin/papirus-draw', 'bin/papirus-temp', 'bin/papirus-buttons', 'bin/papirus-twitter']
+      scripts=['bin/papirus-buttons', 'bin/papirus-clear', 'bin/papirus-clock', 'bin/papirus-composite-write', 'bin/papirus-config', 'bin/papirus-draw', 'bin/papirus-gol', 'bin/papirus-radar', 'bin/papirus-set', 'bin/papirus-setup', 'bin/papirus-temp', 'bin/papirus-textfill', 'bin/papirus-twitter', 'bin/papirus-write'],
+      data_files=[('bitmaps', ['bin/papirus-logo.bmp'])]
      )

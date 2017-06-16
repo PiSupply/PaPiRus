@@ -7,8 +7,8 @@ from papirus import Papirus
 
 class PapirusImage():
 
-    def __init__(self):
-        self.papirus = Papirus()
+    def __init__(self, rotation = 0):
+        self.papirus = Papirus(rotation = rotation)
 
     def write(self, image):
         image = Image.open(image)
