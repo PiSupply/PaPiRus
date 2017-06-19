@@ -701,4 +701,3 @@ It is safe to say we have an awesome and growing community of people using epape
 * [RISC OS software library for driving PaPiRus](https://www.riscosopen.org/forum/forums/1/topics/9142?page=1)
 * [PaPiRus HAT working with resin.io](https://github.com/resin-io-playground/resinio-PaPiRus)
 * [Raspberry Pi Internal Watchdog Setup and Information](http://www.switchdoc.com/2014/11/reliable-projects-using-internal-watchdog-timer-raspberry-pi/)
->>>>>>> 761462bab2661c38d1b54f799f2e8be3c764388d
