@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # PaPiRus
 You can find here a variety of software, hardware and other resources for the [PaPiRus](http://papirus.ws) range of ePaper eInk displays from [Pi Supply](https://www.pi-supply.com). This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
