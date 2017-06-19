@@ -73,7 +73,7 @@ def main(argv):
     papirus = Papirus(rotation = int(argv[0]) if len(sys.argv) > 1 else 0)
 
 
-    # Use smaller font for smaller dislays
+    # Use smaller font for smaller displays
     if papirus.height <= 96:
         SIZE = 18
 
