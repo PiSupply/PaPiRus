@@ -1,4 +1,3 @@
-
 # PaPiRus
 You can find here a variety of software, hardware and other resources for the [PaPiRus](http://papirus.ws) range of ePaper eInk displays from [Pi Supply](https://www.pi-supply.com). This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
@@ -156,9 +155,25 @@ text.RemoveText("Top")
 text.WriteAll()
 ```
 
+#### The Positional Text API (example 3)
+```python
+from papirus import PapirusTextPos
+
+# Same as calling "PapirusTextPos(True)"
+text = PapirusTextPos()
+
+# Write text to the screen at selected point, with an Id
+# This will write "hello world" to the screen with white text and a black background
+text.AddText("hello world", 10, 10, Id="Start", invert=True)
+```
+
 #### Notes
 PaPiRusTextPos will take in to account \n as a line break (or multiple line breaks)
 Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
+
+When using the PapirusTextPos, in either mode, setting the "partial_updates" property to True will cause partial updates to be done, meaning only the section of the PaPiRus screen that has been changed will be updated.  These can be vastly quicker than a full update for each piece of text.
+
+If not using the "partial_updates" property, calling "WriteAll(True)" will do the same thing on a one off basis.
 
 #### Unicode Support in the Text API
 ```python
