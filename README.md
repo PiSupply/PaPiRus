@@ -334,7 +334,8 @@ In case you have problems assembling the board please [check this article on our
 * Connect the GPIO adapter
 * Install the pogo pin connector
 * Install the push buttons
-Not all the sections apply to both the PaPiRus HAT and the PaPiRus Zero.
+
+Please note: Not all the sections apply to both the PaPiRus HAT and the PaPiRus Zero.
 
 ### Datasheets, connectivity, pinout, jumpers and further information
 For additional information follow the links below:
