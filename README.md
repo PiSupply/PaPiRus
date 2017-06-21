@@ -345,7 +345,7 @@ For additional information follow the links below:
 
 # Third party software libraries
 
-It is safe to say we have an awesome and growing community of people using epaper with PaPiRus and beyond and we get a huge amount of contributions of code, some of which we can easily integrate here and others which we can't (we are only a small team). However we want to make sure that any contributions are easy to find, for anyone looking. So here is a list of other software libraries that might be useful to you:
+It is safe to say we have an awesome and growing community of people using epaper with PaPiRus and beyond and we get a huge amount of contributions of code, some of which we can easily integrate here and others which we can't (we are only a small team). However we want to make sure that any contributions are easy to find, for anyone looking. So here is a list of other software libraries that might be useful to you (if you have one of your own, please visit the ["Issues"](https://github.com/PiSupply/PaPiRus/issues) tab above and let us know!):
 
 * [Go software library for driving PaPiRus](https://github.com/wmarbut/go-epdfuse)
 * [RISC OS software library for driving PaPiRus](https://www.riscosopen.org/forum/forums/1/topics/9142?page=1)
