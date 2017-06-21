@@ -290,7 +290,7 @@ papirus-buttons [rotation]
 # Demo of getting temperature from LM75
 papirus-temp
 
-# Demo showing depdency of update rate on temperature
+# Demo showing dependency of update rate on temperature
 papirus-radar
 
 # Display text filling the width of the display
