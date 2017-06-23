@@ -1,6 +1,6 @@
-# Minimal support for LM75b temperature sensor onthe Papirus HAT / Papirus Zero
-# This module allows you to read the tmeperature.
-# The OS-output (Overtemperture Shutdown) connected to GPIO xx (pin 11) is not supported
+# Minimal support for LM75b temperature sensor on the Papirus HAT / Papirus Zero
+# This module allows you to read the temperature.
+# The OS-output (Over-temperature Shutdown) connected to GPIO xx (pin 11) is not supported
 # by this module
 #
 
@@ -20,6 +20,16 @@ class LM75B(object):
         self._address = address
         self._bus = smbus.SMBus(busnum)
         self._bus.write_byte_data(self._address, LM75B_CONF_REGISTER, LM75B_CONF_NORMAL)
+
+    def getTempCFloat(self):
+        """Return temperature in degrees Celsius as float"""
+        raw = self._bus.read_word_data(self._address, LM75B_TEMP_REGISTER) & 0xFFFF
+        raw = ((raw << 8) & 0xFF00) + (raw >> 8)
+        return (raw / 32.0) / 8.0
+
+    def getTempFFloat(self):
+        """Return temperature in degrees Fahrenheit as float"""
+        return (self.getTempCFloat() * (9.0 / 5.0)) + 32.0
 
     def getTempC(self):
         """Return temperature in degrees Celsius as integer, so it can be
