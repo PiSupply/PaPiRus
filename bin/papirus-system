@@ -36,6 +36,11 @@ BLACK = 0
 FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
 FONT_SIZE  = 12
 
+VENDOR = '/proc/device-tree/hat/vendor'
+PRODUCT = '/proc/device-tree/hat/product'
+UUID = '/proc/device-tree/hat/uuid'
+STATUS = '/dev/epd/error'
+
 def sysInfo(papirus):
     # initially set all white background
     image = Image.new('1', papirus.size, WHITE)
@@ -92,27 +97,43 @@ def main(stdscr):
 
     papirus = Papirus()
 
-    vendor  = str(subprocess.check_output(["cat", "/proc/device-tree/hat/vendor"])).rstrip(' \n\r\0')
-    product = str(subprocess.check_output(["cat", "/proc/device-tree/hat/product"])).rstrip(' \n\r\0')
-    serial = str(subprocess.check_output(["cat", "/proc/device-tree/hat/uuid"])).rstrip(' \n\r\0')
-    display_status = str(subprocess.check_output(["cat", "/dev/epd/error"])).rstrip(' \n\r\0')
+    # Check for HAT
+    if os.path.exists(PRODUCT):
+        isHAT = True
+        vendor = str(subprocess.check_output(["cat", VENDOR])).rstrip(' \n\r\0')
+        product = str(subprocess.check_output(["cat", PRODUCT])).rstrip(' \n\r\0')
+        serial = str(subprocess.check_output(["cat", UUID])).rstrip(' \n\r\0')
 
-    panelwin = curses.newwin(10, curses.COLS - 6, 2, 3)
+        panelwin = curses.newwin(10, curses.COLS - 6, 2, 3)
+    else:
+        isHAT = False
+        panelwin = curses.newwin(9, curses.COLS - 6, 2, 3)
+
+    display_status = str(subprocess.check_output(["cat", STATUS])).rstrip(' \n\r\0')
+
     netwin = curses.newwin(4, curses.COLS - 6, 12, 3)
 
     # Fill firmware info window.
     panelwin.erase()
     panelwin.border()
-    panelwin.addstr(1, 2, 'Vendor: {v:s}'.format(v=vendor))
-    panelwin.addstr(2, 2, 'Product: {p:s}'.format(p=product))
-    panelwin.addstr(3, 2, 'PANEL: {p:s}" ({w:d} x {h:d})'.format(p=papirus.panel, w=papirus.width, h=papirus.height))
-    panelwin.addstr(4, 2, 'FILM: {v:s}'.format(v=papirus.version))
-    panelwin.addstr(5, 2, 'COG: {g:d}'.format(g=papirus.cog))
-    panelwin.addstr(6, 2, 'VERSION: {f:d}'.format(f=papirus.film))
-    panelwin.addstr(7, 2, 'UUID: {s:s}'.format(s=serial))
-    panelwin.addstr(8, 2, 'Screen status: {b:s}'.format(b=display_status))
+    if isHAT:
+        panelwin.addstr(1, 2, 'Vendor: {v:s}'.format(v=vendor))
+        panelwin.addstr(2, 2, 'Product: {p:s}'.format(p=product))
+        panelwin.addstr(3, 2, 'PANEL: {p:s}" ({w:d} x {h:d})'.format(p=papirus.panel, w=papirus.width, h=papirus.height))
+        panelwin.addstr(4, 2, 'FILM: {v:s}'.format(v=papirus.version))
+        panelwin.addstr(5, 2, 'COG: {g:d}'.format(g=papirus.cog))
+        panelwin.addstr(6, 2, 'VERSION: {f:d}'.format(f=papirus.film))
+        panelwin.addstr(7, 2, 'UUID: {s:s}'.format(s=serial))
+        panelwin.addstr(8, 2, 'Screen status: {b:s}'.format(b=display_status))
+    else:
+        panelwin.addstr(1, 2, 'Vendor: Pi Supply')
+        panelwin.addstr(2, 2, 'Product: PaPiRus Zero')
+        panelwin.addstr(3, 2, 'PANEL: {p:s}" ({w:d} x {h:d})'.format(p=papirus.panel, w=papirus.width, h=papirus.height))
+        panelwin.addstr(4, 2, 'FILM: {v:s}'.format(v=papirus.version))
+        panelwin.addstr(5, 2, 'COG: {g:d}'.format(g=papirus.cog))
+        panelwin.addstr(6, 2, 'VERSION: {f:d}'.format(f=papirus.film))
+        panelwin.addstr(7, 2, 'Screen status: {b:s}'.format(b=display_status))
     panelwin.refresh()
-
 
     netwin.erase()
     netwin.border()
