@@ -112,7 +112,7 @@ def main(argv):
         if (SW5 != -1) and (GPIO.input(SW5) == False):
             print('SW5 Pressed')
 
-        time.sleep(0.5) # debounce
+        time.sleep(0.2) # debounce
 
 def i2c_detect(bus):
     """Detects if the temp and RTC chips are available"""
@@ -216,7 +216,6 @@ def display_file(papirus, file_name):
     """Display resized image using full update"""
 
     image = Image.open(file_name)
-
     rs = image.resize((papirus.width, papirus.height), Image.ANTIALIAS)
     bw = rs.convert("1", dither=Image.FLOYDSTEINBERG)
 
