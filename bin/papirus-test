@@ -1,0 +1,244 @@
+#! /usr/bin/env python
+
+import time
+import sys
+import os
+import smbus
+import subprocess
+from datetime import datetime
+import RPi.GPIO as GPIO
+
+import Image
+import ImageDraw
+import ImageFont
+
+from papirus import Papirus
+from papirus import LM75B
+
+global rtc_dt
+
+WHITE = 1
+BLACK = 0
+
+LM75BD_ADR = 0x48
+MCP7940N_ADR = 0x6F
+
+FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
+BITMAP_PATH = '/usr/local/bitmaps/'
+BITMAP_FILE = BITMAP_PATH + 'papirus-logo.bmp'
+DEMO_FILE = '/home/pi/Pictures/maplin-logo.bmp'
+
+VENDOR = '/proc/device-tree/hat/vendor'
+PRODUCT = '/proc/device-tree/hat/product'
+UUID = '/proc/device-tree/hat/uuid'
+
+GPIO.setmode(GPIO.BCM)
+
+# Check for HAT
+if os.path.exists(PRODUCT):
+    isHAT = True
+    vendor = subprocess.check_output(["cat", VENDOR])
+    product = subprocess.check_output(["cat", PRODUCT])
+    serial = subprocess.check_output(["cat", UUID])
+    SW1 = 16
+    SW2 = 26
+    SW3 = 20
+    SW4 = 21
+    SW5 = -1
+    GPIO.setup(SW1, GPIO.IN)
+    GPIO.setup(SW2, GPIO.IN)
+    GPIO.setup(SW3, GPIO.IN)
+    GPIO.setup(SW4, GPIO.IN)
+else:
+    isHAT = False
+    SW1 = 21
+    SW2 = 16
+    SW3 = 20
+    SW4 = 19
+    SW5 = 26
+    GPIO.setup(SW1, GPIO.IN)
+    GPIO.setup(SW2, GPIO.IN)
+    GPIO.setup(SW3, GPIO.IN)
+    GPIO.setup(SW4, GPIO.IN)
+    GPIO.setup(SW5, GPIO.IN)
+
+def main(argv):
+    """main program"""
+
+    bus = smbus.SMBus(1)  # 1 indicates /dev/i2c-1
+    i2c_detect(bus) # detect devices connected to the bus
+    if isHAT:
+        date_time = date_time_rtc(bus)
+        print("RTC Date/Time: {d:s}".format(d=date_time.strftime("%A %d. %B %Y - %H:%M")))
+    papirus = Papirus() # create an instance of papirus
+
+    panel_info(papirus)
+    print('Trying to use the screen')
+    if not break_detect(papirus):
+        print('Screen status OK')
+        time.sleep(1)
+        print('Displaying an image using full update')
+        display_file(papirus, BITMAP_FILE)
+        time.sleep(1)
+        print('Displaying an animation using partial update')
+        display_animated(papirus, BITMAP_PATH)
+        time.sleep(1)
+        print('Displaying information about the board and screen')
+        display_papirusdata(papirus)
+    else:
+        print('The screen might be broken, cannot continue further')
+
+    print('Press SW1 to exit, SW2 for single image, SW3 for animation, SW4 for board info')
+    if isHAT:
+        print('SW4--SW3--SW2--SW1')
+    else:
+        print('SW5--SW4--SW3--SW2--SW1')
+    # get into demo mode and test the switches
+    while True:
+        # Exit when SW1 and SW2 are pressed simultaneously
+        if GPIO.input(SW1) == False:
+            print('SW1 Pressed - Exiting')
+            papirus.clear()
+            sys.exit()
+        if GPIO.input(SW2) == False:
+            print('SW2 Pressed')
+            display_file(papirus, DEMO_FILE)
+        if GPIO.input(SW3) == False:
+            print('SW3 Pressed')
+            display_animated(papirus, BITMAP_PATH)
+        if GPIO.input(SW4) == False:
+            print('SW4 Pressed')
+            display_papirusdata(papirus)
+        if (SW5 != -1) and (GPIO.input(SW5) == False):
+            print('SW5 Pressed')
+
+        time.sleep(0.2) # debounce
+
+def i2c_detect(bus):
+    """Detects if the temp and RTC chips are available"""
+
+    for device in range(128):
+        try:
+            bus.read_i2c_block_data(device, 0)
+            if device == LM75BD_ADR:
+                print("NXP LM75BD detected at: 0x{d:02x}".format(d=device))
+            elif device == MCP7940N_ADR:
+                print("MCP7940N detected at: 0x{d:02x}".format(d=device))
+            else:
+                print("Other device found at: {d:x}".format(d=device))
+        except:  # exception if I2C read fails
+            pass
+
+def date_time_rtc(bus):
+    data = bus.read_i2c_block_data(MCP7940N_ADR, 0, 7)
+    sec   = (data[0] & 0x7f) / 16 * 10 + (data[0] & 0x0f)
+    min   = data[1] / 16 * 10 + (data[1] & 0x0f)
+    hour  = data[2] / 16 * 10 + (data[2] & 0x0f)
+    day   = data[4] / 16 * 10 + (data[4] & 0x0f)
+    month = (data[5] & 0x10) / 16 * 10 + (data[5] & 0x0f)
+    year  = data[6] / 16 * 10 + (data[6] & 0x0f)
+    dt = datetime(2000+year, month, day, hour, min, sec)
+    return dt
+
+def panel_info(papirus):
+    """Retrieves information about the screen"""
+    if isHAT:
+        print("Vendor: {v:s}".format(v=vendor))
+        print("Product: {p:s}".format(p=product))
+        print("Serial: {s:s}".format(s=serial))
+
+    print("Panel info: {p:s} {w:d} x {h:d} version={v:s} COG={g:d} FILM={f:d}".format(p=papirus.panel, w=papirus.width,
+                                                                            h=papirus.height, v=papirus.version,
+                                                                            g=papirus.cog, f=papirus.film))
+
+def break_detect(papirus):
+    """Try using the screen to determine if it's broken"""
+    # initially set all white background
+    image = Image.new('1', papirus.size, WHITE)
+    # prepare for drawing
+    draw = ImageDraw.Draw(image)
+    # one pixel in top left corner
+    draw.point((0, 0), fill=BLACK)
+    # display image on the panel
+    papirus.display(image)
+    papirus.update()
+    # capture the status of the screen via fuse
+    display_status = str(subprocess.check_output(["cat", "/dev/epd/error"])).rstrip(' \n\r\0')
+    if display_status == 'OK':
+        return False
+    else:
+        return True
+
+def display_papirusdata(papirus):
+    w = papirus.width
+    h = papirus.height
+    #w = 128
+    #h = 96
+    if h<=96:
+        text_font_size1 = 6
+        text_font_size2 = 8
+        text_font_size3 = 20
+    else:
+        text_font_size1 = 11
+        text_font_size2 = 16
+        text_font_size3 = 36
+    sensor = LM75B()
+
+    text_font1 = ImageFont.truetype(FONT_FILE, text_font_size1)
+    text_font2 = ImageFont.truetype(FONT_FILE, text_font_size2)
+    text_font3 = ImageFont.truetype(FONT_FILE, text_font_size3)
+
+    # initially set all white background
+    image = Image.new('1', papirus.size, WHITE)
+
+    # prepare for drawing
+    draw = ImageDraw.Draw(image)
+    draw.rectangle((1, 1, w - 1, h - 1), fill=WHITE, outline=BLACK)
+    draw.rectangle((2, 2, w - 2, h - 2), fill=WHITE, outline=BLACK)
+    # display some information if it is a HAT others if is a Zero
+    if isHAT:
+        draw.text((4, 3), vendor[:-1], fill=BLACK, font=text_font3)
+        draw.text((4, h / 3 + 10), product[:-1], fill=BLACK, font=text_font2)
+    else:
+        draw.text((4, 3), "Pi Supply", fill=BLACK, font=text_font3)
+        draw.text((4, h / 3 + 10), "PaPiRus Zero", fill=BLACK, font=text_font2)
+
+    draw.text((4, h / 2 + 10), "Temperature " + str(sensor.getTempC()) + "\xb0C", fill=BLACK, font=text_font2)
+
+    if w>128 and isHAT:
+        draw.text((5, h-text_font_size1 - 2), serial[:-1], fill=BLACK, font=text_font1)
+
+    # display image on the screen
+    papirus.display(image)
+    papirus.update()
+
+def display_file(papirus, file_name):
+    """Display resized image using full update"""
+
+    image = Image.open(file_name)
+    rs = image.resize((papirus.width, papirus.height), Image.ANTIALIAS)
+    bw = rs.convert("1", dither=Image.FLOYDSTEINBERG)
+
+    papirus.display(bw)
+    papirus.update()
+
+def display_animated(papirus, file_path):
+    """Display animation using partial update"""
+
+    for i in range(0, len(os.listdir(file_path))):
+        name = file_path + '/' + str(i) + '.gif'
+        if os.path.isfile(name):
+            image = Image.open(name)
+            rs = image.resize((papirus.width, papirus.height), Image.ANTIALIAS)
+            bw = rs.convert("1", dither=Image.FLOYDSTEINBERG)
+
+            papirus.display(bw)
+            papirus.partial_update()
+
+    papirus.update()
+
+# main
+if "__main__" == __name__:
+#    if len(sys.argv) < 2:
+#        sys.exit('usage: {p:s} image-file'.format(p=sys.argv[0]))
+    main(sys.argv[1:])
