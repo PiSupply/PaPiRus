@@ -26,7 +26,6 @@ MCP7940N_ADR = 0x6F
 FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
 BITMAP_PATH = '/usr/local/bitmaps/'
 BITMAP_FILE = BITMAP_PATH + 'papirus-logo.bmp'
-DEMO_FILE = '/home/pi/Pictures/maplin-logo.bmp'
 
 VENDOR = '/proc/device-tree/hat/vendor'
 PRODUCT = '/proc/device-tree/hat/product'
@@ -66,15 +65,18 @@ def main(argv):
     """main program"""
 
     bus = smbus.SMBus(1)  # 1 indicates /dev/i2c-1
-    i2c_detect(bus) # detect devices connected to the bus
     if isHAT:
-        date_time = date_time_rtc(bus)
-        print("RTC Date/Time: {d:s}".format(d=date_time.strftime("%A %d. %B %Y - %H:%M")))
+        print("Assuming this is a PaPiRus HAT board")
+    else:
+        print("Assuming this is a PaPiRus Zero board")
+
+    i2c_detect(bus) # detect devices connected to the bus
+
     papirus = Papirus() # create an instance of papirus
 
-    panel_info(papirus)
-    print('Trying to use the screen')
-    if not break_detect(papirus):
+    panel_info(papirus, bus) # provide board and screen information
+
+    if not break_detect(papirus): # trying to use the screen
         print('Screen status OK')
         time.sleep(1)
         print('Displaying an image using full update')
@@ -85,34 +87,38 @@ def main(argv):
         time.sleep(1)
         print('Displaying information about the board and screen')
         display_papirusdata(papirus)
+
+        print('Press SW4 for board info, SW3 for animation, SW2 for single image, SW1 to exit')
+        if isHAT:
+            print('Board layout SW4--SW3--SW2--SW1')
+            print('Board pins    36   37   38   40')
+            print('BCM GPIO      16   26   20   21')
+        else:
+            print('Board layout SW5--SW4--SW3--SW2--SW1')
+            print('Board pins    40   36   38   35   37')
+            print('BCM GPIO      21   16   20   19   26')
+        # get into demo mode and test the switches
+        while True:
+            # Exit when SW1 and SW2 are pressed simultaneously
+            if GPIO.input(SW1) == False:
+                print('SW1 Pressed - Exiting')
+                papirus.clear()
+                sys.exit()
+            if GPIO.input(SW2) == False:
+                print('SW2 Pressed')
+                display_file(papirus, BITMAP_FILE)
+            if GPIO.input(SW3) == False:
+                print('SW3 Pressed')
+                display_animated(papirus, BITMAP_PATH)
+            if GPIO.input(SW4) == False:
+                print('SW4 Pressed')
+                display_papirusdata(papirus)
+            if (SW5 != -1) and (GPIO.input(SW5) == False):
+                print('SW5 Pressed')
+
+            time.sleep(0.2)  # debounce
     else:
         print('The screen might be broken, cannot continue further')
-
-    print('Press SW1 to exit, SW2 for single image, SW3 for animation, SW4 for board info')
-    if isHAT:
-        print('SW4--SW3--SW2--SW1')
-    else:
-        print('SW5--SW4--SW3--SW2--SW1')
-    # get into demo mode and test the switches
-    while True:
-        # Exit when SW1 and SW2 are pressed simultaneously
-        if GPIO.input(SW1) == False:
-            print('SW1 Pressed - Exiting')
-            papirus.clear()
-            sys.exit()
-        if GPIO.input(SW2) == False:
-            print('SW2 Pressed')
-            display_file(papirus, DEMO_FILE)
-        if GPIO.input(SW3) == False:
-            print('SW3 Pressed')
-            display_animated(papirus, BITMAP_PATH)
-        if GPIO.input(SW4) == False:
-            print('SW4 Pressed')
-            display_papirusdata(papirus)
-        if (SW5 != -1) and (GPIO.input(SW5) == False):
-            print('SW5 Pressed')
-
-        time.sleep(0.2) # debounce
 
 def i2c_detect(bus):
     """Detects if the temp and RTC chips are available"""
@@ -140,12 +146,17 @@ def date_time_rtc(bus):
     dt = datetime(2000+year, month, day, hour, min, sec)
     return dt
 
-def panel_info(papirus):
+def panel_info(papirus, bus):
     """Retrieves information about the screen"""
     if isHAT:
         print("Vendor: {v:s}".format(v=vendor))
         print("Product: {p:s}".format(p=product))
         print("Serial: {s:s}".format(s=serial))
+        date_time = date_time_rtc(bus)
+        print("Date/Time from RTC: {d:s}".format(d=date_time.strftime("%A %d. %B %Y - %H:%M")))
+
+    sensor = LM75B()
+    print("Temperature from sensor: {t:d} degrees Celsius" .format(t=sensor.getTempC()))
 
     print("Panel info: {p:s} {w:d} x {h:d} version={v:s} COG={g:d} FILM={f:d}".format(p=papirus.panel, w=papirus.width,
                                                                             h=papirus.height, v=papirus.version,
@@ -172,8 +183,6 @@ def break_detect(papirus):
 def display_papirusdata(papirus):
     w = papirus.width
     h = papirus.height
-    #w = 128
-    #h = 96
     if h<=96:
         text_font_size1 = 6
         text_font_size2 = 8
@@ -239,6 +248,11 @@ def display_animated(papirus, file_path):
 
 # main
 if "__main__" == __name__:
-#    if len(sys.argv) < 2:
-#        sys.exit('usage: {p:s} image-file'.format(p=sys.argv[0]))
-    main(sys.argv[1:])
+    if len(sys.argv) < 1:
+        sys.exit('usage: {p:s}'.format(p=sys.argv[0]))
+
+    try:
+        main(sys.argv[1:])
+    except KeyboardInterrupt:
+        sys.exit('interrupted')
+        pass
