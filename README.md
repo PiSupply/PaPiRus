@@ -272,6 +272,9 @@ papirus-clear
 All demos can be seen by running the following commands. Code can be found in the repo for the python bin directory. 
 
 ```bash
+# Board and screen diagnostic
+papirus-test
+
 # Show clock
 papirus-clock [rotation]
 
