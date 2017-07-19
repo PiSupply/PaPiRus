@@ -18,7 +18,7 @@ class DispText():
         self.size = size
         self.endx = 0
         self.endy = 0
-	self.invert = invert
+        self.invert = invert
 
 class PapirusTextPos(object):
     def __init__(self, autoUpdate = True, rotation = 0):
@@ -27,7 +27,7 @@ class PapirusTextPos(object):
         self.allText = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.autoUpdate = autoUpdate
-	self.partial_updates = False
+        self.partial_updates = False
 
     def AddText(self, text, x=0, y=0, size = 20, Id = None, invert=False, font_path='/usr/share/fonts/truetype/freefont/FreeMono.ttf'):
         # Create a new Id if none is supplied
@@ -35,7 +35,7 @@ class PapirusTextPos(object):
             Id = str(uuid.uuid4())
 
         # If the Id doesn't exist, add it  to the dictionary
-	if Id not in self.allText:
+        if Id not in self.allText:
             self.allText[Id] = DispText(text, x, y, size, invert)
             # add the text to the image
             self.addToImageText(Id, font_path)
