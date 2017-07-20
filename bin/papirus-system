@@ -91,6 +91,8 @@ def main(stdscr):
     stdscr.refresh()
 
     papirus = Papirus()
+    # Issue a command to the screen to populate the screen status which otherwise would show as undefined
+    papirus.clear()
 
     vendor  = str(subprocess.check_output(["cat", "/proc/device-tree/hat/vendor"])).rstrip(' \n\r\0')
     product = str(subprocess.check_output(["cat", "/proc/device-tree/hat/product"])).rstrip(' \n\r\0')
