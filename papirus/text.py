@@ -32,19 +32,21 @@ class PapirusText():
 
         # Compute each line
         for word in text.split():
-            # If there is space on line add the word to it
-            if (len(text_lines[current_line]) + len(word)) < line_size:
+            # Always add first word (even when it is too long)
+            if len(text_lines[current_line]) == 0:
+                text_lines[current_line] += word
+            elif (draw.textsize(text_lines[current_line] + " " + word, font=font)[0]) < self.papirus.width:
                 text_lines[current_line] += " " + word
             else:
                 # No space left on line so move to next one
-                text_lines.append("")
+                text_lines.append(u"")
                 current_line += 1
                 text_lines[current_line] += " " + word
 
         current_line = 0
         for l in text_lines:
+            draw.text( (0, size*current_line) , l, font=font, fill=BLACK)
             current_line += 1
-            draw.text( (0, ((size*current_line)-size)) , l, font=font, fill=BLACK)
 
         self.papirus.display(image)
         self.papirus.update()

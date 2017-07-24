@@ -94,11 +94,11 @@ class PapirusTextPos(object):
 
         # Calculate the max number of char to fit on line
         # Taking in to account the X starting position
-        line_size = ((self.papirus.width - x) / (size*0.65))
+        line_width = self.papirus.width - x
 
         # Starting vars
         current_line = 0
-        # unicode by default
+        # Unicode by default
         text_lines = [u""]
 
         # Split the text by \n first
@@ -107,24 +107,25 @@ class PapirusTextPos(object):
         # Go through the lines and add them
         for line in toProcess:
             # Add in a line to add the words to
-            text_lines.append("")
+            text_lines.append(u"")
+            current_line += 1
             # Compute each line
             for word in line.split():
-                # If there is space on line add the word to it
-                if (len(text_lines[current_line]) + len(word)) < line_size:
-                    # Only add a space if there`s something on the line
-                    if len(text_lines[current_line]) > 0:
-                        text_lines[current_line] += " "
+                # Always add first word (even it is too long)
+                if len(text_lines[current_line]) == 0:
                     text_lines[current_line] += word
+                elif (x + draw.textsize(text_lines[current_line] + " " + word, font=font)[0]) < line_width:
+                    text_lines[current_line] += " " + word
                 else:
                     # No space left on line so move to next one
-                    text_lines.append("")
+                    text_lines.append(u"")
                     current_line += 1
                     text_lines[current_line] += " " + word
-            # Move the pointer to next line
-            current_line +=1
+        # Remove the first empty line
+        if len(text_lines) > 1:
+            del text_lines[0]
 
-        #  Go through all the lines as needed, drawing them on to the image
+        # Go through all the lines as needed, drawing them on to the image
 
         # Reset the ending position of the text
         self.allText[Id].endy = y
@@ -133,14 +134,18 @@ class PapirusTextPos(object):
         # Start at the beginning, calc all the end locations
         current_line = 0
         for l in text_lines:
-            current_line += 1
             # Find out the size of the line to be drawn
             textSize = draw.textsize(l, font=font)
             # Adjust the x end point if needed
             if textSize[0]+x > self.allText[Id].endx:
                 self.allText[Id].endx = textSize[0] + x
             # Add on the y end point
-            self.allText[Id].endy += textSize[1]
+            self.allText[Id].endy += size
+            # If next line does not fit, quit
+            current_line += 1
+            if self.allText[Id].endy > (self.papirus.height - size - 3):
+                del text_lines[current_line:]
+                break;
 
         # Little adjustment to make sure the text gets covered
         self.allText[Id].endy += 3
@@ -152,9 +157,10 @@ class PapirusTextPos(object):
         # Start at the beginning, add all the lines to the image
         current_line = 0
         for l in text_lines:
-            current_line += 1
             # Draw the text to the image
-            draw.text( (x, ((size*current_line)-size) + y) , l, font=font, fill=font_col)
+            yline = y + size*current_line
+            draw.text( (x, yline), l, font=font, fill=font_col)
+            current_line += 1
 
     def WriteAll(self, partial_update=False):
         # Push the image to the PaPiRus device, and update only what's needed
