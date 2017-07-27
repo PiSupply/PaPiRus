@@ -115,7 +115,7 @@ class PapirusTextPos(object):
                 # Always add first word (even it is too long)
                 if len(textLines[currentLine]) == 0:
                     textLines[currentLine] += word
-                elif (x + draw.textsize(textLines[currentLine] + " " + word, font=font)[0]) < lineWidth:
+                elif (draw.textsize(textLines[currentLine] + " " + word, font=font)[0]) < lineWidth:
                     textLines[currentLine] += " " + word
                 else:
                     # No space left on line so move to next one
