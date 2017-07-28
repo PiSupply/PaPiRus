@@ -23,6 +23,7 @@ apt-get install git -y
 apt-get install python-imaging -y
 apt-get install python-smbus -y
 apt-get install bc i2c-tools -y
+apt-get install python-dateutil -y
 
 git clone https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
