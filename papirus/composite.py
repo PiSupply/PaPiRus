@@ -22,9 +22,8 @@ class DispImg():
 
 class PapirusComposite (PapirusTextPos):
 
-    def __init__(self, autoUpdate = True):
-        super(PapirusComposite, self).__init__(autoUpdate)
-        self.papirus = Papirus()
+    def __init__(self, autoUpdate = True, rotation = 0):
+        super(PapirusComposite, self).__init__(autoUpdate, rotation)
         self.allImg = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
 
