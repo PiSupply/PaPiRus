@@ -78,12 +78,11 @@ screen.update()
 # Update only the changed pixels (faster)
 screen.partial_update()
 
+# Update only the changed pixels with user defined update duration
+screen.fast_update()
+
 # Disable automatic use of LM75B temperature sensor
 screen.use_lm75b = False
-
-# Change screen size
-# SCREEN SIZES 1_44INCH | 1_9INCH | 2_0INCH | 2_6INCH | 2_7INCH
-screen.set_size(papirus.2_7INCH) (coming soon)
 
 ```
 
@@ -169,12 +168,15 @@ text.AddText("hello world", 10, 10, Id="Start", invert=True)
 ```
 
 #### Notes
-PaPiRusTextPos will take into account \n as a line break (or multiple line breaks)
+PapirusTextPos will take into account \n as a line break (or multiple line breaks)
 Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
 
-When using the PapirusTextPos, in either mode, setting the "partial_updates" property to True will cause partial updates to be done, meaning only the section of the PaPiRus screen that has been changed will be updated.  These can be vastly quicker than a full update for each piece of text.
+WHen the text is longer than will fit on a single line, PapirusTextPos will break the text in multiple lines.
+You can limit the number of lines by specifying the parameter `maxLines` in the `AddText()` method.
 
-If not using the "partial_updates" property, calling "WriteAll(True)" will do the same thing on a one off basis.
+When using the PapirusTextPos, in either mode, setting the "partialUpdates" property to True will cause partial updates to be done, meaning only the section of the PaPiRus screen that has been changed will be updated.  These can be vastly quicker than a full update for each piece of text.
+
+If not using the "partialUpdates" property, calling `WriteAll(True)` will do the same thing on a one off basis.
 
 #### Unicode Support in the Text API
 ```python
@@ -209,7 +211,7 @@ image.write('/path/to/image', 20, (10, 10) ) # This is not confirmed to work cor
 from papirus import PapirusComposite
 
 # Calling PapirusComposite this way will mean nothing is written to the screen until WriteAll is called
-textNImg = PapirusComposite(False)
+textNImg = PapirusComposite(False [, rotation = rot])
 
 # Write text to the screen at selected point, with an Id
 # Nothing will show on the screen
@@ -292,9 +294,9 @@ papirus-framepush (coming soon)
 papirus-buttons [rotation]
 
 # Demo of getting temperature from LM75
-papirus-temp
+papirus-temp [rotation]
 
-# Demo showing dependency of update rate on temperature
+# Demo showing effect of fast update
 papirus-radar
 
 # Display text filling the width of the display
@@ -324,13 +326,18 @@ The screens have the following screen resolutions:
 ```
 
 ### Refresh rates and screen lifespan
-A typical ePaper refresh rate for a full-screen update is around 1 to 2 Hz (1 to 2 updates per second). The refresh rate of the ePaper displays is dependent on a number of factors including temperature. At lower temperatures you have to drive the display more slowly otherwise you can get "ghosting" and also can damage the display. By fiddling with the temperature variables we have had customers who we know have got this level to ~15 Hz but this is not advised unless you know what you are doing as it will severely reduce the life of the display and may cause other bizarre side-effects.
+A typical ePaper refresh rate for a full-screen update is around 1 to 2 Hz (1 to 2 updates per second). The refresh rate of the ePaper displays is dependent on a number of factors including temperature. At lower temperatures you have to drive the display more slowly otherwise you can get "ghosting" and also can damage the display.
 
 Lastly, a good way to increase the refresh rate of information on the screen is to not use full screen updates but use partial updates as described below.
 
 ### Full and Partial Updates
-Also try using the method partialUpdate() instead of the update() one if you want to refresh the screen faster and maybe want to create some simple animations. Remember though that the partial method cannot be used indefinitely and you will have to refresh the screen every once in a while. You should ideally do a full refresh of the screen every few minutes and it is also recommended to completely power down the screen every few hours.
+Also try using the method partial_update() instead of the update() one if you want to refresh the screen faster and maybe want to create some simple animations. Remember though that the partial method cannot be used indefinitely.
+You should refresh the screen using a Full Update every few minutes and it is also recommended to completely power down the screen every few hours.
 
+### Fast Update
+Fast Update works the same as Partial Update, except the refresh rate is not dependent on temperature but can be set by the user. The refresh duration for this mode is set in milliseconds by writing to `/dev/epd/pu_stagetime`. See the papirus-radar demo code for details.
+Using this mode is only advised if you know what you are doing as it will severely reduce the life of the display and may cause other bizarre side-effects.
+As with the Partial Update mode you should refresh the screen using a Full Update every few minutes and it is also recommended to completely power down the screen every few hours.
 
 # Hardware tips
 In case you have problems assembling the board please [check this article on our website](https://www.pi-supply.com/make/papirus-assembly-tips-and-gotchas/) on which you can find:

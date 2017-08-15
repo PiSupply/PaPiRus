@@ -1,25 +1,36 @@
 #!/usr/bin/env python
 
-# Demo showing the dependency of frame update duration on temperature
+# Demo showing the effect of frame update duration (stagetime).
 #
-# Fastest update is with temperature set to > 60, but ghosting is evident.
-# Lower temperatures give blacker updates, with less ghosting.
-# By not using the LM75B temperature sensor, we can fake the temperature by
-# writing to /dev/epd/termperature 
+# Shortest update duration in the demo is 50 msec, but ghosting is evident.
+# Larger update duration gives a blacker update, with less ghosting.
+# A normal update duration when using partial update is 500 msec.
 #
-# This demo is a modified version of David Lowe's original demo (https://github.com/campag/eink-demo)
-# Best results with the epd driver with continous temperature compensation.
+# This demo is based on David Lowe's original demo (https://github.com/campag/eink-demo),
+# but uses the fast update mode where you can set the stagetime directly.
 
-import thread
-import string
-import time
+import os
 import sys
 
 from datetime import datetime, timedelta
-from subprocess import call, check_output
 from PIL import Image
 from PIL import ImageDraw, ImageFont
 from papirus import Papirus
+
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    execfile('/etc/default/epd-fuse')
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
 
 epd = Papirus()
 
@@ -29,9 +40,9 @@ SCREEN_HEIGHT = epd.size[1]
 SCREEN_WIDTH-=1
 SCREEN_HEIGHT-=1
 
-FONTFILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
+FONTFILE = '/usr/share/fonts/truetype/freefont/FreeSans.ttf'
 
-SIZE_MED = int(SCREEN_HEIGHT/4)  #24
+SIZE_MED = int(SCREEN_HEIGHT/4)
 FONT_MED = ImageFont.truetype(FONTFILE, SIZE_MED)
 CHRW_MED = FONT_MED.getsize("0")[0]
 
@@ -43,7 +54,7 @@ DURATION = 15 # seconds
 image = Image.new('1', epd.size, WHITE)
 draw = ImageDraw.Draw(image)
 
-def epd_draw(lagtime, packet_num):
+def epd_draw(starttime, cycletime, packet_num):
 
     # Clear drawing
     draw.rectangle([(0,0), (SCREEN_WIDTH, SCREEN_HEIGHT)], fill=WHITE, outline=WHITE)
@@ -52,39 +63,40 @@ def epd_draw(lagtime, packet_num):
     draw.ellipse([((SCREEN_WIDTH-SCREEN_HEIGHT)/2,0),(SCREEN_HEIGHT+(SCREEN_WIDTH-SCREEN_HEIGHT)/2, SCREEN_HEIGHT)], outline=BLACK)
     draw.pieslice([((SCREEN_WIDTH-SCREEN_HEIGHT)/2,0),(SCREEN_HEIGHT+(SCREEN_WIDTH-SCREEN_HEIGHT)/2, SCREEN_HEIGHT)], 10*packet_num-2, 10*packet_num+2, fill=BLACK)
 
-    # Temperature & seconds counter
-    temp=check_output(["cat", "/dev/epd/temperature"])
-    temp=temp[:-1]+u'\u00b0C'
+    # Stagetime & seconds counter
+    with open('/dev/epd/pu_stagetime','r') as f:
+        stagetime = f.read().rstrip('\n')
     now = datetime.today()
-    draw.text((SCREEN_WIDTH/2-5.0*CHRW_MED, SCREEN_HEIGHT/2-1.5*SIZE_MED), "%s %02ds" %(temp, now.second), fill=BLACK, font=FONT_MED)
+    seconds = (now - starttime).total_seconds()
+    draw.text((SCREEN_WIDTH/2-4.0*CHRW_MED, SCREEN_HEIGHT/2-1.5*SIZE_MED), "%s  %02ds" %(stagetime, seconds), fill=BLACK, font=FONT_MED)
 
     # fps
-    fps10x=10000/lagtime
-    draw.text((SCREEN_WIDTH/2-3.0*CHRW_MED, SCREEN_HEIGHT/2-0.5*SIZE_MED), "%3dfps" %fps10x, fill=BLACK, font=FONT_MED)
-    draw.text((SCREEN_WIDTH/2-1.4*CHRW_MED, SCREEN_HEIGHT/2-0.5*SIZE_MED), ".", fill=BLACK, font=FONT_MED)
+    fpsint = 1000/cycletime
+    fpsfract = 10000/cycletime - fpsint*10
+    draw.text((SCREEN_WIDTH/2-3.0*CHRW_MED, SCREEN_HEIGHT/2-0.5*SIZE_MED), "%02d.%1dfps" %(fpsint, fpsfract), fill=BLACK, font=FONT_MED)
 
     # Cycle time
-    draw.text((SCREEN_WIDTH/2-2.5*CHRW_MED, SCREEN_HEIGHT/2+0.5*SIZE_MED), "%3dms" %lagtime, fill=BLACK, font=FONT_MED)
+    draw.text((SCREEN_WIDTH/2-2.5*CHRW_MED, SCREEN_HEIGHT/2+0.5*SIZE_MED), "%03dms" %cycletime, fill=BLACK, font=FONT_MED)
 
     # Swap rendered image to epd image buffer
     epd.display(image)
-    if lagtime > 0:
-        epd.partial_update()
+    if cycletime > 0:
+        epd.fast_update()
 
     return
 
 # Main entry
 
-temps = [25, 35, 45, 55, 65]
-for temp in temps:
+times = [500, 200, 100, 75, 50] # stagetimes in msec
+for time in times:
 
     epd.use_lm75b = True
     epd.clear()
 
     epd.use_lm75b = False
-    # Set temperature
-    cmd = "echo " + str(temp) + " > /dev/epd/temperature"
-    call([cmd], shell=True)
+    # Set stagetime
+    with open('/dev/epd/pu_stagetime', 'wb') as f:
+        f.write(str(time))
 
     counter=0
     frametime=-1  # No screen update for first frame
@@ -94,7 +106,7 @@ for temp in temps:
         delta = timedelta(seconds = DURATION)
         while (True):
             prev=datetime.now()
-            epd_draw(frametime,counter)
+            epd_draw(starttime,frametime,counter)
             curr=datetime.now()
             if (curr - starttime) > delta:
                 break
@@ -102,10 +114,7 @@ for temp in temps:
             counter += 1
     except KeyboardInterrupt:
         print "\nClearing panel for long term storage"
-        epd.use_lm75b = True
-        epd.clear()
-        epd.clear()
-        sys.exit('\nKeyboard interrupt')
+        break;
 
 epd.use_lm75b = True
 epd.clear()
