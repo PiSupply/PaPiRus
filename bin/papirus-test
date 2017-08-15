@@ -53,6 +53,7 @@ if os.path.exists(PRODUCT):
     GPIO.setup(SW4, GPIO.IN)
 else:
     isHAT = False
+    devrtc = False
     SW1 = 21
     SW2 = 16
     SW3 = 20
