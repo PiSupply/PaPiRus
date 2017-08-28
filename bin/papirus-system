@@ -96,6 +96,8 @@ def main(stdscr):
     stdscr.refresh()
 
     papirus = Papirus()
+    # Issue a command to the screen to populate the screen status which otherwise would show as undefined
+    papirus.clear()
 
     # Check for HAT
     if os.path.exists(PRODUCT):

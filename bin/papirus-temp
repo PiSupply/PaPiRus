@@ -28,7 +28,8 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
 WHITE = 1
 BLACK = 0
 
-FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
+#FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
+FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeSerif.ttf'
 
 def main(argv):
 
@@ -44,16 +45,23 @@ def main(argv):
     draw = ImageDraw.Draw(image)
     width, height = image.size
 
+    # base font size on mono spaced font
     font_size = int((width - 4) / (8 * 0.65))   # 8 chars to be displayed
     font = ImageFont.truetype(FONT_FILE, font_size)
 
+    # get temperature
     sensor = LM75B()
+    tempC = '{c:.2f}'.format(c=sensor.getTempCFloat()) + u" \u00b0" + 'C'
+    tempF = '{c:.2f}'.format(c=sensor.getTempFFloat()) + u" \u00b0" + 'F'
+    print('Temperature from LM75B: ' + tempC + ' - ' + tempF)
 
-    print('Temperature from LM75B: {c:.2f}'.format(c=sensor.getTempCFloat()) + u"\u00b0" + "C - " + '{f:.2f}'.format(f=sensor.getTempFFloat()) + u"\u00b0" + "F")
-
+    # center the temperatures
+    (txtwidth, txtheight) = draw.textsize(tempC, font=font)
+    x = (width - txtwidth) / 2
+    y = (height - 2 * txtheight - 10) / 2
     draw.rectangle((2, 2, width - 2, height - 2), fill=WHITE, outline=BLACK)
-    draw.text((4, 4), '{t:.2f}\xb0 C'.format(t=sensor.getTempCFloat()), fill=BLACK, font=font)
-    draw.text((4, 14 + font_size), '{t:.2f}\xb0 F'.format(t=sensor.getTempFFloat()), fill=BLACK, font=font)
+    draw.text((x, y), tempC, fill=BLACK, font=font)
+    draw.text((x, y + txtheight + 5), tempF, fill=BLACK, font=font)
 
     papirus.display(image)
     papirus.update()

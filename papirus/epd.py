@@ -192,6 +192,9 @@ class EPD(object):
     def partial_update(self):
         self._command('P')
 
+    def fast_update(self):
+        self._command('F')
+
     def clear(self):
         self._command('C')
 

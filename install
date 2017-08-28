@@ -5,6 +5,7 @@ apt-get install git -y
 apt-get install python-imaging -y
 apt-get install python-smbus -y
 apt-get install bc i2c-tools -y
+apt-get install python-dateutil -y
 
 # enable SPI and I2C
 raspi-config nonint do_spi 0

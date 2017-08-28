@@ -1,7 +1,8 @@
-from lm75b import LM75B
-from epd import EPD as Papirus
-from text import PapirusText
-from image import PapirusImage
-from textpos import PapirusTextPos
-from composite import PapirusComposite
+from papirus.lm75b import LM75B
+from papirus.epd import EPD as Papirus
+from papirus.text import PapirusText
+from papirus.image import PapirusImage
+from papirus.textpos import PapirusTextPos
+from papirus.composite import PapirusComposite
+from papirus.readrtc import get_hwclock
 

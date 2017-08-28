@@ -35,14 +35,7 @@ def main():
     papirus = Papirus(rotation = args.rotate)
     if args.filepath:
         print("Drawing on PaPiRus.......")
-        for i in range(0, 5):
-            print("Rotation = " + str(papirus.rotation))
-            draw_image(papirus, args.filepath, args.type)
-            time.sleep(2)
-            if papirus.rotation == 270:
-                papirus.rotation = 0
-            else:
-                papirus.rotation = papirus.rotation + 90 
+        draw_image(papirus, args.filepath, args.type)
 
 def draw_image(papirus, filepath, type):
     message = ""
