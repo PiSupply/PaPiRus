@@ -6,6 +6,8 @@ apt-get install python-imaging -y
 apt-get install python-smbus -y
 apt-get install bc i2c-tools -y
 apt-get install python-dateutil -y
+apt-get install whiptail -y
+apt-get install make gcc -y
 
 # enable SPI and I2C
 raspi-config nonint do_spi 0
