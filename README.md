@@ -310,6 +310,9 @@ papirus-twitter
 
 # Composite text and graphics
 papirus-composite-write
+
+# Display image sequences or slide-show
+papirus-animation path [rotation] [delay] [fullupdate] [loop]
 ```
 
 ### Tips for using images
