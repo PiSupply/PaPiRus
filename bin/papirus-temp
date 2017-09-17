@@ -53,7 +53,7 @@ def main(argv):
     sensor = LM75B()
     tempC = '{c:.2f}'.format(c=sensor.getTempCFloat()) + u" \u00b0" + 'C'
     tempF = '{c:.2f}'.format(c=sensor.getTempFFloat()) + u" \u00b0" + 'F'
-    print('Temperature from LM75B: ' + tempC + ' - ' + tempF)
+    print(('Temperature from LM75B: ' + tempC + ' - ' + tempF).encode('utf-8'))
 
     # center the temperatures
     (txtwidth, txtheight) = draw.textsize(tempC, font=font)
