@@ -31,18 +31,18 @@ class EPDError(Exception):
 class EPD(object):
 
     """EPD E-Ink interface
-
-to use:
-  from EPD import EPD
-
-  epd = EPD([path='/path/to/epd'], [auto=boolean], [rotation = 0|90|180|270])
-
-  image = Image.new('1', epd.size, 0)
-  # draw on image
-  epd.clear()         # clear the panel
-  epd.display(image)  # tranfer image data
-  epd.update()        # refresh the panel image - not deeed if auto=true
-"""
+    
+    to use:
+    from EPD import EPD
+    
+    epd = EPD([path='/path/to/epd'], [auto=boolean], [rotation = 0|90|180|270])
+    
+    image = Image.new('1', epd.size, 0)
+    # draw on image
+    epd.clear()         # clear the panel
+    epd.display(image)  # tranfer image data
+    epd.update()        # refresh the panel image - not deeed if auto=true
+    """
 
 
     PANEL_RE = re.compile('^([A-Za-z]+)\s+(\d+\.\d+)\s+(\d+)x(\d+)\s+COG\s+(\d+)\s+FILM\s+(\d+)\s*$', flags=0)
@@ -200,7 +200,7 @@ to use:
 
     def _command(self, c):
         if self._uselm75b:
-            with open(os.path.join(self._epd_path, 'temperature'), 'wb') as f:
+            with open(os.path.join(self._epd_path, 'temperature'), 'w') as f:
                 f.write(repr(self._lm75b.getTempC()))
-        with open(os.path.join(self._epd_path, 'command'), 'wb') as f:
+        with open(os.path.join(self._epd_path, 'command'), 'w') as f:
             f.write(c)
