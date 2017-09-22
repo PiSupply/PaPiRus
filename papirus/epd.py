@@ -41,7 +41,7 @@ to use:
   # draw on image
   epd.clear()         # clear the panel
   epd.display(image)  # tranfer image data
-  epd.update()        # refresh the panel image - not deeed if auto=true
+  epd.update()        # refresh the panel image - not needed if auto=true
 """
 
 
@@ -162,10 +162,14 @@ to use:
         with open(os.path.join(self._epd_path, 'error'), 'r') as f:
             return(f.readline().rstrip('\n'))
 
+    def rotation_angle(self, rotation):
+        angles = { 90 : Image.ROTATE_90, 180 : Image.ROTATE_180, 270 : Image.ROTATE_270 }
+        return angles[rotation]
+
     def display(self, image):
 
-        # attempt grayscale conversion, ath then to single bit
-        # better to do this before callin this if the image is to
+        # attempt grayscale conversion, and then to single bit
+        # better to do this before calling this if the image is to
         # be dispayed several times
         if image.mode != "1":
             image = ImageOps.grayscale(image).convert("1", dither=Image.FLOYDSTEINBERG)
@@ -177,7 +181,7 @@ to use:
             raise EPDError('image size mismatch')
 
         if self._rotation != 0:
-            image = image.rotate(self._rotation)
+            image = image.transpose(self.rotation_angle(self._rotation))
 
         with open(os.path.join(self._epd_path, 'LE', 'display_inverse'), 'r+b') as f:
             f.write(image.tobytes())
