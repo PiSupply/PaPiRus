@@ -17,7 +17,7 @@ def main():
     """main program"""
     p = argparse.ArgumentParser()
     p.add_argument('filepath', type=str, help="Path to pictures")
-    p.add_argument('--delay', '-d', type=int, default=0, help="Extra delay between pictures")
+    p.add_argument('--delay', '-d', type=float, default=0, help="Extra delay between pictures")
     p.add_argument('--rotation', '-r', type=int, default=0, help="Rotation one of 0, 90, 180, 270")
     p.add_argument('--fullupdate', '-f', action='store_true', default=False, help="Force full update between each picture")
     p.add_argument('--loop', '-l', action='store_true', default=False, help="Sets the script in a continuous loop. CTRL^C to stop it")
@@ -32,7 +32,7 @@ def main():
 def animate(papirus, imagepath, extradelay, fullupdate, loop):
     """animation"""
 
-    reps = 0 # Counts the times the screen has been used even when in loop to ensure a refresh every 10
+    reps = 0 # Counts the times the screen has been used even when in loop to ensure a refresh every 20
 
     papirus.clear()
 
@@ -59,30 +59,40 @@ def animate(papirus, imagepath, extradelay, fullupdate, loop):
             for i in range(0, len(os.listdir(imagepath))):
                 if not stringnamepictures:
                     extension = os.listdir(imagepath)[i].split(".")[1]
-                    filename = imagepath + '/' + str(i+1) + '.' + extension
+                    filename = imagepath + '/' + str(i) + '.' + extension
                 else:
                     extension = os.listdir(imagepath)[i].split(".")[1]
                     filename = imagepath + '/' + os.listdir(imagepath)[i]
-                reps = reps + 1
                 if os.path.isfile(filename) and extension in PICTURES_TYPES:
-                    image = Image.open(filename)
-                    image = image.resize((papirus.width, papirus.height), Image.ANTIALIAS)
-                    image = image.convert("1", dither=Image.FLOYDSTEINBERG)
+                    fileimg = Image.open(filename)
+                    # Keep first and last pixel row free to avoid streaking with partial update
+                    fileimg.thumbnail((papirus.width-2, papirus.height-2), Image.ANTIALIAS)
+                    fileimg = fileimg.convert("1", dither=Image.FLOYDSTEINBERG)
+                    # Center fileimg
+                    xpadding = int((papirus.size[0] - fileimg.size[0]) / 2)
+                    ypadding = int((papirus.size[1] - fileimg.size[1]) / 2)
+                    image = Image.new('1', papirus.size, 1)
+                    image.paste(fileimg, (xpadding, ypadding))
 
                     papirus.display(image)
-                    if fullupdate or reps % 10 == 0: # Refresh every ten partials
+                    if fullupdate or (reps > 0 and reps % 20 == 0): # Refresh every twenty partials
                         papirus.update()
                     else:
                         papirus.partial_update()
 
+                    reps = reps + 1
                     if extradelay > 0:
                         time.sleep(extradelay)
+            if loop:
+                reps = 0
+                papirus.clear()
+
     except KeyboardInterrupt:
         # quit
-        papirus.clear()
-        sys.exit()
+        pass
 
-    papirus.update()
+    time.sleep(2)
+    papirus.clear()
 
 # main
 if "__main__" == __name__:

@@ -314,8 +314,8 @@ papirus-twitter
 papirus-composite-write
 
 # Display image sequences or slide-show
-# The path containing the pictures must have number sequenced images in the form 1.gif, 2.gif, 3.gif, etc. for an animation or pictures with random names (e.g. in the case of a slide-show). 
-papirus-animation path [rotation] [delay] [fullupdate] [loop]
+# The directory containing the pictures must have number sequenced images in the form 0.gif, 1.gif, 2.gif, etc. for an animation or pictures with random names (e.g. in the case of a slide-show). 
+papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] directory
 ```
 
 ### Tips for using images

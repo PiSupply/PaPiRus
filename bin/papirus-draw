@@ -29,10 +29,10 @@ def main():
     papirus = Papirus()
     p = argparse.ArgumentParser()
     p.add_argument('filepath', type=str)
-    p.add_argument('--type', '-t',type=str, default="resize", help="display type: crop or resize")
-    p.add_argument('--rotate', '-r',type=int, default=0, help="rotate = 0, 90, 180 or 270")
+    p.add_argument('--type', '-t',type=str, default="resize", help="Display type: crop or resize")
+    p.add_argument('--rotation', '-r',type=int, default=0, help="Rotation one of 0, 90, 180, 270")
     args = p.parse_args()
-    papirus = Papirus(rotation = args.rotate)
+    papirus = Papirus(rotation = args.rotation)
     if args.filepath:
         print("Drawing on PaPiRus.......")
         draw_image(papirus, args.filepath, args.type)
@@ -50,32 +50,24 @@ def draw_image(papirus, filepath, type):
         if file.size[0] > file.size[1]:
             wsize = int(float(papirus.size[1]) * float(float(file.size[0]) / float(file.size[1])))
             file.thumbnail((wsize, papirus.size[1]), Image.ANTIALIAS)
-            # centering the image
-            xpadding = int((papirus.size[0] - file.size[0]) / 2)
-            ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Landscape image cropped!"
         # Portrait image
         else:
             hsize = int(float(file.size[0]) * float(float(papirus.size[1]) / float(papirus.size[0])))
             file.thumbnail((papirus.size[0], hsize), Image.ANTIALIAS)
-            # centering the image
-            xpadding = int((papirus.size[0] - file.size[0]) / 2)
-            ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Portrait image cropped!"
     # display resize option
     else:
         # Landscape image
         if file.size[0] > file.size[1]:
-            file.thumbnail(papirus.size, Image.ANTIALIAS)
-            xpadding = int((papirus.size[0] - file.size[0]) / 2)
-            ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Landscape image resized!"
         # Portrait image
         else:
-            file.thumbnail(papirus.size, Image.ANTIALIAS)
-            xpadding = int((papirus.size[0] - file.size[0]) / 2)
-            ypadding = int((papirus.size[1] - file.size[1]) / 2)
             message = "Portrait image resized!"
+        file.thumbnail(papirus.size, Image.ANTIALIAS)
+    # centering the image
+    xpadding = int((papirus.size[0] - file.size[0]) / 2)
+    ypadding = int((papirus.size[1] - file.size[1]) / 2)
     # initially set all white background
     image = Image.new('1', papirus.size, 1)
     image.paste (file, (xpadding, ypadding))
