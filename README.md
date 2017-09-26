@@ -316,6 +316,9 @@ papirus-composite-write
 # Display image sequences or slide-show
 # The directory containing the pictures must have number sequenced images in the form 0.gif, 1.gif, 2.gif, etc. for an animation or pictures with random names (e.g. in the case of a slide-show). 
 papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] directory
+
+# Take a picture with the RPi camera using the PaPiRus screen as viewfinder
+papirus-cam
 ```
 
 ### Tips for using images
