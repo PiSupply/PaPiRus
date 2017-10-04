@@ -4,6 +4,8 @@
 # by this module
 #
 
+from __future__ import (print_function, division)
+
 import smbus
 
 LM75B_ADDRESS             = 0x48
@@ -36,8 +38,8 @@ class LM75B(object):
            used to write to /dev/epd/temperature"""
         raw = self._bus.read_word_data(self._address, LM75B_TEMP_REGISTER) & 0xFFFF
         raw = ((raw << 8) & 0xFF00) + (raw >> 8)
-        return (raw + 128) / 256 # round to nearest integer
+        return (raw + 128) // 256 # round to nearest integer
 
 if __name__ == "__main__":
     sens = LM75B()
-    print (sens.getTempC())
+    print(sens.getTempC(), sens.getTempFFloat())

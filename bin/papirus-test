@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+from __future__ import (print_function, division)
+
 import time
 import sys
 import os
@@ -7,9 +9,7 @@ import smbus
 from datetime import datetime
 import RPi.GPIO as GPIO
 
-import Image
-import ImageDraw
-import ImageFont
+from PIL import Image, ImageDraw, ImageFont
 
 from papirus import Papirus
 from papirus import LM75B
@@ -151,12 +151,12 @@ def i2c_detect(bus):
 def date_time_rtc(bus):
     """Reads time from Real Time Clock using I2C"""
     data = bus.read_i2c_block_data(MCP7940N_ADR, 0, 7)
-    sec   = (data[0] & 0x7f) / 16 * 10 + (data[0] & 0x0f)
-    min   = data[1] / 16 * 10 + (data[1] & 0x0f)
-    hour  = data[2] / 16 * 10 + (data[2] & 0x0f)
-    day   = data[4] / 16 * 10 + (data[4] & 0x0f)
-    month = (data[5] & 0x10) / 16 * 10 + (data[5] & 0x0f)
-    year  = data[6] / 16 * 10 + (data[6] & 0x0f)
+    sec   = (data[0] & 0x7f) // 16 * 10 + (data[0] & 0x0f)
+    min   = data[1] // 16 * 10 + (data[1] & 0x0f)
+    hour  = data[2] // 16 * 10 + (data[2] & 0x0f)
+    day   = data[4] // 16 * 10 + (data[4] & 0x0f)
+    month = (data[5] & 0x10) // 16 * 10 + (data[5] & 0x0f)
+    year  = data[6] // 16 * 10 + (data[6] & 0x0f)
     dt = datetime(2000+year, month, day, hour, min, sec)
     return dt
 

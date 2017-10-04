@@ -11,7 +11,15 @@ You need the python-devel package for building this module:
 
 To build and install: 
 ```
+  # For Python 2
+  $ make clean
   $ make install
+
+  # For Python 3
+  $ make clean
+  $ PYTHON=python3 make install
 ```
-This will install the module in the directory: `/home/pi/.local/lib/python2.7/site-packages`.  
+This will install the module in the directory: `/home/pi/.local/lib/python2.7/site-packages` for Python 2
+and in the directori `/home/pi/.local/lib/python3.x/site-packages` for Python 3..  
+
 Programs using this module therefore need to run as user pi.

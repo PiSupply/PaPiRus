@@ -9,6 +9,8 @@
 # This demo is based on David Lowe's original demo (https://github.com/campag/eink-demo),
 # but uses the fast update mode where you can set the stagetime directly.
 
+from __future__ import (print_function, division)
+
 import os
 import sys
 
@@ -17,10 +19,17 @@ from PIL import Image
 from PIL import ImageDraw, ImageFont
 from papirus import Papirus
 
+if sys.version_info < (3,):
+    def b(x):
+        return x
+else:
+    def b(x):
+        return x.encode('ISO-8859-1')
+
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
 if os.path.exists('/etc/default/epd-fuse'):
-    execfile('/etc/default/epd-fuse')
+    exec(open('/etc/default/epd-fuse').read())
 if EPD_SIZE == 0.0:
     print("Please select your screen size by running 'papirus-config'.")
     sys.exit()
@@ -71,8 +80,8 @@ def epd_draw(starttime, cycletime, packet_num):
     draw.text((SCREEN_WIDTH/2-4.0*CHRW_MED, SCREEN_HEIGHT/2-1.5*SIZE_MED), "%s  %02ds" %(stagetime, seconds), fill=BLACK, font=FONT_MED)
 
     # fps
-    fpsint = 1000/cycletime
-    fpsfract = 10000/cycletime - fpsint*10
+    fpsint = 1000//cycletime
+    fpsfract = 10000//cycletime - fpsint*10
     draw.text((SCREEN_WIDTH/2-3.0*CHRW_MED, SCREEN_HEIGHT/2-0.5*SIZE_MED), "%02d.%1dfps" %(fpsint, fpsfract), fill=BLACK, font=FONT_MED)
 
     # Cycle time
@@ -96,7 +105,7 @@ for time in times:
     epd.use_lm75b = False
     # Set stagetime
     with open('/dev/epd/pu_stagetime', 'wb') as f:
-        f.write(str(time))
+        f.write(b(str(time)))
 
     counter=0
     frametime=-1  # No screen update for first frame
@@ -113,7 +122,7 @@ for time in times:
             frametime=(curr-prev).seconds*1000 + (curr - prev).microseconds/1000
             counter += 1
     except KeyboardInterrupt:
-        print "\nClearing panel for long term storage"
+        print("\nClearing panel for long term storage")
         break;
 
 epd.use_lm75b = True
