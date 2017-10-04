@@ -216,10 +216,6 @@ image = PapirusImage([rotation = rot])
 # easy write image to screen
 # image.write(path)
 image.write('/path/to/image')
-
-# write image to the screen with size and position
-# image.write(path, width, (x,y))
-image.write('/path/to/image', 20, (10, 10) ) # This is not confirmed to work correctly yet!!
 ```
 
 #### The composite API (Text and image)
