@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 import os
 import sys
+import codecs
 
 from PIL import Image
 from PIL import ImageDraw
@@ -10,10 +13,16 @@ from PIL import ImageFont
 from papirus import Papirus
 from papirus import LM75B
 
+# Force stdout to utf-8 even if redirected to pipe or file (e.g. when executed under cron)
+if sys.version_info < (3,) :
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
+else:
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer)
+
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
 if os.path.exists('/etc/default/epd-fuse'):
-    execfile('/etc/default/epd-fuse')
+    exec(open('/etc/default/epd-fuse').read())
 if EPD_SIZE == 0.0:
     print("Please select your screen size by running 'papirus-config'.")
     sys.exit()
@@ -53,7 +62,7 @@ def main(argv):
     sensor = LM75B()
     tempC = '{c:.2f}'.format(c=sensor.getTempCFloat()) + u" \u00b0" + 'C'
     tempF = '{c:.2f}'.format(c=sensor.getTempFFloat()) + u" \u00b0" + 'F'
-    print(('Temperature from LM75B: ' + tempC + ' - ' + tempF).encode('utf-8'))
+    print('Temperature from LM75B: ' + tempC + ' - ' + tempF)
 
     # center the temperatures
     (txtwidth, txtheight) = draw.textsize(tempC, font=font)

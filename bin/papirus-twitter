@@ -14,7 +14,8 @@
 #      by Ton van Overbeek March 2017
 # ------------------------------------------------------
 
-# import libraries to make it work
+from __future__ import print_function
+
 import os
 import sys
 import string
@@ -35,7 +36,7 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
 if os.path.exists('/etc/default/epd-fuse'):
-    execfile('/etc/default/epd-fuse')
+    exec(open('/etc/default/epd-fuse').read())
 if EPD_SIZE == 0.0:
     print("Please select your screen size by running 'papirus-config'.")
     sys.exit()
@@ -65,13 +66,11 @@ off_text = '5 = Off'
 
 # Check for HAT, and if detected redefine SW1 .. SW5
 if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')) :
-   f = open(hatdir + '/product')
-   prod = f.read()
-   f.close()
-   f = open(hatdir + '/vendor')
-   vend = f.read()
-   f.close
-   if (string.find(prod, 'PaPiRus ePaper HAT') == 0) and (string.find(vend, 'Pi Supply') == 0) :
+   with open(hatdir + '/product') as f :
+       prod = f.read()
+   with open(hatdir + '/vendor') as f :
+       vend = f.read()
+   if (prod.find('PaPiRus ePaper HAT') == 0) and (vend.find('Pi Supply') == 0) :
        # Papirus HAT detected
        SW1 = 16
        SW2 = 26
@@ -82,9 +81,8 @@ if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')
 
 def display_tweets(tweets):
     for tweet in tweets:
-        clean_tweet = '%s: %s' % (tweet['user']['screen_name'].encode('utf-8'),
-                                  tweet['text'].encode('utf-8'))
-
+        clean_tweet = '%s: %s' % (tweet['user']['screen_name'],
+                                  tweet['text'])
         # These lines clear URLs from the tweets and tidies up other elements
         # the display doesn't seem to like
         clean_tweet = re.sub(r"(https?\://|http?\://|https?\:)\S+", "", clean_tweet)
@@ -148,13 +146,13 @@ def main():
 
         if (((SW5 != -1) and (GPIO.input(SW5) == False)) or
             ((SW5 == -1) and (GPIO.input(SW1) == False) and (GPIO.input(SW2) == False))):
-            # Says goodbye, clears the screen and shuts the Pi down
-            text.write('Goodbye..., Shutting down ...')
+            # Says goodbye, clears the screen and exits
+            text.write('... Goodbye ...')
             text.write(' ')
-            os.system("sudo shutdown -h now")
+            break
 
         # Small delay to allow for SW1 + SW2 detection on HAT
-        time.sleep(0.1)
+        time.sleep(0.3)
 
 if __name__ == '__main__':
     main()

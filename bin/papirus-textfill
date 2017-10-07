@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 from papirus import Papirus
 from PIL import ImageFont, ImageDraw, Image
 import sys
@@ -9,7 +11,7 @@ import time
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
 if os.path.exists('/etc/default/epd-fuse'):
-    execfile('/etc/default/epd-fuse')
+    exec(open('/etc/default/epd-fuse').read())
 if EPD_SIZE == 0.0:
     print("Please select your screen size by running 'papirus-config'.")
     sys.exit()
@@ -69,16 +71,16 @@ if (len(sys.argv) >= 2):
     printString = sys.argv[1]
 
     if len(printString) > 40:
-        print 'WARNING: string length is too large for single line printing, truncating at 40 chars'
+        print('WARNING: string length is too large for single line printing, truncating at 40 chars')
         printString = printString[0:40]
 
     rot = sys.argv[2] if len(sys.argv) >= 3 else '0'
     my_papirus = Papirus(rotation = int(rot))
     fontsize, dims= getFontSize(my_papirus, printString)
-    print "Writing to Papirus...."
+    print("Writing to Papirus....")
     drawWords(my_papirus, printString, fontsize, dims)
-    print "Finished!"
+    print("Finished!")
 
 else:
-    print "Usage: " + sys.argv[0] + " \"text to display\" [rotation]"
+    print("Usage: " + sys.argv[0] + " \"text to display\" [rotation]")
 

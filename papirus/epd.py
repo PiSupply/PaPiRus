@@ -18,7 +18,14 @@ from PIL import ImageOps
 from papirus import LM75B
 import re
 import os
+import sys
 
+if sys.version_info < (3,):
+    def b(x):
+        return x
+else:
+    def b(x):
+        return x.encode('ISO-8859-1')
 
 class EPDError(Exception):
     def __init__(self, value):
@@ -205,6 +212,6 @@ to use:
     def _command(self, c):
         if self._uselm75b:
             with open(os.path.join(self._epd_path, 'temperature'), 'wb') as f:
-                f.write(repr(self._lm75b.getTempC()))
+                f.write(b(repr(self._lm75b.getTempC())))
         with open(os.path.join(self._epd_path, 'command'), 'wb') as f:
-            f.write(c)
+            f.write(b(c))

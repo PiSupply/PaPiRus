@@ -4,6 +4,11 @@ You can find here a variety of software, hardware and other resources for the [P
 
 You can purchase one of the PaPiRus boards from [our webshop](https://www.pi-supply.com/?s=papirus&post_type=product&tags=1&limit=5&ixwps=1) or from a variety of resellers worldwide.
 
+# Python 2 and Python 3 support
+The library and examples work on both Python 2 and Python 3.
+Currently (October 2017) Python 2 is still the default Python in Raspbian.
+The Python 2 and Python 3 versions can be installed side by side.
+
 # Setup PaPiRus
 ## Auto Installation
 Just run the following script in a terminal window and PaPiRus will be automatically setup.
@@ -20,16 +25,25 @@ You can enable the SPI by typing `sudo raspi-config` at the command line and the
 #### Install Python API (best to run all of these commands as root using sudo)
 ```bash
 # Install dependencies
-apt-get install git -y
-apt-get install python-imaging -y
-apt-get install python-smbus -y
-apt-get install bc i2c-tools -y
-apt-get install python-dateutil -y
-apt-get install fonts-freefont-ttf -y
+sudo apt-get install git -y
+sudo apt-get install bc i2c-tools -y
+sudo apt-get install fonts-freefont-ttf -y
+# For Python 2
+sudo apt-get install python-imaging -y
+sudo apt-get install python-smbus -y
+sudo apt-get install python-dateutil -y
+# For Python 3
+sudo apt-get install python3-imaging -y
+sudo apt-get install python3-smbus -y
+sudo apt-get install python3-dateutil -y
 
-git clone https://github.com/PiSupply/PaPiRus.git
+git clone --depth=1 https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
+
+# For Python 2
 sudo python setup.py install    # Install PaPirRus python library
+# For Python 3
+sudo python3 setup.py install    # Install PaPirRus python library
 ```
 
 #### Install Driver (Option 1) (best to run all of these commands as root using sudo)
@@ -187,7 +201,7 @@ from papirus import PapirusText
 text = PapirusText()
 
 # Write text to the screen, in this case forty stars alternating black and white
-# note the use of u"" syntax to specify unicode
+# note the use of u"" syntax to specify unicode (needed for Python 2, optional for Python 3 since unicode is default in Python 3)
 text.write(u"\u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606")
 ```
 #### Note
@@ -202,10 +216,6 @@ image = PapirusImage([rotation = rot])
 # easy write image to screen
 # image.write(path)
 image.write('/path/to/image')
-
-# write image to the screen with size and position
-# image.write(path, width, (x,y))
-image.write('/path/to/image', 20, (10, 10) ) # This is not confirmed to work correctly yet!!
 ```
 
 #### The composite API (Text and image)
@@ -273,7 +283,7 @@ papirus-clear
 
 ```
 
-#### Demos
+### Demos
 All demos can be seen by running the following commands. Code can be found in the repo for the python bin directory. 
 
 ```bash
@@ -314,15 +324,26 @@ papirus-twitter
 papirus-composite-write
 
 # Display image sequences or slide-show
-# The directory containing the pictures must have number sequenced images in the form 0.gif, 1.gif, 2.gif, etc. for an animation or pictures with random names (e.g. in the case of a slide-show). 
+# The directory containing the pictures must have number sequenced images in the form 0.gif, 1.gif, 2.gif, etc.
+# for an animation or pictures with random names (e.g. in the case of a slide-show). 
 papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] directory
 
 # Take a picture with the RPi camera using the PaPiRus screen as viewfinder
 papirus-cam
 ```
 
+### Demos for using the Real Time Clock of the Papirus HAT
+
+The Papirus HAT has a battery backed-up Real TIme Clock. For more information about the RTC and demos see the
+[RTC-Hat-Examples](./RTC-Hat-Examples) directory and README files.
+
 ### Tips for using images
-The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the PaPiRus screen using GIMP or Photoshop or similar photo editing tools like [the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format or [WIF (the WyoLum Image Format)](http://wyolum.com/introducing-wif-the-wyolum-image-format/).
+The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus
+that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results
+and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the
+PaPiRus screen using GIMP or Photoshop or similar photo editing tools like
+[the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format
+or [WIF (the WyoLum Image Format)](http://wyolum.com/introducing-wif-the-wyolum-image-format/).
 
 ### Screen Resolutions
 The screens have the following screen resolutions:

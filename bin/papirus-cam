@@ -22,6 +22,7 @@
 #
 
 from __future__ import print_function
+
 import io
 import os
 import sys
@@ -63,7 +64,7 @@ if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')
       prod = f.read()
    with open(hatdir + '/vendor', 'r') as f:
       vend = f.read()
-   if (string.find(prod, 'PaPiRus ePaper HAT') == 0) and (string.find(vend, 'Pi Supply') == 0) :
+   if (prod.find('PaPiRus ePaper HAT') == 0) and (vend.find('Pi Supply') == 0) :
        # Papirus HAT detected
        SW1 = 16
        SW2 = 26
@@ -72,12 +73,12 @@ if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')
        SW5 = -1
 
 def setPicFlag():
-   global picFlag
-   picFlag = True
+    global picFlag
+    picFlag = True
 
-def do_exit():
-   global exitFlag
-   exitFlag = True
+def setExitFlag():
+    global exitFlag
+    exitFlag = True
 
 def viewfinderSettings(camera):
     # Leave a 1 pixel border on the display to minimize streaking
@@ -132,7 +133,7 @@ picButton = gpiozero.Button(SW1, pull_up=False)
 exitButton = gpiozero.Button(SW2, pull_up=False)
 
 picFlag = False
-picButton.when_pressed = setPicFlag
+picButton.when_released = setPicFlag
 for i in range (0, 50):
     if picFlag:
         break
@@ -146,7 +147,7 @@ camera.vflip = True
 
 picFlag = False
 exitFlag = False
-exitButton.when_pressed = do_exit
+exitButton.when_released = setExitFlag
 
 viewfinderSettings(camera)
 while True:
