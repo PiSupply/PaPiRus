@@ -29,11 +29,11 @@ sudo apt-get install git -y
 sudo apt-get install bc i2c-tools -y
 sudo apt-get install fonts-freefont-ttf -y
 # For Python 2
-sudo apt-get install python-imaging -y
+sudo apt-get install python-pil -y
 sudo apt-get install python-smbus -y
 sudo apt-get install python-dateutil -y
 # For Python 3
-sudo apt-get install python3-imaging -y
+sudo apt-get install python3-pil -y
 sudo apt-get install python3-smbus -y
 sudo apt-get install python3-dateutil -y
 
@@ -314,8 +314,8 @@ papirus-radar
 # Display text filling the width of the display
 papirus-textfill 'Some text' [rotation]
 
-# Snakes game
-papirus-snakes (coming soon)
+# Snake game
+papirus-snake
 
 # Display Twitter feeds
 papirus-twitter
