@@ -373,5 +373,5 @@ It is safe to say we have an awesome and growing community of people using epape
 * [Raspberry Pi Internal Watchdog Setup and Information](http://www.switchdoc.com/2014/11/reliable-projects-using-internal-watchdog-timer-raspberry-pi/)
 * [Baseball Pi - get the live box score, plays, and batter stats of your favorite MLB team right on your desktop](https://github.com/eat-sleep-code/baseball-pi)
 * PaPiRus Netapp (find Raspberry Pi’s on your network, run a speed test of your internet connection, show a graph of your past speed test results) - [blog here](https://www.talktech.info/2017/09/30/papirus-netapp/) and [GitHub Repo here](https://github.com/vwillcox/papirus-netapp) 
-* [papirus - Ruby gem for the Raspberry Pi PaPiRus eInk screen](https://github.com/mmolhoek/papirus)
+* [PaPiRus Ruby gem for the Raspberry Pi PaPiRus eInk screen](https://github.com/mmolhoek/papirus)
 * [PaPiRuby - Ruby wrapper for the Raspberry Pi PaPiRus eInk screen](https://github.com/EddWills95/PaPiRuby)
