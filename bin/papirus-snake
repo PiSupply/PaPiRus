@@ -16,13 +16,21 @@ from __future__ import print_function, division
 
 import os
 import sys
+import atexit
 from random import randint
 from papirus import Papirus, PapirusTextPos, PapirusComposite
 from PIL import Image
 from PIL import ImageDraw
-#from PIL import ImageFont
 import time
 from gpiozero import Button
+
+# Python 2/3 compatibility function
+if sys.version_info < (3,):
+    def b(x):
+        return x
+else:
+    def b(x):
+        return x.encode('ISO-8859-1')
 
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
@@ -134,7 +142,6 @@ def showIntro():
         intro.AddText('Sorry, Snake can only be played on the 2.7" (264x176) and 2.0" (200x96) displays')
         intro.WriteAll()
         time.sleep(2)
-        intro.papirus.clear()
         sys.exit()
 
     # Define button press action (Note: inverted logic w.r.t. gpiozero)
@@ -148,7 +155,7 @@ def showIntro():
     # Wait for any key
     key = 0
     while getkey() == 0:
-        pass
+        time.sleep(0.1)
 
 def showScore(score):
     global key
@@ -227,9 +234,16 @@ def doGame(papirus):
     papirus.display(image)
     papirus.partial_update()
 
+    # Reset stagetime for fast update
+    stagetime = 500
+    with open('/dev/epd/pu_stagetime','wb') as f:
+        f.write(b(str(stagetime)))
+
     # Game loop
     while True:
         prevDir = dir
+        prevStagetime = stagetime
+
         dir = getkey()
         if dir not in [RIGHT, LEFT, UP, DOWN]:
             dir = prevDir
@@ -262,20 +276,33 @@ def doGame(papirus):
             fillrect(draw, last, WHITE)
         fillrect(draw, snake[0], BLACK)
 
+        # Adjust stagetime (less means faster dnake)
+        stagetime = 500 - len(snake) * 15
+        stagetime = max(stagetime, 200)
+        if stagetime != prevStagetime:
+            with open('/dev/epd/pu_stagetime','wb') as f:
+                f.write(b(str(stagetime)))
+
         key = 0
 
         papirus.display(image)
-        papirus.partial_update()
+        papirus.fast_update()
 
     return showScore(score)
 
+def cleanup(papirus):
+    # Restore pu_stagetime
+    with open('/dev/epd/pu_stagetime','wb') as f:
+       f.write(b(str(500)))
+    papirus.clear()
+
 def main():
     papirus = Papirus(rotation = 180) # Buttons at bottom of screen
+    atexit.register(cleanup, papirus)
 
     showIntro()
     while doGame(papirus):
         pass
-    papirus.clear()
 
 if __name__ == '__main__':
     try:
