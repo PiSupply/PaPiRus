@@ -15,7 +15,11 @@ SW4 = BUT3 = pin 35 = GPIO 19
 
 SW5 = BUT2 = pin 37 = GPIO 26
 ```
-Also see the schematic area this refers to here - https://github.com/PiSupply/PaPiRus/blob/master/hardware/PaPiRus%20Zero/button-schematic.jpg
+Also see the schematic area this refers to [on the image here](https://github.com/PiSupply/PaPiRus/blob/master/hardware/PaPiRus%20Zero/button-schematic.jpg).
+
+## Pull up resistors
+
+PaPiRus Zero has on board pull up resistors and protection resistors for the button GPIOs, so there is no need to use the internal pull-up resistors on the Raspberry Pi. You can see these [on the schematic](https://github.com/PiSupply/PaPiRus/blob/master/hardware/PaPiRus%20Zero/Latest%20Version%20-%20v1.2/2015-032-01-PaPiRus-ZERO-circuit_v1_2.pdf).
 
 ## Jumper settings and meaning
 Some of the ePaper screens have a "border control" pin which controls the status of a 1px border around the edge of the screen. The method of driving this differs between the screens and so this jumper is used to configure the border control for different screens. If you configure it incorrectly, the screen will still operate normally but will display a 1px black border around the edge of the screen (but maybe some people will want this effect?).
