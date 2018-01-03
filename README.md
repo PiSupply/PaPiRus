@@ -282,6 +282,7 @@ papirus-draw /path/to/image -t [resize | crop] -r [0 | 90 | 180 | 270]
 papirus-clear
 
 ```
+**Note:** The line break '\n' is not converted by the shell (bash). In order to do this you need to use the method described [here](https://stackoverflow.com/questions/3005963/how-can-i-have-a-newline-in-a-string-in-sh). For example: `papirus-write $'hello\nWorld'`. Bear in mind that you need to use single quotes after the '$', double quotes do not work.
 
 ### Demos
 All demos can be seen by running the following commands. Code can be found in the repo for the python bin directory. 
