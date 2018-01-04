@@ -20,19 +20,13 @@ if [[ "$P23" == *"3"* ]]; then
 fi
 
 # Install required packages
-apt-get install git -y
+apt-get install git bc i2c-tools fonts-freefont-ttf whiptail make gcc -y
 if [ $PY2 -eq 1 ]; then
-   apt-get install python-pil -y
-   apt-get install python-smbus -y
-   apt-get install python-dateutil -y
+   apt-get install python-pil python-smbus python-dateutil -y
 fi
 if [ $PY3 -eq 1 ]; then
-   apt-get install python3-pil -y
-   apt-get install python3-smbus -y
-   apt-get install python3-dateutil -y
+   apt-get install python3-pil python3-smbus python3-dateutil -y
 fi
-apt-get install bc i2c-tools -y
-apt-get install fonts-freefont-ttf -y
 
 # Enable SPI and I2C
 raspi-config nonint do_spi 0

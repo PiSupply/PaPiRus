@@ -25,17 +25,11 @@ You can enable the SPI by typing `sudo raspi-config` at the command line and the
 #### Install Python API (best to run all of these commands as root using sudo)
 ```bash
 # Install dependencies
-sudo apt-get install git -y
-sudo apt-get install bc i2c-tools -y
-sudo apt-get install fonts-freefont-ttf -y
+sudo apt-get install git bc i2c-tools fonts-freefont-ttf whiptail make gcc -y
 # For Python 2
-sudo apt-get install python-pil -y
-sudo apt-get install python-smbus -y
-sudo apt-get install python-dateutil -y
+sudo apt-get install python-pil python-smbus python-dateutil -y
 # For Python 3
-sudo apt-get install python3-pil -y
-sudo apt-get install python3-smbus -y
-sudo apt-get install python3-dateutil -y
+sudo apt-get install python3-pil python3-smbus python3-dateutil -y
 
 git clone --depth=1 https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
