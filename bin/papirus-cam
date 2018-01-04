@@ -1,0 +1,175 @@
+#!/usr/bin/env python
+
+# Use the Raspberry Pi with Papirus HAT or Papirus Zero and RPi camera to take pictures
+#
+# The program starts by continuously showing what the camera sees on the Papirus screen
+# as a black and white dithered image (viewfinder mode). 
+# Move the camera around to see the image changing.
+# To get the fastest possible updating of the screen we use partial update.
+# Using partial update with changing dithered images does not work very well
+# (remnants of previous image remain visible). Doing an extra partial update with a
+# completely white image between camera iamges works much better (no ghosting).
+# Apologies for the flashing, but this is the best we can do.
+#
+# Press button 1 (See the papirus-buttons example) to take a picture.
+# The picture is taken with 1280 x 720 resolution and stored in your home directory
+# with <timestamp>.jpg as filename. The stored picture is taken with default camera
+# settings (i.e. it is in color).
+# Then the picture you took is shown as a black and white dithered image with 16:9 aspect
+# ratio on the Papirus screen.
+#
+# To return to viewfinder mode, press button 1 again
+#
+
+from __future__ import print_function
+
+import io
+import os
+import sys
+import string
+import time
+from PIL import Image
+import papirus
+import picamera
+import gpiozero
+from datetime import datetime
+
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    exec(open('/etc/default/epd-fuse').read())
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
+
+# Define button GPIOs for HAT or Zero
+hatdir = '/proc/device-tree/hat'
+
+# Assume Papirus Zero
+SW1 = 21
+SW2 = 16
+SW3 = 20
+SW4 = 19
+SW5 = 26
+
+if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')) :
+   with open(hatdir + '/product', 'r') as f:
+      prod = f.read()
+   with open(hatdir + '/vendor', 'r') as f:
+      vend = f.read()
+   if (prod.find('PaPiRus ePaper HAT') == 0) and (vend.find('Pi Supply') == 0) :
+       # Papirus HAT detected
+       SW1 = 16
+       SW2 = 26
+       SW3 = 20
+       SW4 = 21
+       SW5 = -1
+
+def setPicFlag():
+    global picFlag
+    picFlag = True
+
+def setExitFlag():
+    global exitFlag
+    exitFlag = True
+
+def viewfinderSettings(camera):
+    # Leave a 1 pixel border on the display to minimize streaking
+    camera.resolution=(papirus.width-2, papirus.height-2)
+    camera.brightness=65
+
+def pictureSettings(camera):
+    camera.resolution=(1280,720)
+    camera.brightness=50
+
+def takePicture(cmaera):
+    global picFlag
+
+    # Take 1280 x 720 picture
+    pictureSettings(camera)
+    datetim = datetime.now().isoformat()
+    fname = (os.environ['HOME'] + '/%s.jpg') % datetim
+    camera.capture(fname)
+    print('Picture stored as ' + fname)
+
+    # Display the picture on Papirus
+    viewfinderSettings(camera)
+    fileimg = Image.open(fname)
+    fileimg.thumbnail(papirus.size, Image.ANTIALIAS)
+    xpadding = int((papirus.size[0] - fileimg.size[0]) / 2)
+    ypadding = int((papirus.size[1] - fileimg.size[1]) / 2)
+    image = Image.new('1', papirus.size, 1)
+    image.paste(fileimg, (xpadding, ypadding))
+    papirus.display(image)
+    papirus.update()
+
+    # Return to viewfinder mode when SW1 pressed
+    picFlag = False
+    while picFlag == False:
+        if exitFlag:
+            return
+        time.sleep(0.1)
+
+papirus = papirus.Papirus()
+
+# Show intro image
+image = Image.new('1', papirus.size, 1)
+fileimg = Image.open('/usr/local/bitmaps/papirus-cam-intro.jpg')
+fileimg.thumbnail(papirus.size, Image.ANTIALIAS)
+xpadding = int((papirus.size[0] - fileimg.size[0]) / 2)
+ypadding = int((papirus.size[1] - fileimg.size[1]) / 2)
+image.paste(fileimg, (xpadding, ypadding))
+papirus.display(image)
+papirus.update()
+
+picButton = gpiozero.Button(SW1, pull_up=False)
+exitButton = gpiozero.Button(SW2, pull_up=False)
+
+picFlag = False
+picButton.when_released = setPicFlag
+for i in range (0, 50):
+    if picFlag:
+        break
+    time.sleep(0.1)
+
+camera = picamera.PiCamera()
+
+# Adjust the following 2 lines depending on your RPi camera orientation.
+camera.hflip = True
+camera.vflip = True
+
+picFlag = False
+exitFlag = False
+exitButton.when_released = setExitFlag
+
+viewfinderSettings(camera)
+while True:
+    # Create the in-memory stream
+    stream = io.BytesIO()
+    camera.capture(stream, format='jpeg')
+    # "Rewind" the stream to the beginning so we can read its content
+    stream.seek(0)
+    camimg = Image.open(stream)
+    # Display white image (best result when displaying dithered image afterwards)
+    image = Image.new('1', papirus.size, 1)
+    papirus.display(image)
+    papirus.partial_update()
+    # Display dithered camera image with 1 pixel border
+    image.paste(camimg, (1,1))
+    papirus.display(image)
+    papirus.partial_update()
+    time.sleep(0.5)
+    if picFlag:
+       print('Taking picture')
+       takePicture(camera)
+       picFlag = False
+    if exitFlag:
+       papirus.clear()
+       break

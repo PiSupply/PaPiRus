@@ -1,5 +1,8 @@
 # Read time from real time clock using the ioctl interface for /dev/rtc
 #
+
+from __future__ import print_function
+
 from collections import namedtuple
 from datetime import datetime
 from fcntl import ioctl
@@ -87,5 +90,5 @@ def get_hwclock(devrtc="/dev/rtc"):
     return RtcTime.unpack(ret).to_datetime()
 
 if __name__ == "__main__":
-    print ("Date/Time from RTC: {d:s}".format(d= get_hwclock().strftime("%A %d %B %Y - %H:%M:%S")))
+    print("Date/Time from RTC: {d:s}".format(d= get_hwclock().strftime("%A %d %B %Y - %H:%M:%S")))
 

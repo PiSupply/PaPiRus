@@ -1,28 +1,32 @@
+from __future__ import division
+
 import os
 import sys
 
 from PIL import Image
-from PIL import ImageOps
 from papirus import Papirus
+
+WHITE = 1
 
 class PapirusImage():
 
     def __init__(self, rotation = 0):
         self.papirus = Papirus(rotation = rotation)
 
-    def write(self, image):
-        image = Image.open(image)
-        image = ImageOps.grayscale(image)
+    def write(self, imagefile):
+        fileimg = Image.open(imagefile)
 
-        # crop to the middle
-        w,h = image.size
-        x = w / 2 - self.papirus.width / 2
-        y = h / 2 - self.papirus.height / 2
+        w,h = fileimg.size
 
-        rs = image
-        if w != self.papirus.width or h != self.papirus.height:
-            rs = image.resize((self.papirus.width, self.papirus.height))
-        bw = rs.convert("1", dither=Image.FLOYDSTEINBERG)
+        rsimg = fileimg
+        if w > self.papirus.width or h > self.papirus.height:
+            rsimg.thumbnail(self.papirus.size)
 
-        self.papirus.display(bw)
+        xpadding = (self.papirus.width  - rsimg.size[0]) // 2
+        ypadding = (self.papirus.height - rsimg.size[1]) // 2
+
+        image = Image.new('1', self.papirus.size, WHITE)
+        image.paste(rsimg, (xpadding, ypadding))
+
+        self.papirus.display(image)
         self.papirus.update()

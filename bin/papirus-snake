@@ -1,0 +1,312 @@
+#!/usr/bin/env python
+#
+# papirus-snake
+#
+# Classic snake game for Papirus HAT and Papirus Zero.
+# The code supports only the 2.7" (264x176) and 2.0" (200x96) screens.
+# The buttons on the HAT and the Zero are expected to be below the screen
+# (so your fingers are not in the way when playing)
+# The 4 HAT buttons are Left, Up, Down, Right. The Left/Up combo is used as
+# exit button on the Score screen at the end of a game.
+# Since the Zero has 5 buttons, the 5th button can also be used as exit button
+# on the Score screen.
+#
+ 
+from __future__ import print_function, division
+
+import os
+import sys
+import atexit
+from random import randint
+from papirus import Papirus, PapirusTextPos, PapirusComposite
+from PIL import Image
+from PIL import ImageDraw
+import time
+from gpiozero import Button
+
+# Python 2/3 compatibility function
+if sys.version_info < (3,):
+    def b(x):
+        return x
+else:
+    def b(x):
+        return x.encode('ISO-8859-1')
+
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    exec(open('/etc/default/epd-fuse').read())
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'papirus-config'.")
+    sys.exit()
+
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print('Please run script as root')
+        sys.exit()
+
+# Define button GPIOs for HAT or Zero
+hatdir = '/proc/device-tree/hat'
+
+# Definitions for Papirus Zero
+SW1 = 21
+SW2 = 16
+SW3 = 20 
+SW4 = 19
+SW5 = 26
+
+# Check for HAT, and if detected redefine SW1 .. SW5
+if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')) :
+   with open(hatdir + '/product') as f :
+      prod = f.read()
+   with open(hatdir + '/vendor') as f :
+      vend = f.read()
+   if (prod.find('PaPiRus ePaper HAT') == 0) and (vend.find('Pi Supply') == 0) :
+       # Papirus HAT detected
+       SW1 = 16
+       SW2 = 26
+       SW3 = 20
+       SW4 = 21
+       SW5 = -1
+
+WHITE = 1
+BLACK = 0
+
+LEFT  = 1
+UP    = 2
+DOWN  = 4
+RIGHT = 8
+
+CELLSIZE = 8
+
+leftButton  = Button(SW1, pull_up=False)
+upButton    = Button(SW2, pull_up=False)
+downButton  = Button(SW3, pull_up=False)
+rightButton = Button(SW4, pull_up=False)
+if SW5 != -1:
+   exitButton = Button(SW5, pull_up=False)
+
+def setkey(device):
+    global key
+    pinnr = device.pin.number
+    if   pinnr == SW1: key |= LEFT
+    elif pinnr == SW2: key |= UP
+    elif pinnr == SW3: key |= DOWN
+    elif pinnr == SW4: key |= RIGHT
+    elif pinnr == SW5: key |= LEFT|UP
+    else:
+        key = 0
+
+def getkey():
+    global key
+    return key
+
+def fillrect(draw,cell,color):
+    x1 = cell[0] * CELLSIZE
+    y1 = cell[1] * CELLSIZE
+    x2 = x1 + CELLSIZE
+    y2 = y1 + CELLSIZE
+    draw.rectangle([(x1,y1),(x2,y2)], fill=color, outline=color)
+
+def fillcircle(draw,cell,color):
+    x1 = cell[0] * CELLSIZE
+    y1 = cell[1] * CELLSIZE
+    x2 = x1 + CELLSIZE
+    y2 = y1 + CELLSIZE
+    draw.chord([(x1,y1),(x2,y2)], 0, 360, fill=color, outline=color)
+
+def showIntro():
+    global key
+    global CELLSIZE
+
+    intro=PapirusComposite(rotation=180, autoUpdate=False)
+    (width,height) = intro.papirus.size
+    if width == 264 and height == 176:   # 2.7"
+        intro.AddImg('/usr/local/bitmaps/python.png',x=10,y=30,size=(109,96))
+        intro.AddText("Snake", x=110, y=10,  size=28, fontPath='/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf')
+        intro.AddText("Press any button\nto start game", x=110, y=60,  size=16, fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        intro.AddText(u"Game buttons: \u2190 \u2191 \u2193 \u2192", x=50, y=150, size=16,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        intro.WriteAll()
+    elif width == 200 and height == 96:  # 2.0":
+        CELLSIZE = 6
+        intro.AddImg('/usr/local/bitmaps/python.png',x=0, y=0, size=(109,96))
+        intro.AddText("Snake", x=90, y=5,  fontPath='/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf')
+        intro.AddText("Press any button\nto start game", x=90, y=30,  size=14, fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        intro.AddText(u"Game buttons:\n\u2190 \u2191 \u2193 \u2192", x=130, y=69, size=12,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        intro.WriteAll()
+    else:
+        intro.AddText('Sorry, Snake can only be played on the 2.7" (264x176) and 2.0" (200x96) displays')
+        intro.WriteAll()
+        time.sleep(2)
+        sys.exit()
+
+    # Define button press action (Note: inverted logic w.r.t. gpiozero)
+    leftButton.when_released  = setkey
+    upButton.when_released    = setkey
+    downButton.when_released  = setkey
+    rightButton.when_released = setkey
+    if SW5 != -1:
+        exitButton.when_released = setkey
+
+    # Wait for any key
+    key = 0
+    while getkey() == 0:
+        time.sleep(0.1)
+
+def showScore(score):
+    global key
+
+    img = PapirusTextPos(rotation=180,autoUpdate=False)
+    (width,height) = img.papirus.size
+    if width == 264 and height == 176:   # 2.7"
+        img.AddText("Score = " + str(score), x=70, y=10, size=28, fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        img.AddText("Press any button", x=110, y=60,  size=16, fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        img.AddText("for new game", x=110, y=75, size=16, fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        img.AddText(u"Press buttons \u2190 and \u2191 to exit", x=10, y=150, size=16,
+                    fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+    elif width == 200 and height == 96:  # 2.0":
+        img.AddText("Score = " + str(score), x=60, y=0, fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        img.AddText("Press any button for new game", x=5, y=30,
+                    size=14, fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        if SW5 != -1:
+            img.AddText(u"Press button 5 or buttons \u2190 and \u2191\nto exit", x=5, y=60, size=14,
+                        fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+        else:
+            img.AddText(u"Press buttons \u2190 and \u2191 to exit", x=5, y=75, size=14,
+                    fontPath='/usr/share/fonts/truetype/freefont/FreeSerif.ttf')
+    img.WriteAll()
+
+    # Wait for the exit key(s) or other key to continue
+    key = 0
+    while getkey() == 0:
+        time.sleep(0.3)
+    if key != (LEFT|UP):
+        return True
+    else:
+        return False
+
+def doGame(papirus):
+    global key
+
+    key = 0
+    score = 0
+
+    gridwidth  = papirus.width // CELLSIZE
+    gridheight = papirus.height // CELLSIZE
+
+    image = Image.new('1', papirus.size, WHITE)
+    draw = ImageDraw.Draw(image)
+
+    # Draw border
+    x1 = CELLSIZE // 2
+    y1 = CELLSIZE // 2
+    x2 = (gridwidth-1) * CELLSIZE + CELLSIZE//2
+    y2 = (gridheight-1) * CELLSIZE + CELLSIZE//2
+    draw.rectangle([(x1,y1), (x2,y2)], fill=WHITE, outline=BLACK)
+    papirus.display(image)
+    papirus.update()
+
+    # Initial direction
+    dir = LEFT
+
+    # Initial snake
+    x = randint(1,gridwidth-5)
+    y = randint(1,gridheight-2)
+    snake = [[x,y],[x+1,y],[x+2,y]]
+    for i in snake:
+        fillrect(draw, i, BLACK)
+
+    # Initial food
+    food = []
+    while food == []:
+       x = randint(1, gridwidth - 2)
+       y = randint(1, gridheight - 2)
+       food = [x, y]
+       if food in snake:
+           food = []
+    fillcircle(draw, food, BLACK)
+
+    # Display first screen
+    papirus.display(image)
+    papirus.partial_update()
+
+    # Reset stagetime for fast update
+    stagetime = 500
+    with open('/dev/epd/pu_stagetime','wb') as f:
+        f.write(b(str(stagetime)))
+
+    # Game loop
+    while True:
+        prevDir = dir
+        prevStagetime = stagetime
+
+        dir = getkey()
+        if dir not in [RIGHT, LEFT, UP, DOWN]:
+            dir = prevDir
+        dx = (dir & RIGHT and  1) + (dir & LEFT and -1)
+        dy = (dir & UP    and -1) + (dir & DOWN and  1)
+        snake.insert(0, [snake[0][0] + dx, snake[0][1] + dy])
+
+        # If snake crosses the boundaries, make it enter from the other side
+        if snake[0][0] == 0: snake[0][0] = gridwidth - 2
+        if snake[0][1] == 0: snake[0][1] = gridheight - 2
+        if snake[0][0] == gridwidth - 1:  snake[0][0] = 1
+        if snake[0][1] == gridheight - 1: snake[0][1] = 1
+
+        # If snake runs over itself, game over
+        if snake[0] in snake[1:]: break
+
+        # Snake eats food
+        if snake[0] == food:
+            food = []
+            score += 1
+            while food == []:
+                x = randint(1, gridwidth  - 2)
+                y = randint(1, gridheight - 2)
+                food = [x, y]
+                if food in snake:
+                    food = []
+            fillcircle(draw, food, BLACK)
+        else:
+            last = snake.pop()
+            fillrect(draw, last, WHITE)
+        fillrect(draw, snake[0], BLACK)
+
+        # Adjust stagetime (less means faster dnake)
+        stagetime = 500 - len(snake) * 15
+        stagetime = max(stagetime, 200)
+        if stagetime != prevStagetime:
+            with open('/dev/epd/pu_stagetime','wb') as f:
+                f.write(b(str(stagetime)))
+
+        key = 0
+
+        papirus.display(image)
+        papirus.fast_update()
+
+    return showScore(score)
+
+def cleanup(papirus):
+    # Restore pu_stagetime
+    with open('/dev/epd/pu_stagetime','wb') as f:
+       f.write(b(str(500)))
+    papirus.clear()
+
+def main():
+    papirus = Papirus(rotation = 180) # Buttons at bottom of screen
+    atexit.register(cleanup, papirus)
+
+    showIntro()
+    while doGame(papirus):
+        pass
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit('interrupted')
+

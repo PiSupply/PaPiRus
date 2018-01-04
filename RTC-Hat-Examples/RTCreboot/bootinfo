@@ -13,7 +13,7 @@ i2cbus = SMBus(1)
 
 disablealm0(i2cbus)
 
-upsince = check_output(["uptime", "-s"])
+upsince = check_output(["uptime", "-s"]).decode('utf-8')
 now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 rtc = readrtc(i2cbus).strftime('%Y-%m-%d %H:%M:%S')
 

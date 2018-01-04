@@ -12,6 +12,10 @@ SW3 = BUT3 = pin 38 = GPIO 20
 
 SW4 = BUT4 = pin 40 = GPIO 21
 ```
+Also see the schematic area this refers to [on the image here](https://github.com/PiSupply/PaPiRus/blob/master/hardware/PaPiRus%20HAT/button-schematic.jpg).
+## Pull up resistors
+
+PaPiRus HAT has on board pull up resistors and protection resistors for the button GPIOs, so there is no need to use the internal pull-up resistors on the Raspberry Pi. You can see these [on the schematic](https://github.com/PiSupply/PaPiRus/blob/master/hardware/PaPiRus%20HAT/Latest%20Version%20-%20v1.9/2014-035-01-Pi-ePaper-circuit_v1_9.pdf).
 
 ## Jumper settings and meaning
 **CN2**

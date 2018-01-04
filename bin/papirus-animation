@@ -1,0 +1,103 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import time
+import os
+import argparse
+
+from PIL import Image
+
+from papirus import Papirus
+
+PICTURES_TYPES = ['jpg', 'png', 'bmp', 'gif']
+
+# Create an instance of papirus
+papirus = Papirus()
+
+def main():
+    """main program"""
+    p = argparse.ArgumentParser()
+    p.add_argument('filepath', type=str, help="Path to pictures")
+    p.add_argument('--delay', '-d', type=float, default=0, help="Extra delay between pictures")
+    p.add_argument('--rotation', '-r', type=int, default=0, help="Rotation one of 0, 90, 180, 270")
+    p.add_argument('--fullupdate', '-f', action='store_true', default=False, help="Force full update between each picture")
+    p.add_argument('--loop', '-l', action='store_true', default=False, help="Sets the script in a continuous loop. CTRL^C to stop it")
+    args = p.parse_args()
+
+    papirus = Papirus(rotation=args.rotation)
+    if args.filepath:
+        print("Animation on PaPiRus.......")
+        animate(papirus, args.filepath, args.delay, args.fullupdate, args.loop)
+        print("Finished!")
+
+def animate(papirus, imagepath, extradelay, fullupdate, loop):
+    """animation"""
+
+    reps = 0 # Counts the times the screen has been used even when in loop to ensure a refresh every 10
+
+    papirus.clear()
+
+    print('Displaying the animation')
+
+    try: # Extract name and extension of the first file in the list
+        name = os.listdir(imagepath)[0].split(".")[0]
+        extension = os.listdir(imagepath)[0].split(".")[1]
+        if name.isdigit() and extension in PICTURES_TYPES: # If it is a number assumes it is an animated sequence
+            stringnamepictures = False
+            print('Numbered sequence')
+        elif name[0].isalpha() and extension in PICTURES_TYPES: # If it is an alpha then it is a slideshow
+            stringnamepictures = True
+            print('Unnumbered sequence')
+        else:
+            print('There are no compatible files in the chosen directory')
+            exit()
+    except Exception as e:
+        raise e
+        print("No file found")
+
+    try:
+        while loop or reps == 0:
+            for i in range(0, len(os.listdir(imagepath))):
+                if not stringnamepictures:
+                    extension = os.listdir(imagepath)[i].split(".")[1]
+                    filename = imagepath + '/' + str(i) + '.' + extension
+                else:
+                    extension = os.listdir(imagepath)[i].split(".")[1]
+                    filename = imagepath + '/' + os.listdir(imagepath)[i]
+                if os.path.isfile(filename) and extension in PICTURES_TYPES:
+                    fileimg = Image.open(filename)
+                    # Keep first and last pixel row free to avoid streaking with partial update
+                    fileimg.thumbnail((papirus.width-2, papirus.height-2), Image.ANTIALIAS)
+                    fileimg = fileimg.convert("1", dither=Image.FLOYDSTEINBERG)
+                    # Center fileimg
+                    xpadding = int((papirus.size[0] - fileimg.size[0]) / 2)
+                    ypadding = int((papirus.size[1] - fileimg.size[1]) / 2)
+                    image = Image.new('1', papirus.size, 1)
+                    image.paste(fileimg, (xpadding, ypadding))
+
+                    papirus.display(image)
+                    if fullupdate or reps % 10 == 0: # Refresh every ten partials
+                        papirus.update()
+                    else:
+                        papirus.partial_update()
+
+                    reps = reps + 1
+                    if extradelay > 0:
+                        time.sleep(extradelay)
+
+    except KeyboardInterrupt:
+        # quit
+        pass
+
+    if loop:
+        # When looping clear the display at exit
+        time.sleep(2)
+        papirus.clear()
+    else:
+        # Otherwise show the last image
+        papirus.update()
+
+# main
+if "__main__" == __name__:
+    main()

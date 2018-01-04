@@ -1,5 +1,7 @@
 # utility functions for Papirus Hat hardware clock (MCP7940N)
 
+from __future__ import division
+
 from datetime import datetime
 from calendar import isleap
 from smbusf import SMBus
@@ -10,7 +12,7 @@ LPYR  = 0x20
 almbase = [0xa, 0x11]
 
 def tobcd(val):
-  return (val % 10) | (val / 10) << 4
+  return (val % 10) | (val // 10) << 4
 
 def writertc(i2cbus, dt):
   sec = dt.second
@@ -65,12 +67,12 @@ def writealm(i2cbus, alm, dt):
 def readrtc(i2cbus):
   data=i2cbus.read_i2c_block_data(RTCADR, 0, 7)
 
-  sec   = (data[0] & 0x7f) / 16 * 10 + (data[0] & 0x0f)
-  min   = data[1] / 16 * 10 + (data[1] & 0x0f)
-  hour  = data[2] / 16 * 10 + (data[2] & 0x0f)
-  day   = data[4] / 16 * 10 + (data[4] & 0x0f)
-  month = (data[5] & 0x10) / 16 * 10 + (data[5] & 0x0f)
-  year  = data[6] / 16 * 10 + (data[6] & 0x0f)
+  sec   = (data[0] & 0x7f) // 16 * 10 + (data[0] & 0x0f)
+  min   = data[1] // 16 * 10 + (data[1] & 0x0f)
+  hour  = data[2] // 16 * 10 + (data[2] & 0x0f)
+  day   = data[4] // 16 * 10 + (data[4] & 0x0f)
+  month = (data[5] & 0x10) // 16 * 10 + (data[5] & 0x0f)
+  year  = data[6] // 16 * 10 + (data[6] & 0x0f)
   dt = datetime(2000+year, month, day, hour, min, sec)
   return dt
 
@@ -81,11 +83,11 @@ def readalm(i2cbus, alm):
     alm = 0
   data = i2cbus.read_i2c_block_data(RTCADR, almbase[alm], 6)
 
-  sec   = data[0] / 16 * 10 + (data[0] & 0x0f)
-  min   = data[1] / 16 * 10 + (data[1] & 0x0f)
-  hour  = data[2] / 16 * 10 + (data[2] & 0x0f)
-  day   = data[4] / 16 * 10 + (data[4] & 0x0f)
-  month = data[5] / 16 * 10 + (data[5] & 0x0f)
+  sec   = data[0] // 16 * 10 + (data[0] & 0x0f)
+  min   = data[1] // 16 * 10 + (data[1] & 0x0f)
+  hour  = data[2] // 16 * 10 + (data[2] & 0x0f)
+  day   = data[4] // 16 * 10 + (data[4] & 0x0f)
+  month = data[5] // 16 * 10 + (data[5] & 0x0f)
   # year not used in alarm time
   dt = datetime(2000, month, day, hour, min, sec)
   return dt

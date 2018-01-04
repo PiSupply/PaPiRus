@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import (print_function, division)
+
 import os
 import sys
 
@@ -24,7 +26,7 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
 if os.path.exists('/etc/default/epd-fuse'):
-    execfile('/etc/default/epd-fuse')
+    exec(open('/etc/default/epd-fuse').read())
 if EPD_SIZE == 0.0:
     print("Please select your screen size by running 'papirus-config'.")
     sys.exit()
@@ -36,9 +38,9 @@ def colourGrid(draw, item, lifeDict):
     y = y * CELLSIZE # translates array into grid size
     x = x * CELLSIZE # translates array into grid size
     if lifeDict[item] == 0:
-	draw.rectangle(( (x, y), (x + CELLSIZE, y + CELLSIZE) ), fill=WHITE, outline=WHITE)
+        draw.rectangle(( (x, y), (x + CELLSIZE, y + CELLSIZE) ), fill=WHITE, outline=WHITE)
     if lifeDict[item] == 1:
-	draw.rectangle(( (x, y), (x + CELLSIZE, y + CELLSIZE) ), fill=BLACK, outline=WHITE)
+        draw.rectangle(( (x, y), (x + CELLSIZE, y + CELLSIZE) ), fill=BLACK, outline=WHITE)
     return None
 
 # Creates an dictionary of all the cells
@@ -46,8 +48,8 @@ def colourGrid(draw, item, lifeDict):
 def generateGrid(height, width):
     gridDict = {}
     #creates dictionary for all cells
-    for y in range (height / CELLSIZE):
-        for x in range (width / CELLSIZE):
+    for y in range (height // CELLSIZE):
+        for x in range (width // CELLSIZE):
             gridDict[x,y] = 0 #Sets cells as dead
     return gridDict
 
@@ -64,8 +66,8 @@ def getNeighbours(epd, item,lifeDict):
     for x in range (-1,2):
         for y in range (-1,2):
             checkCell = (item[0]+x,item[1]+y)
-            if checkCell[0] < (epd.width / CELLSIZE)  and checkCell[0] >=0:
-                if checkCell[1] < (epd.height / CELLSIZE) and checkCell[1]>= 0:
+            if checkCell[0] < (epd.width // CELLSIZE)  and checkCell[0] >=0:
+                if checkCell[1] < (epd.height // CELLSIZE) and checkCell[1]>= 0:
                     if lifeDict[checkCell] == 1:
                         if x == 0 and y == 0: # negate the central cell
                             neighbours += 0

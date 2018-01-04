@@ -1,7 +1,13 @@
+![Alt text](https://user-images.githubusercontent.com/16068311/30544688-3fa0b09c-9c7f-11e7-863f-5cfb64b9d668.png?raw=true "PaPiRus Logo")
 # PaPiRus
 You can find here a variety of software, hardware and other resources for the [PaPiRus](http://papirus.ws) range of ePaper eInk displays from [Pi Supply](https://www.pi-supply.com). This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
 You can purchase one of the PaPiRus boards from [our webshop](https://www.pi-supply.com/?s=papirus&post_type=product&tags=1&limit=5&ixwps=1) or from a variety of resellers worldwide.
+
+# Python 2 and Python 3 support
+The library and examples work on both Python 2 and Python 3.
+Currently (October 2017) Python 2 is still the default Python in Raspbian.
+The Python 2 and Python 3 versions can be installed side by side.
 
 # Setup PaPiRus
 ## Auto Installation
@@ -19,17 +25,19 @@ You can enable the SPI by typing `sudo raspi-config` at the command line and the
 #### Install Python API (best to run all of these commands as root using sudo)
 ```bash
 # Install dependencies
-apt-get install git -y
-apt-get install python-imaging -y
-apt-get install python-smbus -y
-apt-get install bc i2c-tools -y
-apt-get install python-dateutil -y
-apt-get install whiptail -y
-apt-get install make gcc -y
+sudo apt-get install git bc i2c-tools fonts-freefont-ttf whiptail make gcc -y
+# For Python 2
+sudo apt-get install python-pil python-smbus python-dateutil -y
+# For Python 3
+sudo apt-get install python3-pil python3-smbus python3-dateutil -y
 
-git clone https://github.com/PiSupply/PaPiRus.git
+git clone --depth=1 https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
+
+# For Python 2
 sudo python setup.py install    # Install PaPirRus python library
+# For Python 3
+sudo python3 setup.py install    # Install PaPirRus python library
 ```
 
 #### Install Driver (Option 1) (best to run all of these commands as root using sudo)
@@ -187,7 +195,7 @@ from papirus import PapirusText
 text = PapirusText()
 
 # Write text to the screen, in this case forty stars alternating black and white
-# note the use of u"" syntax to specify unicode
+# note the use of u"" syntax to specify unicode (needed for Python 2, optional for Python 3 since unicode is default in Python 3)
 text.write(u"\u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606 \u2605 \u2606")
 ```
 #### Note
@@ -202,10 +210,6 @@ image = PapirusImage([rotation = rot])
 # easy write image to screen
 # image.write(path)
 image.write('/path/to/image')
-
-# write image to the screen with size and position
-# image.write(path, width, (x,y))
-image.write('/path/to/image', 20, (10, 10) ) # This is not confirmed to work correctly yet!!
 ```
 
 #### The composite API (Text and image)
@@ -272,8 +276,9 @@ papirus-draw /path/to/image -t [resize | crop] -r [0 | 90 | 180 | 270]
 papirus-clear
 
 ```
+**Note:** The line break '\n' is not converted by the shell (bash). In order to do this you need to use the method described [here](https://stackoverflow.com/questions/3005963/how-can-i-have-a-newline-in-a-string-in-sh). For example: `papirus-write $'hello\nWorld'`. Bear in mind that you need to use single quotes after the '$', double quotes do not work.
 
-#### Demos
+### Demos
 All demos can be seen by running the following commands. Code can be found in the repo for the python bin directory. 
 
 ```bash
@@ -304,18 +309,36 @@ papirus-radar
 # Display text filling the width of the display
 papirus-textfill 'Some text' [rotation]
 
-# Snakes game
-papirus-snakes (coming soon)
+# Snake game
+papirus-snake
 
 # Display Twitter feeds
 papirus-twitter
 
 # Composite text and graphics
 papirus-composite-write
+
+# Display image sequences or slide-show
+# The directory containing the pictures must have number sequenced images in the form 0.gif, 1.gif, 2.gif, etc.
+# for an animation or pictures with random names (e.g. in the case of a slide-show). 
+papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] directory
+
+# Take a picture with the RPi camera using the PaPiRus screen as viewfinder
+papirus-cam
 ```
 
+### Demos for using the Real Time Clock of the Papirus HAT
+
+The Papirus HAT has a battery backed-up Real TIme Clock. For more information about the RTC and demos see the
+[RTC-Hat-Examples](./RTC-Hat-Examples) directory and README files.
+
 ### Tips for using images
-The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the PaPiRus screen using GIMP or Photoshop or similar photo editing tools like [the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format or [WIF (the WyoLum Image Format)](http://wyolum.com/introducing-wif-the-wyolum-image-format/).
+The PaPiRus can only display Bitmap images (.BMP) in black and white (1 bit colour). If you pass an image to PaPiRus
+that is not a 1 Bit Bitmap, it will automatically be converted to this by the software. However, for best results
+and higher image quality we would recommend that you convert the image to a 1 Bit Bitmap before pushing to the
+PaPiRus screen using GIMP or Photoshop or similar photo editing tools like
+[the rePaper companion](https://github.com/aerialist/repaper_companion) to resize images and convert them to XBM format
+or [WIF (the WyoLum Image Format)](http://wyolum.com/introducing-wif-the-wyolum-image-format/).
 
 ### Screen Resolutions
 The screens have the following screen resolutions:
@@ -365,3 +388,6 @@ It is safe to say we have an awesome and growing community of people using epape
 * [PaPiRus HAT working with resin.io](https://github.com/resin-io-playground/resinio-PaPiRus)
 * [Raspberry Pi Internal Watchdog Setup and Information](http://www.switchdoc.com/2014/11/reliable-projects-using-internal-watchdog-timer-raspberry-pi/)
 * [Baseball Pi - get the live box score, plays, and batter stats of your favorite MLB team right on your desktop](https://github.com/eat-sleep-code/baseball-pi)
+* PaPiRus Netapp (find Raspberry Pi’s on your network, run a speed test of your internet connection, show a graph of your past speed test results) - [blog here](https://www.talktech.info/2017/09/30/papirus-netapp/) and [GitHub Repo here](https://github.com/vwillcox/papirus-netapp) 
+* [PaPiRus Ruby gem for the Raspberry Pi PaPiRus eInk screen](https://github.com/mmolhoek/papirus)
+* [PaPiRuby - Ruby wrapper for the Raspberry Pi PaPiRus eInk screen](https://github.com/EddWills95/PaPiRuby)
