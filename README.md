@@ -318,12 +318,17 @@ papirus-twitter
 # Composite text and graphics
 papirus-composite-write
 
+# Copy framebuffer (text console or desktop) to Papirus using the buttons to zoom en pan
+# Only for 2.7" and 2.0" displays
+papirus-fbcopy
+
 # Display image sequences or slide-show
 # The directory containing the pictures must have number sequenced images in the form 0.gif, 1.gif, 2.gif, etc.
 # for an animation or pictures with random names (e.g. in the case of a slide-show). 
 papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] directory
 
 # Take a picture with the RPi camera using the PaPiRus screen as viewfinder
+# Only for 2.7" and 2.0" displays
 papirus-cam
 ```
 
