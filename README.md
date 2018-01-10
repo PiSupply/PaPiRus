@@ -4,11 +4,6 @@ You can find here a variety of software, hardware and other resources for the [P
 
 You can purchase one of the PaPiRus boards from [our webshop](https://www.pi-supply.com/?s=papirus&post_type=product&tags=1&limit=5&ixwps=1) or from a variety of resellers worldwide.
 
-# Python 2 and Python 3 support
-The library and examples work on both Python 2 and Python 3.
-Currently (October 2017) Python 2 is still the default Python in Raspbian.
-The Python 2 and Python 3 versions can be installed side by side.
-
 # Setup PaPiRus
 ## Auto Installation
 Just run the following script in a terminal window and PaPiRus will be automatically setup.
@@ -69,6 +64,8 @@ sudo papirus-config
 ```
 
 # Python API
+## Python 2 and Python 3 support
+The library and examples work on both Python 2 and Python 3. Currently (October 2017) Python 2 is still the default Python in Raspbian. The Python 2 and Python 3 versions can be installed side by side.
 
 #### The Basic API
 
