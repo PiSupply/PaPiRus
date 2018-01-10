@@ -1,0 +1,367 @@
+#!/usr/bin/env python
+#
+# Mirror framebuffer to PaPiRus display.
+#
+# Uses fbcat to grab the framebuffer and then reduces it to fit on the PaPiRus screen.
+# fbcat will also grab the text console when no desktop is running.
+#
+# Since the PaPiRus is only black and white the grabbed dekstop image is dithered.
+# Displaying dithered images with partial update results in ghosting
+# By doing an additional partial update with a white image the ghosting is reduced.
+# 
+# When mirroring the text console (no desktop running) the image is inverted
+# to get black text on a white background, which works much better on Papirus.
+#
+# Author: Ton van Overbeek
+#
+
+from __future__ import print_function, division
+
+import os
+import sys
+from subprocess import call
+from PIL import Image
+from PIL import ImageDraw
+from PIL.ImageOps import invert
+from time import sleep
+from papirus import Papirus, PapirusTextPos
+import gpiozero
+
+def checkButtons(cropbox, fbAspect, epdAspect):
+    global sw1Flag, sw2Flag, sw3Flag, sw4Flag, sw5Flag, exitFlag
+    global epdboxw, epdboxh, fbboxw, fbboxh
+
+    x = cropbox[0]
+    y = cropbox[1]
+    boxw = cropbox[2] - x
+    boxh = cropbox[3] - y
+    boxAspect = boxw/boxh
+    if (sw2Flag and sw3Flag) or sw5Flag:
+        # Exit
+        exitFlag = True
+    elif sw1Flag and sw2Flag:
+        # Zoom in
+        if (boxw//2 >= epdboxw) and (boxh//2 >= epdboxh):
+            x += boxw//4
+            y += boxh//4
+            boxw = boxw//2
+            boxh = boxh//2
+            if boxw/boxh == fbAspect:
+                boxhtmp = int(boxw / epdAspect)
+                boxwtmp = int(boxh * epdAspect)
+                boxAspect = epdAspect
+                if fbAspect > epdAspect and boxhtmp <= fbboxh:
+                    y = y - (boxhtmp - boxh)
+                    boxh = boxhtmp
+                if epdAspect > fbAspect and boxwtmp <= fbboxw:
+                    x = x - (boxwtmp - boxw)
+                    boxw = boxwtmp
+            cropbox = (x, y, x+boxw, y+boxh)
+        else:
+            # Max zoom in: pixel ratio 1:1
+            x += (boxw - epdboxw) // 2
+            y += (boxh - epdboxh) // 2
+            cropbox = (x, y, x + epdboxw, y + epdboxh)
+        sw1Flag = sw2Flag = False
+    elif sw3Flag and sw4Flag:
+        # Zoom out
+        if (boxw*2 <= fbboxw) and (boxh*2 <= fbboxh):
+            boxw *= 2
+            boxh *= 2
+            x -= boxw//4
+            y -= boxh//4
+            if (x  < 0):
+                x = 0
+            if (x + boxw > fbboxw):
+                x = fbboxw - boxw
+            if (y < 0):
+                y = 0
+            if (y + boxh > fbboxh):
+                y = fbboxh - boxh
+            cropbox = (x, y, x+boxw, y+boxh)
+        else:
+            # Max zoom out: complete framebuffer
+            boxAspect = fbAspect
+            cropbox = (0, 0, fbboxw, fbboxh)
+        sw3Flag = sw4Flag = False
+    elif sw1Flag:
+        # Move Left
+        x -= boxw//2
+        if (x < 0):
+            x = 0
+        cropbox = (x, y, x+boxw, y+boxh)
+        sw1Flag = False
+    elif sw2Flag:
+        # Move Up
+        y -= boxh//2
+        if (y < 0):
+            y = 0
+        cropbox = (x, y, x+boxw, y+boxh)
+        sw2Flag = False
+    elif sw3Flag:
+        # Move Down
+        y += boxh//2
+        if (y + boxh > fbboxh):
+            y = fbboxh - boxh
+        cropbox = (x, y, x+boxw, y+boxh)
+        sw3Flag = False
+    elif sw4Flag:
+        # Move right
+        x += boxw//2
+        if (x + boxw > fbboxw):
+            x = fbboxw - boxw
+        cropbox = (x, y, x+boxw, y+boxh)
+        sw4Flag = False
+    return cropbox , boxAspect
+
+
+def doFbCopy(papirus, xwinFlag):
+    global imWhite
+    global epdboxw, epdboxh, fbboxw, fbboxh
+    global exitFlag
+
+    # Use a monochrome image to force 0/1 values
+    image = Image.new('1', papirus.size, 1)
+
+    # prepare for drawing
+    draw = ImageDraw.Draw(image)
+    width, height = papirus.size
+    # Keep image 1 pixel away from Papirus border
+    epdboxw = width - 2
+    epdboxh = height - 2
+    epdAspect = epdboxw/epdboxh
+
+    # First screendump
+    call('fbcat > /tmp/scrdmp.ppm', shell=True)
+    im=Image.open('/tmp/scrdmp.ppm')
+
+    # Initial crop box = full screen
+    [fbboxw, fbboxh] = im.size
+    fbAspect = fbboxw / fbboxh
+    cropbox = (0, 0, fbboxw, fbboxh)
+    boxAspect = fbAspect
+
+    im.thumbnail((epdboxw, epdboxh))
+    if xwinFlag:
+        im=im.point(lambda p: p * 1.05)   # Brighten image before dithering
+    else:
+        im=invert(im)                     # Invert text screen -> black text on white
+    # Center image
+    xpadding0 = int((width - im.size[0]) // 2)
+    ypadding0 = int((height - im.size[1]) // 2)
+
+    exitFlag = False
+    while True:
+        # Display image on the panel
+        if boxAspect == fbAspect:
+            # Possible white borders
+            xpadding = xpadding0
+            ypadding = ypadding0
+            image = imWhite.copy()
+        else:
+            xpadding = ypadding = 0
+        image.paste(im,(xpadding, ypadding))
+        if xwinFlag:
+            papirus.display(imWhite)    # White screen to reduce ghosting
+            papirus.partial_update()
+        papirus.display(image)          # Display the real thing
+        papirus.partial_update()
+
+        sleep(1)
+
+        cropbox, boxAspect = checkButtons(cropbox, fbAspect, epdAspect)
+        if exitFlag:
+            return
+
+        call('fbcat > /tmp/scrdmp.ppm', shell=True)
+        im=Image.open('/tmp/scrdmp.ppm')
+        im=im.crop(cropbox)
+        im.thumbnail((epdboxw, epdboxh))
+        if xwinFlag:
+            im=im.point(lambda p: p * 1.05)   # Brighten image before dithering
+        else:
+            im=invert(im)                     # Invert text screen -> black text on white
+
+def showIntro():
+    global sw1Flag, sw2Flag, sw3Flag, sw4Flag, sw5Flag
+
+    intro=PapirusTextPos(rotation=180, autoUpdate=False)
+    (width,height) = intro.papirus.size
+    if width == 264 and height == 176:   # 2.7"
+        intro.AddText("Papirus Framebuffer Copy", x=10, y=1, size=16, invert=True,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf')
+
+        intro.AddText(u"\u2190+\u2191: Zoom in", x=10, y=25, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2193+\u2192: Zoom out", x=10, y=40, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2190: Left", x=10, y=55, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2191: Up", x=10, y=70, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2193: Down", x=10, y=85, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2192: Right", x=10, y=100, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2191+\u2193: Exit", x=10, y=115, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+
+        intro.AddText("Press any button to continue", x=10, y=135, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+
+        intro.AddText(u"Buttons:", x=10, y=height-16, size=14,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2190", x=80, y=height-16, size=17,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2191", x=130, y=height-16, size=17,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2193", x=180, y=height-16, size=17,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2192", x=230, y=height-16, size=17,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.WriteAll()
+    elif width == 200 and height == 96:   # 2.0"
+        intro.AddText("Papirus Framebuffer Copy", x=15, y=1, size=12, invert=True,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf')
+
+        intro.AddText(u"\u2190+\u2191: Zoom in", x=10, y=20, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2193+\u2192: Zoom out", x=100, y=20, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2190:Left", x=10, y=32, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2191:Up", x=60, y=32, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2193:Down", x=100, y=32, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2192:Right", x=150, y=32, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2191+\u2193 or x: Exit", x=10, y=44, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+
+        intro.AddText("Any button to continue", x=25, y=60, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+
+        intro.AddText("Buttons:", x=55, y=height-20, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2190", x=0, y=height-10, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2191", x=35, y=height-10, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2193", x=74, y=height-10, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"\u2192", x=112, y=height-10, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+        intro.AddText(u"x", x=152, y=height-10, size=11,
+                      fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf')
+
+        intro.WriteAll()
+    else:
+        intro.AddText('Sorry, Papirus Framebuffer Copy runs only on the 2.7" (264x176) and 2.0" (200x96) displays')
+        intro.WriteAll()
+        sleep(2)
+        sys.exit()
+
+    # Wait for any button
+    while sw1Flag == False and sw2Flag == False and sw3Flag == False and sw4Flag == False and sw5Flag == False:
+        pass
+    sw1Flag = sw2Flag = sw3Flag = sw4Flag = sw5Flag = False
+
+def X_is_running():
+    from subprocess import Popen, PIPE
+    os.environ["DISPLAY"] = ":0"   # Set DISPLAY in case we are logged in via ssh
+    p = Popen(["xset", "-q"], stdout=PIPE, stderr=PIPE)
+    p.communicate()
+    return p.returncode == 0
+ 
+# ---------- Main ----------
+
+global imWhite
+global sw1Flag, sw2Flag, sw3Flag, sw4Flag, sw5Flag
+
+# Check EPD_SIZE is defined
+EPD_SIZE=0.0
+if os.path.exists('/etc/default/epd-fuse'):
+    exec(open('/etc/default/epd-fuse').read())
+if EPD_SIZE == 0.0:
+    print("Please select your screen size by running 'sudo papirus-config'.")
+    sys.exit()
+
+# Running as root only needed for older Raspbians without /dev/gpiomem
+if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+    user = os.getuid()
+    if user != 0:
+        print("Please run script as root")
+        sys.exit()
+
+# Define button GPIOs for HAT or Zero
+hatdir = '/proc/device-tree/hat'
+
+# Assume Papirus Zero
+SW1 = 21
+SW2 = 16
+SW3 = 20
+SW4 = 19
+SW5 = 26
+
+if (os.path.exists(hatdir + '/product')) and (os.path.exists(hatdir + '/vendor')) :
+   with open(hatdir + '/product', 'r') as f:
+      prod = f.read()
+   with open(hatdir + '/vendor', 'r') as f:
+      vend = f.read()
+   if (prod.find('PaPiRus ePaper HAT') == 0) and (vend.find('Pi Supply') == 0) :
+       # Papirus HAT detected
+       SW1 = 16
+       SW2 = 26
+       SW3 = 20
+       SW4 = 21
+       SW5 = -1
+
+# Bind switches
+sw1Button = gpiozero.Button(SW1, pull_up=False)
+sw2Button = gpiozero.Button(SW2, pull_up=False)
+sw3Button = gpiozero.Button(SW3, pull_up=False)
+sw4Button = gpiozero.Button(SW4, pull_up=False)
+if SW5 != -1:
+    sw5Button = gpiozero.Button(SW5, pull_up=False)
+
+sw1Flag = sw2Flag = sw3Flag = sw4Flag = sw5Flag = False
+
+def setSw1Flag():
+    global sw1Flag
+    sw1Flag = True
+
+def setSw2Flag():
+    global sw2Flag
+    sw2Flag = True
+
+def setSw3Flag():
+    global sw3Flag
+    sw3Flag = True
+
+def setSw4Flag():
+    global sw4Flag
+    sw4Flag = True
+
+def setSw5Flag():
+    global sw5Flag
+    sw5Flag = True
+
+sw1Button.when_released = setSw1Flag
+sw2Button.when_released = setSw2Flag
+sw3Button.when_released = setSw3Flag
+sw4Button.when_released = setSw4Flag
+if SW5 != -1:
+   sw5Button.when_released = setSw5Flag
+
+# Start the framebuffer copy
+papirus = Papirus(rotation=180)
+imWhite = Image.new('1', papirus.size, 1)
+xwinFlag = X_is_running()
+try:
+    showIntro()
+    doFbCopy(papirus, xwinFlag)
+except KeyboardInterrupt:
+    print("\nInterrupted ...")
+
+papirus.clear()
