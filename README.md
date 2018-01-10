@@ -251,6 +251,15 @@ textNImg.RemoveImg("Top")
 textNImg.WriteAll()
 ```
 
+#### Code versioning
+For PaPiRus we have adopted a common definition for the major.minor.micro version number. Whenever submitting code make sure to update the version number if applicable.
+
+* The major number should be increased whenever the API changes in an incompatible way.
+* The minor number should be increased whenever the API changes in a compatible way.
+* The micro number should be increased whenever the implementation changes, while the API does not.
+
+You can change the version in the [__init__.py](https://github.com/PiSupply/PaPiRus/blob/master/papirus/__init__.py).
+
 #### Font family
 PaPiRusText and PaPiRusTextPos are using the font _FreeMono.ttf_ by default. It is possible to specify the argument `font_path` in `PapirusText.write`, `PapirusTextPos.AddText`, `PapirusTextPos.UpdateText` and `PapirusTextPos.addToImageText` to change the _font family_. The argument must be a string containing the path to the _.ttf_ file.
 ```
