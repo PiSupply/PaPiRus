@@ -56,9 +56,9 @@ git clone https://github.com/repaper/gratis.git
 
 cd /tmp/papirus/gratis
 make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
-make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
-systemctl enable epd-fuse.service
-systemctl start epd-fuse
+sudo make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
+sudo systemctl enable epd-fuse.service
+sudo systemctl start epd-fuse
 ```
 
 #### Select your screen size
@@ -103,6 +103,12 @@ text = PapirusText([rotation = rot])
 # Write text to the screen
 # text.write(text)
 text.write("hello world")
+
+# Write text to the screen specifying all options
+# text.write(text, [size = <size> ],[fontPath = <fontpath>],[maxLines = <n>])
+maxLines is the max number of lines to autowrap the given text.
+New lines (\n) in the text will not go to the next line, but are interpreted as white space.
+Use PapirusTextPos() instead which recognizes '\n'. 
 ```
 
 #### The Positional Text API (example 1)
