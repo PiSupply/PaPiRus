@@ -409,3 +409,4 @@ It is safe to say we have an awesome and growing community of people using epape
 * PaPiRus Netapp (find Raspberry Pi’s on your network, run a speed test of your internet connection, show a graph of your past speed test results) - [blog here](https://www.talktech.info/2017/09/30/papirus-netapp/) and [GitHub Repo here](https://github.com/vwillcox/papirus-netapp) 
 * [PaPiRus Ruby gem for the Raspberry Pi PaPiRus eInk screen](https://github.com/mmolhoek/papirus)
 * [PaPiRuby - Ruby wrapper for the Raspberry Pi PaPiRus eInk screen](https://github.com/EddWills95/PaPiRuby)
+* Power outage monitor (using PiJuice and PaPiRus) by Frederick Vandenbosch. You can find punctures and code [here](http://frederickvandenbosch.be/?p=2876)
