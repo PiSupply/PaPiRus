@@ -143,7 +143,7 @@ text.Clear()
 ```python
 from papirus import PapirusTextPos
 
-# Calling PapirusTextPos this way will mean nothing is written to the screen be default
+# Calling PapirusTextPos this way will mean nothing is written to the screen by default
 text = PapirusTextPos(False [,rotation = rot])
 
 # Write text to the screen at selected point, with an Id
@@ -161,8 +161,8 @@ text.WriteAll()
 # No change will happen on the screen
 text.UpdateText("Start", "New Text")
 
-# Remove The second line of text
-# The text won't be removed just yet from the screen
+# Remove the second line of text
+# The text won't be removed from the screen yet
 text.RemoveText("Top")
 
 # Now update the screen to show the changes
@@ -185,7 +185,7 @@ text.AddText("hello world", 10, 10, Id="Start", invert=True)
 PapirusTextPos will take into account \n as a line break (or multiple line breaks)
 Meaning text will be aligned to the X position given, it will not return to x=0 for the start of the next line.
 
-WHen the text is longer than will fit on a single line, PapirusTextPos will break the text in multiple lines.
+When the text is longer than will fit on a single line, PapirusTextPos will break the text into multiple lines.
 You can limit the number of lines by specifying the parameter `maxLines` in the `AddText()` method.
 
 When using the PapirusTextPos, in either mode, setting the "partialUpdates" property to True will cause partial updates to be done, meaning only the section of the PaPiRus screen that has been changed will be updated.  These can be vastly quicker than a full update for each piece of text.
@@ -236,7 +236,7 @@ textNImg.AddImg("/path/to/image",20,20,(25,25), Id="BigImg")
 # Nothing will show on the screen
 textNImg.AddImg("/path/to/image", Id="Top")
 
-# Now display all elements on the scrren
+# Now display all elements on the screen
 textNImg.WriteAll()
 
 # Update the first line
@@ -248,7 +248,7 @@ textNImg.UpdateText("Start", "New Text")
 textNImg.UpdateImg("BigImg", "/path/to/new/images")
 
 # Remove top image
-# The images won't be removed just yet from the screen
+# The images won't be removed from the screen yet
 textNImg.RemoveImg("Top")
 
 # Now update the screen to show the changes
@@ -331,13 +331,12 @@ papirus-twitter
 # Composite text and graphics
 papirus-composite-write
 
-# Copy framebuffer (text console or desktop) to Papirus using the buttons to zoom en pan
+# Copy framebuffer (text console or desktop) to Papirus using the buttons to zoom and pan
 # Only for 2.7" and 2.0" displays
 papirus-fbcopy
 
-# Display image sequences or slide-show
-# The directory containing the pictures must have number sequenced images in the form 0.gif, 1.gif, 2.gif, etc.
-# for an animation or pictures with random names (e.g. in the case of a slide-show). 
+# Display image sequences or slideshow
+# For an animation, the directory containing the pictures must have numbered images in the form 0.gif, 1.gif, 2.gif, etc.
 papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] directory
 
 # Take a picture with the RPi camera using the PaPiRus screen as viewfinder
@@ -347,7 +346,7 @@ papirus-cam
 
 ### Demos for using the Real Time Clock of the Papirus HAT
 
-The Papirus HAT has a battery backed-up Real TIme Clock. For more information about the RTC and demos see the
+The Papirus HAT has a battery backed-up Real Time Clock. For more information about the RTC and demos see the
 [RTC-Hat-Examples](./RTC-Hat-Examples) directory and README files.
 
 ### Tips for using images
