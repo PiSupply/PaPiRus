@@ -331,12 +331,13 @@ papirus-twitter
 # Composite text and graphics
 papirus-composite-write
 
-# Copy framebuffer (text console or desktop) to Papirus using the buttons to zoom and pan
+# Copy framebuffer (text console or desktop) to PaPiRus using the buttons to zoom and pan
 # Only for 2.7" and 2.0" displays
 papirus-fbcopy
 
 # Display image sequences or slideshow
-# For an animation, the directory containing the pictures must have numbered images in the form 0.gif, 1.gif, 2.gif, etc.
+# For an animation, the directory containing the images must have numbered images in the form 0.gif, 1.gif, 2.gif, etc.
+# Otherwise the images will be displayed in filename order.
 papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] directory
 
 # Take a picture with the RPi camera using the PaPiRus screen as viewfinder
@@ -344,9 +345,9 @@ papirus-animation [--delay DELAY] [--rotation ROTATION] [--fullupdate] [--loop] 
 papirus-cam
 ```
 
-### Demos for using the Real Time Clock of the Papirus HAT
+### Demos for using the Real Time Clock of the PaPiRus HAT
 
-The Papirus HAT has a battery backed-up Real Time Clock. For more information about the RTC and demos see the
+The PaPiRus HAT has a battery backed-up Real Time Clock. For more information about the RTC and demos see the
 [RTC-Hat-Examples](./RTC-Hat-Examples) directory and README files.
 
 ### Tips for using images
