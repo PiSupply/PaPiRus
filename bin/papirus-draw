@@ -7,6 +7,7 @@ import sys
 import time
 from papirus import Papirus
 from PIL import Image
+import StringIO
 import argparse
 
 # Command line usage
@@ -44,8 +45,16 @@ def draw_image(papirus, filepath, type):
     # padding for placing the image
     xpadding = 0
     ypadding = 0
-    # open the image to display
-    file = Image.open(filepath)
+    # check whether to load the image from stdin or fs
+    if (filepath == "-"):
+        # load the image to display from stdin
+        image_stdin = ""
+        for line in sys.stdin:
+            image_stdin += line
+        file = Image.open(StringIO.StringIO(image_stdin))
+    else:
+        # open the image to display
+        file = Image.open(filepath)
     # display with crop option
     if type == "crop":
         # Landscape image
