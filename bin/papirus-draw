@@ -7,8 +7,8 @@ import sys
 import time
 from papirus import Papirus
 from PIL import Image
-import StringIO
 import argparse
+from io import BytesIO
 
 # Command line usage
 # papirus-draw "filepath" -t "crop|resize"
@@ -47,14 +47,13 @@ def draw_image(papirus, filepath, type):
     ypadding = 0
     # check whether to load the image from stdin or fs
     if (filepath == "-"):
-        # load the image to display from stdin
-        image_stdin = ""
-        for line in sys.stdin:
-            image_stdin += line
-        file = Image.open(StringIO.StringIO(image_stdin))
+        # load the image from stdin
+        image = BytesIO(read_stdin())
     else:
-        # open the image to display
-        file = Image.open(filepath)
+        # load the image from fs
+        image = filepath
+    # open the image to display
+    file = Image.open(image)
     # display with crop option
     if type == "crop":
         # Landscape image
@@ -85,6 +84,14 @@ def draw_image(papirus, filepath, type):
     papirus.display(image)
     papirus.update()
     print(message)
+
+def read_stdin():
+    # Handle stdin differences between
+    if sys.version_info >= (3, 0):
+        stdin = sys.stdin.buffer
+    else:
+        stdin = sys.stdin
+    return stdin.read()
 
 if __name__ == '__main__':
     main()
