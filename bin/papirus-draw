@@ -86,7 +86,7 @@ def draw_image(papirus, filepath, type):
     print(message)
 
 def read_stdin():
-    # Handle stdin differences between
+    # Handle stdin differences between python2 and python3
     if sys.version_info >= (3, 0):
         stdin = sys.stdin.buffer
     else:
