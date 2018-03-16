@@ -11,7 +11,7 @@ import argparse
 from io import BytesIO
 
 # Command line usage
-# papirus-draw "filepath" -t "crop|resize"
+# papirus-draw /path/to/image -t [resize | crop] -r [0 | 90 | 180 | 270] [-i]
 
 # Running as root only needed for older Raspbians without /dev/gpiomem
 if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
