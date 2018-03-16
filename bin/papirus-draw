@@ -6,7 +6,7 @@ import os
 import sys
 import time
 from papirus import Papirus
-from PIL import Image
+from PIL import Image, ImageMath
 import argparse
 from io import BytesIO
 
@@ -34,13 +34,14 @@ def main():
     p.add_argument('filepath', type=str)
     p.add_argument('--type', '-t',type=str, default="resize", help="Display type: crop or resize")
     p.add_argument('--rotation', '-r',type=int, default=0, help="Rotation one of 0, 90, 180, 270")
+    p.add_argument('--invert', '-i',action='store_true', help="Invert image pixels")
     args = p.parse_args()
     papirus = Papirus(rotation = args.rotation)
     if args.filepath:
         print("Drawing on PaPiRus.......")
-        draw_image(papirus, args.filepath, args.type)
+        draw_image(papirus, args.filepath, args.type, args.invert)
 
-def draw_image(papirus, filepath, type):
+def draw_image(papirus, filepath, type, invert):
     message = ""
     # padding for placing the image
     xpadding = 0
@@ -81,6 +82,9 @@ def draw_image(papirus, filepath, type):
     # initially set all white background
     image = Image.new('1', papirus.size, 1)
     image.paste (file, (xpadding, ypadding))
+    if invert:
+        # Replace black with white pixels and vice versa
+        image = ImageMath.eval('255-(a)', a=image)
     papirus.display(image)
     papirus.update()
     print(message)
