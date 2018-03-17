@@ -283,7 +283,7 @@ papirus-set [1.44 | 1.9 | 2.0 | 2.6 | 2.7 ]
 papirus-write "Some text to write" [-x ] [-y ] [-fsize ] [-rot] [-inv]
 
 # Draw image on the screen
-papirus-draw /path/to/image -t [resize | crop] -r [0 | 90 | 180 | 270]
+papirus-draw /path/to/image -t [resize | crop] -r [0 | 90 | 180 | 270] [-i]
 
 # Clear the screen
 papirus-clear
