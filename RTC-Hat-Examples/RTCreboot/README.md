@@ -12,7 +12,7 @@ This example uses two programs:
 Both programs rely on the smbusf module (See [py_smbusf](../py-smbusf) for build and installation instructions).
 In order to run `bootinfo` at system boot add the following line to `/etc/rc.local`:
 ```
-sudo -u pi /home/pi/PaPiRus/RTC-Hat-Examples/RTCreboot/bootinfo
+sudo -u pi python /home/pi/PaPiRus/RTC-Hat-Examples/RTCreboot/bootinfo
 ```
 Modify the path as required for your installation.  
 `bootinfo` has to be run as user pi, since the smbusf module is only installed for user pi when you follow the
