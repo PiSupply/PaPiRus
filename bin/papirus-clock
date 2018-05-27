@@ -78,6 +78,7 @@ def demo(papirus):
     # clear the display buffer
     draw.rectangle((0, 0, width, height), fill=WHITE, outline=WHITE)
     previous_second = 0
+    previous_minute = 0
     previous_day = 0
 
     while True:
@@ -88,21 +89,30 @@ def demo(papirus):
             time.sleep(0.1)
 
         if now.day != previous_day:
+            date_text = '{y:04d}-{m:02d}-{d:02d}'.format(y=now.year, m=now.month, d=now.day)
+            date_text_width = draw.textsize(date_text, font=date_font)[0]
+
             draw.rectangle((2, 2, width - 2, height - 2), fill=WHITE, outline=BLACK)
-            draw.text((10, clock_font_size + 10), '{y:04d}-{m:02d}-{d:02d}'.format(y=now.year, m=now.month, d=now.day), fill=BLACK, font=date_font)
+            draw.text(((width - date_text_width) / 2, clock_font_size + 10), date_text, fill=BLACK, font=date_font)
+
             previous_day = now.day
         else:
             draw.rectangle((5, 10, width - 5, 10 + clock_font_size), fill=WHITE, outline=WHITE)
 
-        draw.text((5, 10), '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second), fill=BLACK, font=clock_font)
+        time_text = '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second)
+        time_text_width = draw.textsize(time_text, font=clock_font)[0]
+
+        draw.text(((width - time_text_width) / 2, 10), time_text, fill=BLACK, font=clock_font)
 
         # display image on the panel
         papirus.display(image)
-        if now.second < previous_second:
+        if now.minute > previous_minute:
             papirus.update()    # full update every minute
         else:
             papirus.partial_update()
+
         previous_second = now.second
+        previous_minute = now.minute
 
 # main
 if "__main__" == __name__:
