@@ -68,11 +68,9 @@ or
 sudo papirus-config
 ```
 # Python API
+**NOTE:** In the following examples where `rotation = rot` rot should be one of the following values: 0, 90, 180 or 270 degrees, depending on the screen orientation. i.e. `screen = Papirus([rotation = 90])`
+
 #### The Basic API
-
-**NOTE:** In the following examples where `rotation = rot` rot should be one of the following values: 0, 90, 180 or 270 degrees, depending on the screen orientation.
-
-i.e. `screen = Papirus([rotation = 90])`
 
 ```python
 from papirus import Papirus
