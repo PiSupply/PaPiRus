@@ -70,11 +70,15 @@ sudo papirus-config
 # Python API
 #### The Basic API
 
+**NOTE:** In the following examples where `rotation = rot` rot should be one of the following values: 0, 90, 180 or 270 degrees, depending on the screen orientation.
+
+i.e. `screen = Papirus([rotation = 90])`
+
 ```python
 from papirus import Papirus
 
 # The epaper screen object.
-# Optional rotation argument: rot = 0, 90, 180 or 270
+# Optional rotation argument: rot = 0, 90, 180 or 270 degrees
 screen = Papirus([rotation = rot])
 
 # Write a bitmap to the epaper screen
@@ -108,7 +112,7 @@ text.write("hello world")
 text.write(text, [size = <size> ],[fontPath = <fontpath>],[maxLines = <n>])
 # maxLines is the max number of lines to autowrap the given text.
 # New lines ('\n') in the text will not go to the next line, but are interpreted as white space.
-# Use PapirusTextPos() instead which recognizes '\n'. 
+# Use PapirusTextPos() instead which recognizes '\n'.
 ```
 
 #### The Positional Text API (example 1)
@@ -154,7 +158,7 @@ text.AddText("hello world", 10, 10, Id="Start" )
 # Nothing will show on the screen
 text.AddText("Another line", Id="Top")
 
-# Now display BOTH lines on the scrren
+# Now display BOTH lines on the screen
 text.WriteAll()
 
 # Update the first line
@@ -292,7 +296,7 @@ papirus-clear
 **Note:** The line break '\n' is not converted by the shell (bash). In order to do this you need to use the method described [here](https://stackoverflow.com/questions/3005963/how-can-i-have-a-newline-in-a-string-in-sh). For example: `papirus-write $'hello\nWorld'`. Bear in mind that you need to use single quotes after the '$', double quotes do not work.
 
 ### Demos
-All demos can be seen by running the following commands. Code can be found in the repo for the python bin directory. 
+All demos can be seen by running the following commands. Code can be found in the repo for the python bin directory.
 
 ```bash
 # Board and screen diagnostic
@@ -406,7 +410,7 @@ It is safe to say we have an awesome and growing community of people using epape
 * [PaPiRus HAT working with resin.io](https://github.com/resin-io-playground/resinio-PaPiRus)
 * [Raspberry Pi Internal Watchdog Setup and Information](http://www.switchdoc.com/2014/11/reliable-projects-using-internal-watchdog-timer-raspberry-pi/)
 * [Baseball Pi - get the live box score, plays, and batter stats of your favorite MLB team right on your desktop](https://github.com/eat-sleep-code/baseball-pi)
-* PaPiRus Netapp (find Raspberry Pi’s on your network, run a speed test of your internet connection, show a graph of your past speed test results) - [blog here](https://www.talktech.info/2017/09/30/papirus-netapp/) and [GitHub Repo here](https://github.com/vwillcox/papirus-netapp) 
+* PaPiRus Netapp (find Raspberry Pi’s on your network, run a speed test of your internet connection, show a graph of your past speed test results) - [blog here](https://www.talktech.info/2017/09/30/papirus-netapp/) and [GitHub Repo here](https://github.com/vwillcox/papirus-netapp)
 * [PaPiRus Ruby gem for the Raspberry Pi PaPiRus eInk screen](https://github.com/mmolhoek/papirus)
 * [PaPiRuby - Ruby wrapper for the Raspberry Pi PaPiRus eInk screen](https://github.com/EddWills95/PaPiRuby)
 * Power outage monitor (using PiJuice and PaPiRus) by Frederick Vandenbosch. [You can find pictures and code here](http://frederickvandenbosch.be/?p=2876)
