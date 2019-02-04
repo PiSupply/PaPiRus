@@ -9,7 +9,7 @@ WHITE = 1
 BLACK = 0
 
 # Class for holding the details of the text
-class DispText():
+class DispText(object):
     def __init__(self, text, x, y, size, invert):
         self.text = text
         self.x = x
@@ -20,9 +20,9 @@ class DispText():
         self.invert = invert
 
 class PapirusTextPos(object):
-    def __init__(self, autoUpdate = True, rotation = 0):
+    def __init__(self, autoUpdate=True, rotation=0):
         # Set up the PaPirus and dictionary for text
-        self.papirus = Papirus(rotation = rotation)
+        self.papirus = Papirus(rotation=rotation)
         self.allText = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.autoUpdate = autoUpdate
@@ -30,7 +30,7 @@ class PapirusTextPos(object):
 
     def AddText(self, text, x=0, y=0, size=20, Id=None, invert=False, fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf', maxLines=100):
         # Create a new Id if none is supplied
-        if Id == None:
+        if Id is None:
             Id = str(uuid.uuid4())
 
         # If the Id doesn't exist, add it  to the dictionary
@@ -41,8 +41,6 @@ class PapirusTextPos(object):
             #Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
-
-    
 
     def UpdateText(self, Id, newText, fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf', maxLines=100):
         # If the ID supplied is in the dictionary, update the text
@@ -179,3 +177,4 @@ class PapirusTextPos(object):
         self.image = Image.new('1', self.papirus.size, WHITE)
         self.allText = dict()
         self.papirus.clear()
+

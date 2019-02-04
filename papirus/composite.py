@@ -11,7 +11,7 @@ WHITE = 1
 BLACK = 0
 
 # Class for holding the details of the img
-class DispImg():
+class DispImg(object):
     def __init__(self, image, x, y, size):
         self.image = image
         self.x = x
@@ -20,16 +20,16 @@ class DispImg():
         self.endx = 0
         self.endy = 0
 
-class PapirusComposite (PapirusTextPos):
+class PapirusComposite(PapirusTextPos):
 
-    def __init__(self, autoUpdate = True, rotation = 0):
+    def __init__(self, autoUpdate=True, rotation=0):
         super(PapirusComposite, self).__init__(autoUpdate, rotation)
         self.allImg = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
 
-    def AddImg(self, image, x=0, y=0, size = (10,10), Id = None):
+    def AddImg(self, image, x=0, y=0, size = (10,10), Id=None):
         # Create a new Id if none is supplied
-        if Id == None:
+        if Id is None:
             Id = str(uuid.uuid4())
 
         image = Image.open(image)
@@ -88,3 +88,4 @@ class PapirusComposite (PapirusTextPos):
         y =  self.allImg[Id].y
 
         self.image.paste(self.allImg[Id].image,(x,y))
+

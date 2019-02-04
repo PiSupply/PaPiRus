@@ -8,12 +8,12 @@ import random
 WHITE = 1
 BLACK = 0
 
-class PapirusText():
+class PapirusText(object):
 
-    def __init__(self, rotation = 0):
-        self.papirus = Papirus(rotation = rotation)
+    def __init__(self, rotation=0):
+        self.papirus = Papirus(rotation=rotation)
 
-    def write(self, text, size = 20, fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf', maxLines = 100):
+    def write(self, text, size=20, fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf', maxLines=100):
         
         # initially set all white background
         image = Image.new('1', self.papirus.size, WHITE)
@@ -51,3 +51,4 @@ class PapirusText():
 
         self.papirus.display(image)
         self.papirus.update()
+
