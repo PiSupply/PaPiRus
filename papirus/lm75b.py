@@ -43,3 +43,4 @@ class LM75B(object):
 if __name__ == "__main__":
     sens = LM75B()
     print(sens.getTempC(), sens.getTempFFloat())
+

@@ -17,10 +17,10 @@ def main():
     papirus = Papirus()
     i2cbus=SMBus(1)
 
-    write_text(papirus, 'Line 1', save = True)
-    write_text(papirus, 'Line 2', y = 20, load = True, ldfile = 'save.bmp')
+    write_text(papirus, 'Line 1', save=True)
+    write_text(papirus, 'Line 2', y=20, load=True, ldfile='save.bmp')
 
-def write_text(papirus, text, x=0, y=0, size=20, load = False, ldfile = ' ', save = False, file = 'save.bmp'):
+def write_text(papirus, text, x=0, y=0, size=20, load=False, ldfile=' ', save=False, file='save.bmp'):
     global image, draw, font
 
     if os.path.isfile(ldfile):
@@ -66,13 +66,11 @@ def write_text(papirus, text, x=0, y=0, size=20, load = False, ldfile = ' ', sav
 def replace_line(papirus, x, y, text, size=20):
     global image, draw, font, lock
 
-    while lock == True:
+    while lock:
         pass
     lock = True
     draw.rectangle((x, y, papirus.width, y + size), fill=WHITE, outline=WHITE)
     draw.text((x, y), text, font=font, fill=BLACK)
-    #papirus.display(image)
-    #papirus.partial_update()
     lock = False
 
 def update_lines(papirus):
@@ -82,3 +80,4 @@ def update_lines(papirus):
 
 if __name__ == '__main__':
     main()
+

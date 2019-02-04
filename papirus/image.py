@@ -8,10 +8,10 @@ from papirus import Papirus
 
 WHITE = 1
 
-class PapirusImage():
+class PapirusImage(object):
 
-    def __init__(self, rotation = 0):
-        self.papirus = Papirus(rotation = rotation)
+    def __init__(self, rotation=0):
+        self.papirus = Papirus(rotation=rotation)
 
     def write(self, imagefile):
         fileimg = Image.open(imagefile)
@@ -30,3 +30,4 @@ class PapirusImage():
 
         self.papirus.display(image)
         self.papirus.update()
+
