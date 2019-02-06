@@ -144,7 +144,7 @@ to use:
 
     @rotation.setter
     def rotation(self, rot):
-        if rot not in (0, 90, 180, 270)
+        if rot not in (0, 90, 180, 270):
             raise EPDError('rotation can only be 0, 90, 180 or 270')
         if abs(self._rotation - rot) == 90 or abs(self._rotation - rot) == 270:
             self._width, self._height = self._height, self._width
