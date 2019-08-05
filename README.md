@@ -80,7 +80,8 @@ from papirus import Papirus
 screen = Papirus([rotation = rot])
 
 # Write a bitmap to the epaper screen
-screen.display('./path/to/bmp/image')
+from PIL import Image
+screen.display(Image.open('./path/to/bmp/image'))
 
 # Perform a full update to the screen (slower)
 screen.update()
