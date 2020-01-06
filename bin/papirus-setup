@@ -36,4 +36,3 @@ while [ "$SIZE" = "" ]; do
    fi
 done
 papirus-set $SIZE
-systemctl start epd-fuse

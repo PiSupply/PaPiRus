@@ -58,7 +58,7 @@ cd /tmp/papirus/gratis
 make rpi EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
 sudo make rpi-install EPD_IO=epd_io.h PANEL_VERSION='V231_G2'
 sudo systemctl enable epd-fuse.service
-sudo systemctl start epd-fuse
+sudo reboot
 ```
 
 #### Select your screen size
