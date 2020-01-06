@@ -75,7 +75,7 @@ to use:
             self._auto = True
         if ('rotation' in kwargs):
             rot = kwargs['rotation']
-            if rot == 0 or rot == 90 or rot == 180 or rot == 270:
+            if rot in (0, 90, 180, 270):
                 self._rotation = rot
             else:
                 raise EPDError('rotation can only be 0, 90, 180 or 270')
@@ -86,7 +86,7 @@ to use:
         with open(os.path.join(self._epd_path, 'panel')) as f:
             line = f.readline().rstrip('\n')
             m = self.PANEL_RE.match(line)
-            if None == m:
+            if m is None:
                 raise EPDError('invalid panel string')
             self._panel = m.group(1) + ' ' + m.group(2)
             self._width = int(m.group(3))
@@ -96,10 +96,8 @@ to use:
 
         if self._width < 1 or self._height < 1:
             raise EPDError('invalid panel geometry')
-        if self._rotation == 90 or self._rotation == 270:
-            w = self._height
-            self._height = self._width
-            self._width = w
+        if self._rotation in (90, 270):
+            self._width, self._height = self._height, self._width
 
     @property
     def size(self):
@@ -146,12 +144,10 @@ to use:
 
     @rotation.setter
     def rotation(self, rot):
-        if rot != 0 and rot != 90 and rot != 180 and rot != 270:
+        if rot not in (0, 90, 180, 270):
             raise EPDError('rotation can only be 0, 90, 180 or 270')
         if abs(self._rotation - rot) == 90 or abs(self._rotation - rot) == 270:
-            w = self._height
-            self._height = self._width
-            self._width = w
+            self._width, self._height = self._height, self._width
         self._rotation = rot
 
     @property
@@ -215,3 +211,4 @@ to use:
                 f.write(b(repr(self._lm75b.getTempC())))
         with open(os.path.join(self._epd_path, 'command'), 'wb') as f:
             f.write(b(c))
+
