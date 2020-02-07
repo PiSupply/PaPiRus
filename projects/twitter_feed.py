@@ -64,7 +64,7 @@ while True:
             papirus.clear()
             sys.exit()
 
-        if GPIO.input(SW4) == False and tweet_index < 9:
+        if GPIO.input(SW4) == False and tweet_index < 19:
                 tweet_index = tweet_index + 1
                 next_tweet()
         if GPIO.input(SW3) == False and tweet_index > 0:

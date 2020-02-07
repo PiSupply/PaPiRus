@@ -1,4 +1,4 @@
-![Alt text](https://user-images.githubusercontent.com/16068311/30544688-3fa0b09c-9c7f-11e7-863f-5cfb64b9d668.png?raw=true "PaPiRus Logo")
+![Alt text](https://user-images.githubusercontent.com/1878314/73881257-e9cb7080-4857-11ea-8bb8-3d005c41bbac.png)
 # PaPiRus
 You can find here a variety of software, hardware and other resources for the [PaPiRus](http://papirus.ws) range of ePaper eInk displays from [Pi Supply](https://www.pi-supply.com). This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
