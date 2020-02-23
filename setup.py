@@ -1,10 +1,9 @@
 #! /usr/bin/env python
 
 from distutils.core import setup
-import papirus
 
 setup(name='papirus',
-      version=papirus.__version__,
+      version='1.0.0',
       description="PaPiRus API",
       author='PiSupply',
       author_email='sales@pi-supply.com',
