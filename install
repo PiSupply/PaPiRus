@@ -19,6 +19,9 @@ if [[ "$P23" == *"3"* ]]; then
    PY3=1
 fi
 
+#Force apt update
+apt-get update -y
+
 # Install required packages
 apt-get install git bc i2c-tools fonts-freefont-ttf whiptail make gcc -y
 if [ $PY2 -eq 1 ]; then
