@@ -16,7 +16,7 @@ curl -sSL https://pisupp.ly/papiruscode | sudo bash
 If you have any troubles with the auto installation or if for some reason you prefer to install PaPiRus manually, then follow the steps below.
 
 ### Python 2 and Python 3 support
-The library and examples work on both Python 2 and Python 3. Currently (October 2017) Python 2 is still the default Python in Raspbian. The Python 2 and Python 3 versions can be installed side by side.
+The library and examples work on both Python 2 and Python 3. Currently (July 2020) Python 2 is still the default Python in Raspbian. The Python 2 and Python 3 versions can be installed side by side.
 
 
 #### Enabling SPI and I2C interfaces on Raspberry Pi
