@@ -1,5 +1,5 @@
 # PaPiRus HAT additional details
-## Pinout for buttons 
+## Pinout for buttons
 
 As mentioned on the description and packaging, these buttons are optional and if you want to use them you will need to solder yourself. If you do, they connect as follows:
 
@@ -71,3 +71,10 @@ The latest hardware version of the ePaper / eInk displays themselves no longer r
 
 For this reason, if you need to use BCM18 / Pin 12 for another reason, you can just cut the trace or desolder the header for that pin.
 Alternatively, we have had success in "disconnecting" this pin by getting a 40 pin through hole extension header and removing pin 12 out  - by pulling it or cutting it out.
+
+## Open Source Hardware
+
+We are proud to say that the PaPiRus HAT is certified by the [Open Source Hardware Association](https://certification.oshwa.org/uk000017.html) with UID number UK000017. Our certification mark is below:
+
+
+![OSHW_mark_UK000017](https://user-images.githubusercontent.com/1878314/95060522-46867000-06f2-11eb-9815-149abf83775c.png)

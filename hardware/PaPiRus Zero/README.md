@@ -1,5 +1,5 @@
 # PaPiRus Zero additional details
-## Pinout for buttons 
+## Pinout for buttons
 
 The schematic labels switches SW1 to SW5 as well as the signal lines to those buttons (signals are labeled BUT1 to BUT5) but confusingly the signals to specific switches do not maintain the same number as the switch.
 
@@ -49,3 +49,10 @@ CN17  Raspberry Pi pin 29
 The temperature sensor in use is a [NXP LM75BD](http://www.nxp.com/documents/data_sheet/LM75B.pdf) and this is located at 0x48 on i2c-1 when using a 40 pin Raspberry Pi. If you are using this with a 26 pin Raspberry Pi it will be on i2c-0 at the same address but this is a rare use case.
 
 The temperature sensor has many more features than we have documented. We will not be officially supporting all of these features as they are already well documented in the datasheets and elsewhere. But we have left them available for advanced users.
+
+## Open Source Hardware
+
+We are proud to say that the PaPiRus Zero is certified by the [Open Source Hardware Association](https://certification.oshwa.org/uk000018.html) with UID number UK000018. Our certification mark is below:
+
+
+![OSHW_mark_UK000018](https://user-images.githubusercontent.com/1878314/95060263-f27b8b80-06f1-11eb-8deb-a61f0fd0abcd.png)
