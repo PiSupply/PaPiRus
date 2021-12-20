@@ -29,7 +29,7 @@ sudo apt-get install git bc i2c-tools fonts-freefont-ttf whiptail make gcc -y
 # For Python 2
 sudo apt-get install python-pil python-smbus python-dateutil -y
 # For Python 3
-sudo apt-get install python3-pil python3-smbus python3-dateutil -y
+sudo apt-get install python3-pil python3-smbus python3-dateutil python3-distutils -y
 
 git clone --depth=1 https://github.com/PiSupply/PaPiRus.git
 cd PaPiRus
