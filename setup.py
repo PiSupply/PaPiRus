@@ -10,7 +10,7 @@ setup(name='papirus',
       long_description_content_type='text/markdown',
       author='PiSupply',
       author_email='sales@pi-supply.com',
-      url='pi-supply.com',
+      url='https://pi-supply.com',
       packages=['papirus'],
       project_urls={
           "Bug Tracker": "https://github.com/PiSupply/PaPiRus/issues",
