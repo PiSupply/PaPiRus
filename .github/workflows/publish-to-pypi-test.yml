@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build-n-publish:
-    name: Build and publish Python 🐍 distribution 📦 to TestPyPI
+    name: Build and publish Python 🐍 distribution 📦 to TestPyPI (Python 3)
     runs-on: ubuntu-20.04
 
     steps:
@@ -36,7 +36,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
 
   build-n-publish-2:
-    name: Build and publish Python 🐍 distribution 📦 to TestPyPI
+    name: Build and publish Python 🐍 distribution 📦 to TestPyPI (Python 2)
     runs-on: ubuntu-20.04
 
     steps:
