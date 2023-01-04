@@ -166,8 +166,8 @@ to use:
             return(f.readline().rstrip('\n'))
 
     def rotation_angle(self, rotation):
-        angles = {90: Image.ROTATE_90, 
-                  180: Image.ROTATE_180, 
+        angles = {90: Image.ROTATE_90,
+                  180: Image.ROTATE_180,
                   270: Image.ROTATE_270}
         return angles[rotation]
 
@@ -196,7 +196,6 @@ to use:
         if self.auto:
             self.update()
 
-
     def update(self):
         self._command('U')
 
@@ -216,4 +215,3 @@ to use:
                 f.write(b(repr(self._lm75b.getTempC())))
         with open(os.path.join(self._epd_path, 'command'), 'wb') as f:
             f.write(b(c))
-
