@@ -4,7 +4,6 @@ from __future__ import division
 
 from datetime import datetime
 from calendar import isleap
-from smbusf import SMBus
 
 RTCADR = 0x6f
 STBIT = 0x80
