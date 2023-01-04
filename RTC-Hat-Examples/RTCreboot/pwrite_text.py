@@ -36,7 +36,8 @@ def write_text(papirus, text, x=0, y=0,
     # prepare for drawing
     draw = ImageDraw.Draw(image)
 
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', size)
+    font = ImageFont.truetype('/usr/share/fonts/truetype'
+                              '/freefont/FreeMonoBold.ttf', size)
 
     # Calculate the max number of char to fit on line
     line_size = ((papirus.width - x) / (size*0.65))
