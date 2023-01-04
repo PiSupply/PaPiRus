@@ -50,7 +50,7 @@ def writealm(i2cbus, alm, dt):
     min = dt.minute
     hour = dt.hour
     # rtc-ds1307 uses weekday convention Sun = 1, Sat = 7
-    # wkday in alarm has to match the wkday of rtc time 
+    # wkday in alarm has to match the wkday of rtc time
     # for the alarm to trigger
     wkday = (dt.weekday() + 1) % 7 + 1
     day = dt.day
