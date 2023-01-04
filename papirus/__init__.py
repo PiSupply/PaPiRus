@@ -5,4 +5,3 @@ from papirus.image import PapirusImage
 from papirus.textpos import PapirusTextPos
 from papirus.composite import PapirusComposite
 from papirus.readrtc import get_hwclock
-
