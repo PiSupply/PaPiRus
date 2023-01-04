@@ -50,7 +50,8 @@ def writealm(i2cbus, alm, dt):
     min = dt.minute
     hour = dt.hour
     # rtc-ds1307 uses weekday convention Sun = 1, Sat = 7
-    # wkday in alarm has to match the wkday of rtc time for the alarm to trigger
+    # wkday in alarm has to match the wkday of rtc time 
+    # for the alarm to trigger
     wkday = (dt.weekday() + 1) % 7 + 1
     day = dt.day
     month = dt.month
@@ -101,6 +102,7 @@ def enablealm0(i2cbus):
     data |= 0x10
     i2cbus.write_byte_data(RTCADR, 7, data)
 
+
 def enablealm1(i2cbus):
     data = i2cbus.read_byte_data(RTCADR, 7)
     data |= 0x20
@@ -108,7 +110,8 @@ def enablealm1(i2cbus):
 
 
 def disablealm0(i2cbus):
-    # When disabling the alarm, keep the mfp output high (otherwise we'll get an immediate reboot)
+    # When disabling the alarm, keep the mfp output high
+    # (otherwise we'll get an immediate reboot)
     data = i2cbus.read_byte_data(RTCADR, 7)
     data &= 0xef
     data |= 0x80
@@ -116,7 +119,8 @@ def disablealm0(i2cbus):
 
 
 def disablealm1(i2cbus):
-    # When disabling the alarm, keep the mfp output high (otherwise we'll get an immediate reboot)
+    # When disabling the alarm, keep the mfp output high
+    # (otherwise we'll get an immediate reboot)
     data = i2cbus.read_byte_data(RTCADR, 7)
     data &= 0xdf
     data |= 0x80
