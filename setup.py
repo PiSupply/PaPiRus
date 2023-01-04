@@ -5,6 +5,8 @@ from distutils.core import setup
 setup(name='papirus',
       version='1.0.0',
       description="PaPiRus API",
+      long_description=open(join(dirname(__file__), 'README.md')).read(),
+      long_description_content_type="text/markdown",
       author='PiSupply',
       author_email='sales@pi-supply.com',
       url='pi-supply.com',
