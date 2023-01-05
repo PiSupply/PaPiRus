@@ -40,7 +40,7 @@ statuses = api.GetHomeTimeline(count=20)
 def home_timeline(Home):
     name = statuses[tweet_index].user.screen_name
     status = statuses[tweet_index].text
-    return status, name;
+    return status, name
 
 
 def next_tweet():
@@ -68,13 +68,13 @@ while True:
         sys.exit()
 
     if GPIO.input(SW4) is False and tweet_index < 19:
-            tweet_index = tweet_index + 1
-            next_tweet()
+        tweet_index = tweet_index + 1
+        next_tweet()
     if GPIO.input(SW3) is False and tweet_index > 0:
-            tweet_index = tweet_index - 1
-            next_tweet()
+        tweet_index = tweet_index - 1
+        next_tweet()
     if GPIO.input(SW1) is False:
-            statuses = api.GetHomeTimeline(count=20)
-            tweet_index = 0
-            next_tweet()
+        statuses = api.GetHomeTimeline(count=20)
+        tweet_index = 0
+        next_tweet()
     sleep(0.1)
