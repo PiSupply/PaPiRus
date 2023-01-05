@@ -17,6 +17,7 @@ class DispText(object):
         self.endy = 0
         self.invert = invert
 
+
 class PapirusTextPos(object):
     def __init__(self, autoUpdate=True, rotation=0):
         # Set up the PaPirus and dictionary for text
@@ -79,8 +80,8 @@ class PapirusTextPos(object):
                        fill="white")
 
     def addToImageText(self, Id,
-                       fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
-                       maxLines=100):
+            fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
+            maxLines=100):
         # Break the text item back in to parts
         size = self.allText[Id].size
         x = self.allText[Id].x
