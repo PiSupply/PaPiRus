@@ -1,4 +1,4 @@
-#qCopyright 2013-2015 Pervasive Displays, Inc.
+# Copyright 2013-2015 Pervasive Displays, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ else:
     def b(x):
         return x.encode('ISO-8859-1')
 
+
 class EPDError(Exception):
     def __init__(self, value):
         self.value = value
@@ -50,7 +51,6 @@ to use:
   epd.display(image)  # tranfer image data
   epd.update()        # refresh the panel image - not needed if auto=true
 """
-
 
     PANEL_RE = re.compile('^([A-Za-z]+)\s+(\d+\.\d+)\s+(\d+)x(\d+)\s+COG\s+(\d+)\s+FILM\s+(\d+)\s*$', flags=0)
 
@@ -166,7 +166,9 @@ to use:
             return(f.readline().rstrip('\n'))
 
     def rotation_angle(self, rotation):
-        angles = { 90 : Image.ROTATE_90, 180 : Image.ROTATE_180, 270 : Image.ROTATE_270 }
+        angles = {90: Image.ROTATE_90,
+                  180: Image.ROTATE_180,
+                  270: Image.ROTATE_270}
         return angles[rotation]
 
     def display(self, image):
@@ -175,7 +177,8 @@ to use:
         # better to do this before calling this if the image is to
         # be dispayed several times
         if image.mode != "1":
-            image = ImageOps.grayscale(image).convert("1", dither=Image.FLOYDSTEINBERG)
+            image = ImageOps.grayscale(image).convert(
+                    "1", dither=Image.FLOYDSTEINBERG)
 
         if image.mode != "1":
             raise EPDError('only single bit images are supported')
@@ -186,12 +189,12 @@ to use:
         if self._rotation != 0:
             image = image.transpose(self.rotation_angle(self._rotation))
 
-        with open(os.path.join(self._epd_path, 'LE', 'display_inverse'), 'r+b') as f:
+        with open(os.path.join(self._epd_path, 'LE',
+                  'display_inverse'), 'r+b') as f:
             f.write(image.tobytes())
 
         if self.auto:
             self.update()
-
 
     def update(self):
         self._command('U')
@@ -207,8 +210,8 @@ to use:
 
     def _command(self, c):
         if self._uselm75b:
-            with open(os.path.join(self._epd_path, 'temperature'), 'wb') as f:
+            with open(os.path.join(self._epd_path,
+                      'temperature'), 'wb') as f:
                 f.write(b(repr(self._lm75b.getTempC())))
         with open(os.path.join(self._epd_path, 'command'), 'wb') as f:
             f.write(b(c))
-
