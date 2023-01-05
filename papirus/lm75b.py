@@ -42,7 +42,7 @@ class LM75B(object):
     def getTempC(self):
         """Return temperature in degrees Celsius as integer, so it can be
            used to write to /dev/epd/temperature"""
-        raw = self._bus.read_word_data(self._address, 
+        raw = self._bus.read_word_data(self._address,
                                        LM75B_TEMP_REGISTER) & 0xFFFF
         raw = ((raw << 8) & 0xFF00) + (raw >> 8)
         return (raw + 128) // 256  # round to nearest integer
