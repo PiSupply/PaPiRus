@@ -62,7 +62,7 @@ text.WriteAll()
 
 while True:
     if (GPIO.input(SW1) is False) and (GPIO.input(SW2) is False):
-        write_text(papirus, "Exiting ...", EPD_SIZE)
+        write_text(papirus, "Exiting ...", SIZE)
         sleep(0.2)
         papirus.clear()
         sys.exit()
