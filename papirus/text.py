@@ -11,8 +11,9 @@ class PapirusText(object):
         self.papirus = Papirus(rotation=rotation)
 
     def write(self, text, size=20,
-              fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf', maxLines=100):
-        
+              fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
+              maxLines=100):
+
         # initially set all white background
         image = Image.new('1', self.papirus.size, WHITE)
 
@@ -45,7 +46,7 @@ class PapirusText(object):
 
         currentLine = 0
         for line in textLines:
-            draw.text( (0, size*currentLine) , line, font=font, fill=BLACK)
+            draw.text((0, size*currentLine), line, font=font, fill=BLACK)
             currentLine += 1
 
         self.papirus.display(image)
