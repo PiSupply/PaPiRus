@@ -79,9 +79,10 @@ class PapirusTextPos(object):
                        self.allText[Id].endx, self.allText[Id].endy],
                        fill="white")
 
-    def addToImageText(self, Id,
-            fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
-            maxLines=100):
+    def addToImageText(
+        self, Id,
+        fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
+        maxLines=100):
         # Break the text item back in to parts
         size = self.allText[Id].size
         x = self.allText[Id].x
