@@ -163,7 +163,7 @@ to use:
 
     def error_status(self):
         with open(os.path.join(self._epd_path, 'error'), 'r') as f:
-            return(f.readline().rstrip('\n'))
+            return (f.readline().rstrip('\n'))
 
     def rotation_angle(self, rotation):
         angles = {90: Image.ROTATE_90,
