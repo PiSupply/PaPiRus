@@ -29,62 +29,62 @@ class PapirusTextPos(object):
         self.partialUpdates = False
 
     def AddText(self, text, x=0, y=0, size=20,
-                id=None, invert=False, fontpath=FONT_PATH, maxlines=100):
+                ident=None, invert=False, fontpath=FONT_PATH, maxlines=100):
         # Create a new id if none is supplied
-        if id is None:
-            id = str(uuid.uuid4())
+        if ident is None:
+            ident = str(uuid.uuid4())
 
         # If the id doesn't exist, add it  to the dictionary
-        if id not in self.allText:
-            self.allText[id] = DispText(text, x, y, size, invert)
+        if ident not in self.allText:
+            self.allText[ident] = DispText(text, x, y, size, invert)
             # add the text to the image
-            self.addToImageText(id, fontpath, maxlines)
+            self.addToImageText(ident, fontpath, maxlines)
             # Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
-    def UpdateText(self, id, newtext, fontpath=FONT_PATH, maxlines=100):
+    def UpdateText(self, ident, newtext, fontpath=FONT_PATH, maxlines=100):
         # If the ID supplied is in the dictionary, update the text
         # Currently ONLY the text is update
-        if id in self.allText:
-            self.allText[id].text = newtext
+        if ident in self.allText:
+            self.allText[ident].text = newtext
 
             # Remove from the old text from the image
             # (that doesn't use the actual text)
-            self.removeImageText(id)
+            self.removeImageText(ident)
             # Add the new text to the image
-            self.addToImageText(id, fontpath, maxlines)
+            self.addToImageText(ident, fontpath, maxlines)
             # Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
-    def RemoveText(self, id):
+    def RemoveText(self, ident):
         # If the ID supplied is in the dictionary, remove it.
         if id in self.allText:
-            self.removeImageText(id)
-            del self.allText[id]
+            self.removeImageText(ident)
+            del self.allText[ident]
 
             # Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
-    def removeImageText(self, id):
+    def removeImageText(self, ident):
         # prepare for drawing
         draw = ImageDraw.Draw(self.image)
         # Draw over the top of the text with a rectangle to cover it
-        draw.rectangle([self.allText[id].x, self.allText[id].y,
-                       self.allText[id].endx, self.allText[id].endy],
+        draw.rectangle([self.allText[ident].x, self.allText[ident].y,
+                       self.allText[ident].endx, self.allText[ident].endy],
                        fill="white")
 
-    def addToImageText(self, id, fontpath=FONT_PATH, maxlines=100):
+    def addToImageText(self, ident, fontpath=FONT_PATH, maxlines=100):
         # Break the text item back in to parts
-        size = self.allText[id].size
-        x = self.allText[id].x
-        y = self.allText[id].y
+        size = self.allText[ident].size
+        x = self.allText[ident].x
+        y = self.allText[ident].y
         fontColor = BLACK
         backgroundColor = WHITE
 
-        if self.allText[id].invert:
+        if self.allText[ident].invert:
             fontColor = WHITE
             backgroundColor = BLACK
 
@@ -104,10 +104,10 @@ class PapirusTextPos(object):
         textLines = [u""]
 
         # Split the text by \n first
-        toProcess = self.allText[id].text.splitlines()
+        to_process = self.allText[ident].text.splitlines()
 
         # Go through the lines and add them
-        for line in toProcess:
+        for line in to_process:
             # Add in a line to add the words to
             textLines.append(u"")
             currentLine += 1
@@ -133,8 +133,8 @@ class PapirusTextPos(object):
         # Go through all the lines as needed, drawing them on to the image
 
         # Reset the ending position of the text
-        self.allText[id].endy = y
-        self.allText[id].endx = x
+        self.allText[ident].endy = y
+        self.allText[ident].endx = x
 
         # Start at the beginning, calc all the end locations
         currentLine = 0
@@ -142,23 +142,23 @@ class PapirusTextPos(object):
             # Find out the size of the line to be drawn
             textSize = draw.textsize(line, font=font)
             # Adjust the x end point if needed
-            if textSize[0]+x > self.allText[id].endx:
-                self.allText[id].endx = textSize[0] + x
+            if textSize[0]+x > self.allText[ident].endx:
+                self.allText[ident].endx = textSize[0] + x
             # Add on the y end point
-            self.allText[id].endy += size
+            self.allText[ident].endy += size
             # If next line does not fit, quit
             currentLine += 1
-            if self.allText[id].endy > (self.papirus.height - size - 3):
+            if self.allText[ident].endy > (self.papirus.height - size - 3):
                 del textLines[currentLine:]
                 break
 
         # Little adjustment to make sure the text gets covered
-        self.allText[id].endy += 3
+        self.allText[ident].endy += 3
 
         # If the text is wanted inverted, put a rectangle down first
-        if self.allText[id].invert:
-            draw.rectangle([self.allText[id].x, self.allText[id].y,
-                           self.allText[id].endx, self.allText[id].endy],
+        if self.allText[ident].invert:
+            draw.rectangle([self.allText[ident].x, self.allText[ident].y,
+                           self.allText[ident].endx, self.allText[ident].endy],
                            fill=backgroundColor)
 
         # Start at the beginning, add all the lines to the image
