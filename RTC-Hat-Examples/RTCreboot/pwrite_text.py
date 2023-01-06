@@ -25,7 +25,7 @@ def write_text(papirus, text, x=0, y=0,
                save=False, file='save.bmp'):
     global image, draw, font
 
-    if os.path.isfile(ldfile):
+    if load and os.path.isfile(ldfile):
         image = Image.open(ldfile)
         image.load()
         os.remove(ldfile)
