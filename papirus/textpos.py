@@ -6,6 +6,7 @@ WHITE = 1
 BLACK = 0
 FONT_PATH = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
 
+
 # Class for holding the details of the text
 class DispText(object):
     def __init__(self, text, x, y, size, invert):
@@ -27,8 +28,8 @@ class PapirusTextPos(object):
         self.autoUpdate = autoUpdate
         self.partialUpdates = False
 
-    def AddText(self, text, x=0, y=0,
-                size=20, Id=None, invert=False, fontPath=FONT_PATH, maxLines=100):
+    def AddText(self, text, x=0, y=0, size=20,
+                Id=None, invert=False, fontPath=FONT_PATH, maxLines=100):
         # Create a new Id if none is supplied
         if Id is None:
             Id = str(uuid.uuid4())
