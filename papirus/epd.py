@@ -52,7 +52,7 @@ to use:
   epd.update()        # refresh the panel image - not needed if auto=true
 """
 
-    PANEL_RE = re.compile('^([A-Za-z]+)\s+(\d+\.\d+)\s+(\d+)x(\d+)\s+COG\s+(\d+)\s+FILM\s+(\d+)\s*$', flags=0)
+    PANEL_RE = re.compile(r'^([A-Za-z]+)\s+(\d+\.\d+)\s+(\d+)x(\d+)\s+COG\s+(\d+)\s+FILM\s+(\d+)\s*$', flags=0)
 
     def __init__(self, *args, **kwargs):
         self._epd_path = '/dev/epd'
