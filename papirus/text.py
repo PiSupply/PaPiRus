@@ -11,8 +11,8 @@ class PapirusText(object):
         self.papirus = Papirus(rotation=rotation)
 
     def write(self, text, size=20,
-              fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
-              maxLines=100):
+              fontpath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
+              maxlines=100):
 
         # initially set all white background
         image = Image.new('1', self.papirus.size, WHITE)
@@ -20,7 +20,7 @@ class PapirusText(object):
         # prepare for drawing
         draw = ImageDraw.Draw(image)
 
-        font = ImageFont.truetype(fontPath, size)
+        font = ImageFont.truetype(fontpath, size)
 
         # Calculate the max number of char to fit on line
         lineSize = (self.papirus.width / (size*0.65))
@@ -40,7 +40,7 @@ class PapirusText(object):
             else:
                 # No space left on line so move to next one
                 textLines.append(u"")
-                if currentLine < maxLines:
+                if currentLine < maxlines:
                     currentLine += 1
                     textLines[currentLine] += word
 
