@@ -4,7 +4,7 @@ import uuid
 
 WHITE = 1
 BLACK = 0
-
+FONT_PATH = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
 
 # Class for holding the details of the text
 class DispText(object):
@@ -28,9 +28,7 @@ class PapirusTextPos(object):
         self.partialUpdates = False
 
     def AddText(self, text, x=0, y=0,
-                size=20, Id=None, invert=False,
-                fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
-                maxLines=100):
+                size=20, Id=None, invert=False, FONT_PATH, maxLines=100):
         # Create a new Id if none is supplied
         if Id is None:
             Id = str(uuid.uuid4())
@@ -44,9 +42,7 @@ class PapirusTextPos(object):
             if self.autoUpdate:
                 self.WriteAll()
 
-    def UpdateText(self, Id, newText,
-                   fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
-                   maxLines=100):
+    def UpdateText(self, Id, newText, FONT_PATH, maxLines=100):
         # If the ID supplied is in the dictionary, update the text
         # Currently ONLY the text is update
         if Id in self.allText:
@@ -79,10 +75,7 @@ class PapirusTextPos(object):
                        self.allText[Id].endx, self.allText[Id].endy],
                        fill="white")
 
-    def addToImageText(
-            self, Id,
-            fontPath='/usr/share/fonts/truetype/freefont/FreeMono.ttf',
-            maxLines=100):
+    def addToImageText(self, Id, FONT_PATH, maxLines=100):
         # Break the text item back in to parts
         size = self.allText[Id].size
         x = self.allText[Id].x
