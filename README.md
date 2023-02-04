@@ -1,6 +1,6 @@
 ![Alt text](https://user-images.githubusercontent.com/1878314/73881257-e9cb7080-4857-11ea-8bb8-3d005c41bbac.png)
 # PaPiRus
-You can find here a variety of software, hardware and other resources for the [PaPiRus](http://papirus.ws) range of ePaper eInk displays from [Pi Supply](https://www.pi-supply.com). This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
+You can find here a variety of software, hardware and other resources for the [PaPiRus](https://uk.pi-supply.com/products/papirus-epaper-eink-screen-hat-for-raspberry-pi) range of ePaper eInk displays from [Pi Supply](https://www.pi-supply.com). This repository is based on, and makes use of, the [rePaper/gratis GitHub repository](https://github.com/repaper/gratis).
 
 You can purchase one of the PaPiRus boards from [our webshop](https://www.pi-supply.com/?s=papirus&post_type=product&tags=1&limit=5&ixwps=1) or from a variety of resellers worldwide.
 
