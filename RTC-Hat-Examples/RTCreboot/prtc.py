@@ -41,6 +41,7 @@ def writertc(i2cbus, dt):
 
     i2cbus.write_i2c_block_data(RTCADR, 0, data)
 
+
 def writealm(i2cbus, alm, dt):
     if alm > 0:
         alm = 1
@@ -65,17 +66,19 @@ def writealm(i2cbus, alm, dt):
 
     i2cbus.write_i2c_block_data(RTCADR, almbase[alm], data)
 
-def readrtc(i2cbus):
-    data=i2cbus.read_i2c_block_data(RTCADR, 0, 7)
 
-    sec   = (data[0] & 0x7f) // 16 * 10 + (data[0] & 0x0f)
-    min   = data[1] // 16 * 10 + (data[1] & 0x0f)
-    hour  = data[2] // 16 * 10 + (data[2] & 0x0f)
-    day   = data[4] // 16 * 10 + (data[4] & 0x0f)
+def readrtc(i2cbus):
+    data = i2cbus.read_i2c_block_data(RTCADR, 0, 7)
+
+    sec = (data[0] & 0x7f)   // 16 * 10 + (data[0] & 0x0f)
+    min = data[1]            // 16 * 10 + (data[1] & 0x0f)
+    hour = data[2]           // 16 * 10 + (data[2] & 0x0f)
+    day = data[4]            // 16 * 10 + (data[4] & 0x0f)
     month = (data[5] & 0x10) // 16 * 10 + (data[5] & 0x0f)
-    year  = data[6] // 16 * 10 + (data[6] & 0x0f)
+    year = data[6]           // 16 * 10 + (data[6] & 0x0f)
     dt = datetime(2000+year, month, day, hour, min, sec)
     return dt
+
 
 def readalm(i2cbus, alm):
     if alm > 0:
@@ -84,24 +87,27 @@ def readalm(i2cbus, alm):
         alm = 0
     data = i2cbus.read_i2c_block_data(RTCADR, almbase[alm], 6)
 
-    sec   = data[0] // 16 * 10 + (data[0] & 0x0f)
-    min   = data[1] // 16 * 10 + (data[1] & 0x0f)
-    hour  = data[2] // 16 * 10 + (data[2] & 0x0f)
-    day   = data[4] // 16 * 10 + (data[4] & 0x0f)
+    sec = data[0]   // 16 * 10 + (data[0] & 0x0f)
+    min = data[1]   // 16 * 10 + (data[1] & 0x0f)
+    hour = data[2]  // 16 * 10 + (data[2] & 0x0f)
+    day = data[4]   // 16 * 10 + (data[4] & 0x0f)
     month = data[5] // 16 * 10 + (data[5] & 0x0f)
     # year not used in alarm time
     dt = datetime(2000, month, day, hour, min, sec)
     return dt
+
 
 def enablealm0(i2cbus):
     data = i2cbus.read_byte_data(RTCADR, 7)
     data |= 0x10
     i2cbus.write_byte_data(RTCADR, 7, data)
 
+
 def enablealm1(i2cbus):
     data = i2cbus.read_byte_data(RTCADR, 7)
     data |= 0x20
     i2cbus.write_byte_data(RTCADR, 7, data)
+
 
 def disablealm0(i2cbus):
     # When disabling the alarm, keep the mfp output high (otherwise we'll get an immediate reboot)
@@ -110,6 +116,7 @@ def disablealm0(i2cbus):
     data |= 0x80
     i2cbus.write_byte_data(RTCADR, 7, data)
 
+
 def disablealm1(i2cbus):
     # When disabling the alarm, keep the mfp output high (otherwise we'll get an immediate reboot)
     data = i2cbus.read_byte_data(RTCADR, 7)
@@ -117,13 +124,16 @@ def disablealm1(i2cbus):
     data |= 0x80
     i2cbus.write_byte_data(RTCADR, 7, data)
 
+
 def enablesqw(i2cbus):
     # Set 1 Hz square wave output
     i2cbus.write_byte_data(RTCADR, 7, 0x40)
 
+
 def disablesqw(i2cbus):
     # Disable square wave and set ouput high
     i2cbus.write_byte_data(RTCADR, 7, 0x80)
+
 
 def mfpoutput(i2cbus, val):
     # set MFP output directly
