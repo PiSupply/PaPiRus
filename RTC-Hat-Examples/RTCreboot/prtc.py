@@ -51,8 +51,8 @@ def writealm(i2cbus, alm, dt):
     min = dt.minute
     hour = dt.hour
     # rtc-ds1307 uses weekday convention Sun = 1, Sat = 7
-    # wkday in alarm has to match the wkday of rtc time for the alarm to trigger
-    wkday = (dt.weekday() + 1)%7 + 1
+    # wkday in alarm has to match the wkday of rtc for the alarm to trigger
+    wkday = (dt.weekday() + 1) % 7 + 1
     day = dt.day
     month = dt.month
  
@@ -70,12 +70,12 @@ def writealm(i2cbus, alm, dt):
 def readrtc(i2cbus):
     data = i2cbus.read_i2c_block_data(RTCADR, 0, 7)
 
-    sec = (data[0] & 0x7f)   // 16 * 10 + (data[0] & 0x0f)
-    min = data[1]            // 16 * 10 + (data[1] & 0x0f)
-    hour = data[2]           // 16 * 10 + (data[2] & 0x0f)
-    day = data[4]            // 16 * 10 + (data[4] & 0x0f)
+    sec = (data[0] & 0x7f) // 16 * 10 + (data[0] & 0x0f)
+    min = data[1] // 16 * 10 + (data[1] & 0x0f)
+    hour = data[2] // 16 * 10 + (data[2] & 0x0f)
+    day = data[4] // 16 * 10 + (data[4] & 0x0f)
     month = (data[5] & 0x10) // 16 * 10 + (data[5] & 0x0f)
-    year = data[6]           // 16 * 10 + (data[6] & 0x0f)
+    year = data[6] // 16 * 10 + (data[6] & 0x0f)
     dt = datetime(2000+year, month, day, hour, min, sec)
     return dt
 
@@ -87,10 +87,10 @@ def readalm(i2cbus, alm):
         alm = 0
     data = i2cbus.read_i2c_block_data(RTCADR, almbase[alm], 6)
 
-    sec = data[0]   // 16 * 10 + (data[0] & 0x0f)
-    min = data[1]   // 16 * 10 + (data[1] & 0x0f)
-    hour = data[2]  // 16 * 10 + (data[2] & 0x0f)
-    day = data[4]   // 16 * 10 + (data[4] & 0x0f)
+    sec = data[0] // 16 * 10 + (data[0] & 0x0f)
+    min = data[1] // 16 * 10 + (data[1] & 0x0f)
+    hour = data[2] // 16 * 10 + (data[2] & 0x0f)
+    day = data[4] // 16 * 10 + (data[4] & 0x0f)
     month = data[5] // 16 * 10 + (data[5] & 0x0f)
     # year not used in alarm time
     dt = datetime(2000, month, day, hour, min, sec)
