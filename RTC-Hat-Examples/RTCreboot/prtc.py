@@ -8,24 +8,26 @@ from smbusf import SMBus
 
 RTCADR = 0x6f
 STBIT = 0x80
-LPYR  = 0x20
+LPYR = 0x20
 almbase = [0xa, 0x11]
+
 
 def tobcd(val):
     return (val % 10) | (val // 10) << 4
+
 
 def writertc(i2cbus, dt):
     sec = dt.second
     min = dt.minute
     hour = dt.hour
     # rtc-ds1307 uses weekday convention Sun = 1, Sat = 7
-    wkday = (dt.weekday() + 1)%7 + 1
+    wkday = (dt.weekday() + 1) % 7 + 1
     day = dt.day
     month = dt.month
     year = dt.year
     leap = isleap(year)
 
-    data = [0,0,0,0,0,0,0]
+    data = [0, 0, 0, 0, 0, 0, 0]
     data[0] = tobcd(sec) | STBIT
     data[1] = tobcd(min)
     data[2] = tobcd(hour)
@@ -52,9 +54,8 @@ def writealm(i2cbus, alm, dt):
     wkday = (dt.weekday() + 1)%7 + 1
     day = dt.day
     month = dt.month
-    year = dt.year
  
-    data = [0,0,0,0,0,0]
+    data = [0, 0, 0, 0, 0, 0]
     data[0] = tobcd(sec)
     data[1] = tobcd(min)
     data[2] = tobcd(hour)
@@ -131,4 +132,3 @@ def mfpoutput(i2cbus, val):
     else:
         data = 0x80
     i2cbus.write_byte_data(RTCADR, 7, data)
-

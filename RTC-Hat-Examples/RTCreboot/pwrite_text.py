@@ -4,7 +4,6 @@ from papirus import Papirus
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from smbusf import SMBus
 import os
 
 WHITE = 1
@@ -15,7 +14,6 @@ lock = False
 
 def main():
     papirus = Papirus()
-    i2cbus=SMBus(1)
 
     write_text(papirus, 'Line 1', save=True)
     write_text(papirus, 'Line 2', y=20, load=True, ldfile='save.bmp')
@@ -80,4 +78,3 @@ def update_lines(papirus):
 
 if __name__ == '__main__':
     main()
-
