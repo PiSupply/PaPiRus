@@ -12,27 +12,31 @@ RTCADR = 0x6f
 
 lock = False
 
+
 def main():
     papirus = Papirus()
 
     write_text(papirus, 'Line 1', save=True)
     write_text(papirus, 'Line 2', y=20, load=True, ldfile='save.bmp')
 
-def write_text(papirus, text, x=0, y=0, size=20, load=False, ldfile=' ', save=False, file='save.bmp'):
+
+def write_text(papirus, text, x=0, y=0, size=20, load=False, ldfile=' ',
+               save=False, file='save.bmp'):
     global image, draw, font
 
     if os.path.isfile(ldfile):
-      image = Image.open(ldfile)
-      image.load()
-      os.remove(ldfile)
+        image = Image.open(ldfile)
+        image.load()
+        os.remove(ldfile)
     else:
-      # set all white background
-      image = Image.new('1', papirus.size, WHITE)
+        # set all white background
+        image = Image.new('1', papirus.size, WHITE)
 
     # prepare for drawing
     draw = ImageDraw.Draw(image)
 
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', size)
+    font = ImageFont.truetype(
+               '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', size)
 
     # Calculate the max number of char to fit on line
     line_size = ((papirus.width - x) / (size*0.65))
@@ -61,6 +65,7 @@ def write_text(papirus, text, x=0, y=0, size=20, load=False, ldfile=' ', save=Fa
     if (save):
         image.save(file)
 
+
 def replace_line(papirus, x, y, text, size=20):
     global image, draw, font, lock
 
@@ -71,10 +76,12 @@ def replace_line(papirus, x, y, text, size=20):
     draw.text((x, y), text, font=font, fill=BLACK)
     lock = False
 
+
 def update_lines(papirus):
     global image
     papirus.display(image)
     papirus.partial_update()
+
 
 if __name__ == '__main__':
     main()

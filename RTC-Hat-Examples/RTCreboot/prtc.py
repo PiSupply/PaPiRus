@@ -4,7 +4,6 @@ from __future__ import division
 
 from datetime import datetime
 from calendar import isleap
-from smbusf import SMBus
 
 RTCADR = 0x6f
 STBIT = 0x80
@@ -110,7 +109,8 @@ def enablealm1(i2cbus):
 
 
 def disablealm0(i2cbus):
-    # When disabling the alarm, keep the mfp output high (otherwise we'll get an immediate reboot)
+    # When disabling the alarm, keep the mfp output high (otherwise we'll
+    # get an immediate reboot)
     data = i2cbus.read_byte_data(RTCADR, 7)
     data &= 0xef
     data |= 0x80
@@ -118,7 +118,8 @@ def disablealm0(i2cbus):
 
 
 def disablealm1(i2cbus):
-    # When disabling the alarm, keep the mfp output high (otherwise we'll get an immediate reboot)
+    # When disabling the alarm, keep the mfp output high (otherwise we'll
+    # get an immediate reboot)
     data = i2cbus.read_byte_data(RTCADR, 7)
     data &= 0xdf
     data |= 0x80
