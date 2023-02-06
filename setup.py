@@ -46,5 +46,6 @@ setup(name='papirus',
               'bitmaps/10.gif', 'bitmaps/11.gif', 'bitmaps/12.gif',
               'bitmaps/13.gif', 'bitmaps/14.gif', 'bitmaps/15.gif',
               'bitmaps/papirus-cam-intro.jpg', 'bitmaps/python.png']
-          )]
-     )
+          )
+     ]
+    )
