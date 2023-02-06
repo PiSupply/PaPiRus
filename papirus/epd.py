@@ -191,8 +191,8 @@ to use:
             image = image.transpose(self.rotation_angle(self._rotation))
 
         with open(
-            os.path.join(self._epd_path, 'LE', 'display_inverse'),
-            'r+b') as f:
+                os.path.join(self._epd_path, 'LE', 'display_inverse'),
+                'r+b') as f:
             f.write(image.tobytes())
 
         if self.auto:
