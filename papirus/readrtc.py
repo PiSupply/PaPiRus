@@ -100,4 +100,4 @@ def get_hwclock(devrtc="/dev/rtc"):
 
 if __name__ == "__main__":
     print("Date/Time from RTC: {d:s}".format(
-                             d=get_hwclock().strftime("%A %d %B %Y - %H:%M:%S")))
+          d=get_hwclock().strftime("%A %d %B %Y - %H:%M:%S")))

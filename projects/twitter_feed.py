@@ -42,6 +42,7 @@ def home_timeline(Home):
     status = statuses[tweet_index].text
     return status, name
 
+
 def next_tweet():
     status, name = home_timeline(sys.argv[1] if len(sys.argv) > 1 else 0)
     twitter_name = "@" + name

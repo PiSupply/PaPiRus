@@ -1,6 +1,6 @@
 from PIL import Image
 from PIL import ImageOps
-from papirus import Papirus
+#from papirus import Papirus
 from papirus import PapirusTextPos
 import uuid
 
