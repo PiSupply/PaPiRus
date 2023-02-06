@@ -1,6 +1,3 @@
-import os
-import sys
-
 from PIL import Image
 from PIL import ImageOps
 from papirus import Papirus

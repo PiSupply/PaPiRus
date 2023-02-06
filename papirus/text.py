@@ -1,9 +1,5 @@
-import os
-import sys
-
 from PIL import Image, ImageDraw, ImageFont
 from papirus import Papirus
-import random
 
 WHITE = 1
 BLACK = 0

@@ -52,7 +52,9 @@ to use:
   epd.update()        # refresh the panel image - not needed if auto=true
 """
 
-    PANEL_RE = re.compile('^([A-Za-z]+)\s+(\d+\.\d+)\s+(\d+)x(\d+)\s+COG\s+(\d+)\s+FILM\s+(\d+)\s*$', flags=0)
+    PANEL_RE = re.compile(
+                '^([A-Za-z]+)\s+(\d+\.\d+)\s+(\d+)x(\d+)\s+COG'
+                '\s+(\d+)\s+FILM\s+(\d+)\s*$', flags=0)   # noqa: W605
 
     def __init__(self, *args, **kwargs):
         self._epd_path = '/dev/epd'
@@ -163,7 +165,7 @@ to use:
 
     def error_status(self):
         with open(os.path.join(self._epd_path, 'error'), 'r') as f:
-            return(f.readline().rstrip('\n'))
+            return f.readline().rstrip('\n')
 
     def rotation_angle(self, rotation):
         angles = {90: Image.ROTATE_90, 180: Image.ROTATE_180,

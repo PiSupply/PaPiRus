@@ -40,7 +40,7 @@ statuses = api.GetHomeTimeline(count=20)
 def home_timeline(Home):
     name = statuses[tweet_index].user.screen_name
     status = statuses[tweet_index].text
-        return status, name
+    return status, name
 
 def next_tweet():
     status, name = home_timeline(sys.argv[1] if len(sys.argv) > 1 else 0)
