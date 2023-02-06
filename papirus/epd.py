@@ -178,8 +178,8 @@ to use:
         # better to do this before calling this if the image is to
         # be dispayed several times
         if image.mode != "1":
-            image = ImageOps.grayscale(image).convert("1",
-                                       dither=Image.FLOYDSTEINBERG)
+            image = ImageOps.grayscale(
+                image).convert("1", dither=Image.FLOYDSTEINBERG)
 
         if image.mode != "1":
             raise EPDError('only single bit images are supported')
@@ -190,8 +190,9 @@ to use:
         if self._rotation != 0:
             image = image.transpose(self.rotation_angle(self._rotation))
 
-        with open(os.path.join(self._epd_path, 'LE', 'display_inverse'),
-                               'r+b') as f:
+        with open(
+            os.path.join(self._epd_path, 'LE', 'display_inverse'),
+            'r+b') as f:
             f.write(image.tobytes())
 
         if self.auto:

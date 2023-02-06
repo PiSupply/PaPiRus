@@ -1,0 +1,3 @@
+[flake8]
+per-file-ignore = __init__.py:F401
+                  epd.py:W605
