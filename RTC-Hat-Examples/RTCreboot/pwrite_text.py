@@ -56,9 +56,9 @@ def write_text(papirus, text, x=0, y=0, size=20, load=False, ldfile=' ',
             text_lines[current_line] += " " + word
 
     current_line = 0
-    for l in text_lines:
-        draw.text( (x, (size*current_line + y)), l, font=font, fill=BLACK)
-        current_line += 1
+    for line in text_lines:
+        draw.text((x, (size*current_line + y)), line, font=font, fill=BLACK)
+        current_line += 1ine
 
     papirus.display(image)
     papirus.partial_update()
