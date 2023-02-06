@@ -2,4 +2,5 @@
 per-file-ignores =
      papirus/__init__.py: F401
      papirus/epd.py: W605
+     papirus/textpos.py: C901
      setup.py: E124
