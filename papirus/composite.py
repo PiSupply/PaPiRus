@@ -10,6 +10,7 @@ import uuid
 WHITE = 1
 BLACK = 0
 
+
 # Class for holding the details of the img
 class DispImg(object):
     def __init__(self, image, x, y, size):
@@ -20,6 +21,7 @@ class DispImg(object):
         self.endx = 0
         self.endy = 0
 
+
 class PapirusComposite(PapirusTextPos):
 
     def __init__(self, autoUpdate=True, rotation=0):
@@ -27,7 +29,7 @@ class PapirusComposite(PapirusTextPos):
         self.allImg = dict()
         self.image = Image.new('1', self.papirus.size, WHITE)
 
-    def AddImg(self, image, x=0, y=0, size = (10,10), Id=None):
+    def AddImg(self, image, x=0, y=0, size=(10, 10), Id=None):
         # Create a new Id if none is supplied
         if Id is None:
             Id = str(uuid.uuid4())
@@ -42,7 +44,7 @@ class PapirusComposite(PapirusTextPos):
             self.allImg[Id] = DispImg(image, x, y, size)
             # add the img to the image
             self.addToImageImg(Id)
-            #Automatically show?
+            # Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
@@ -56,12 +58,13 @@ class PapirusComposite(PapirusTextPos):
             image = image.convert("1", dither=Image.FLOYDSTEINBERG)
 
             self.allImg[Id].image = image
-            
-            # Remove from the old img from the image (that doesn't use the actual img)
+
+            # Remove from the old img from the image
+            # (that doesn't use the actual img)
             self.removeImageImg(Id)
             # Add the new img to the image
             self.addToImageImg(Id)
-            #Automatically show?
+            # Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
@@ -71,7 +74,7 @@ class PapirusComposite(PapirusTextPos):
             self.removeImageImg(Id)
             del self.allImg[Id]
 
-            #Automatically show?
+            # Automatically show?
             if self.autoUpdate:
                 self.WriteAll()
 
@@ -79,13 +82,12 @@ class PapirusComposite(PapirusTextPos):
         # prepare for drawing
         filler = Image.new('1', self.allImg[Id].size, WHITE)
         # Draw over the top of the img with a rectangle to cover it
-        x =  self.allImg[Id].x
-        y =  self.allImg[Id].y
-        self.image.paste(filler,(x,y))
+        x = self.allImg[Id].x
+        y = self.allImg[Id].y
+        self.image.paste(filler, (x, y))
 
     def addToImageImg(self, Id):
-        x =  self.allImg[Id].x
-        y =  self.allImg[Id].y
+        x = self.allImg[Id].x
+        y = self.allImg[Id].y
 
-        self.image.paste(self.allImg[Id].image,(x,y))
-
+        self.image.paste(self.allImg[Id].image, (x, y))

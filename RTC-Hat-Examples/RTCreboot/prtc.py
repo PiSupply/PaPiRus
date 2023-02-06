@@ -54,7 +54,7 @@ def writealm(i2cbus, alm, dt):
     wkday = (dt.weekday() + 1) % 7 + 1
     day = dt.day
     month = dt.month
- 
+
     data = [0, 0, 0, 0, 0, 0]
     data[0] = tobcd(sec)
     data[1] = tobcd(min)
