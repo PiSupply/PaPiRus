@@ -33,8 +33,10 @@ api = twitter.Api(
     access_token_secret=access_token_secret
 )
 tweet_index = 0
-text = PapirusTextPos(False, rotation=0)
 statuses = api.GetHomeTimeline(count=20)
+textpos = PapirusTextPos(False, rotation=0)
+text = PapirusText()
+papirus = Papirus
 
 
 def home_timeline(Home):
@@ -47,22 +49,22 @@ def next_tweet():
     status, name = home_timeline(sys.argv[1] if len(sys.argv) > 1 else 0)
     twitter_name = "@" + name
 
-    text.UpdateText("start", twitter_name)
-    text.UpdateText("tweet", status)
-    text.WriteAll()
+    textpos.UpdateText("start", twitter_name)
+    textpos.UpdateText("tweet", status)
+    textpos.WriteAll()
 
 
 # Display first tweet
 status, name = home_timeline(sys.argv[1] if len(sys.argv) > 1 else 0)
 twitter_name = "@" + name
 
-text.AddText(twitter_name, 0, 0, Id="start")
-text.AddText(status, 0, 20, Id="tweet")
-text.WriteAll()
+textpos.AddText(twitter_name, 0, 0, Id="start")
+textpos.AddText(status, 0, 20, Id="tweet")
+textpos.WriteAll()
 
 while True:
     if not GPIO.input(SW1) and not GPIO.input(SW2):
-        write_text(papirus, "Exiting ...", SIZE)
+        text.write("Exiting ...")
         sleep(0.2)
         papirus.clear()
         sys.exit()
